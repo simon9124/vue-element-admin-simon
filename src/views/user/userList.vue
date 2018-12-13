@@ -288,7 +288,7 @@ export default {
     handleSwitchChange(row) {
       this.tableDataLoading = true
       updateUsers(row).then(result => {
-        // 给该行row的userStatus项更新为重新获得的row.userStatus
+        // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
         this.$set(row, 'userStatus', row.userStatus)
         this.$message({
           message: result.data.message,
@@ -305,6 +305,7 @@ export default {
       }).then(() => {
         this.tableDataLoading = true
         deleteUser().then(result => {
+          // 前端虚拟删除操作 -> 根据row的下标删除该row
           const index = this.tableData.indexOf(row)
           this.tableData.splice(index, 1)
           this.refreshTable()
@@ -323,7 +324,7 @@ export default {
     },
     // 批量操作数据
     batctExecute() {
-      // 批量操作
+      // 将选择的数据放在delCodes数组中
       const delCodes = []
       for (const select of this.multipleSelection) {
         delCodes.push(select.userCode)
@@ -354,6 +355,7 @@ export default {
           })
           .then(() => {
             this.tableDataLoading = true
+            // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
             this.multipleSelection.forEach(row => {
               deleteUser().then(result => {
                 const index = this.tableData.indexOf(row)
