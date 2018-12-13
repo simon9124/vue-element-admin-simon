@@ -89,10 +89,10 @@
                                  width="150"
                                  sortable="custom">
                 </el-table-column>
-                <el-table-column label="中文名"
+                <el-table-column label="姓名"
                                  align="center"
                                  prop="userNickName"
-                                 width="150"
+                                 width="120"
                                  sortable="custom">
                 </el-table-column>
                 <el-table-column label="手机"
@@ -108,12 +108,31 @@
                 </el-table-column>
                 <el-table-column label="地址"
                                  align="center"
-                                 prop="userAddress"
+                                 width="400"
                                  sortable="custom">
+                  <!-- 地址栏添加行内编辑功能 -->
+                  <template slot-scope="scope">
+                    <!-- 非编辑状态 -->
+                    <span v-if="scope.row.edit === false">
+                      {{scope.row.userAddress}}
+                      <i class="el-icon-edit edit"
+                         @click="scope.row.edit = !scope.row.edit"></i>
+                    </span>
+                    <!-- 编辑状态 -->
+                    <span v-else>
+                      <el-input v-model="scope.row.userAddress"
+                                style="width:280px"></el-input>
+                      <i class="el-icon-check check"
+                         @click="editInline(scope.row)"></i>
+                      <i class="el-icon-close close"
+                         @click="scope.row.edit = !scope.row.edit"></i>
+                    </span>
+                  </template>
                 </el-table-column>
-                <el-table-column label="用户状态"
+                <el-table-column label="状态"
                                  align="center"
-                                 width="80">
+                                 width="50">
+                  <!-- 状态栏添加行内修改功能 -->
                   <template slot-scope="scope">
                     <el-switch v-model="scope.row.userStatus"
                                :active-value="1"
@@ -203,7 +222,6 @@
 <script>
 // import ComponentSelect from '@/components/ComponentSelect'
 import ComponentFilter from '@/components/ComponentFilter'
-// import { select } from '@/api/components/component'
 import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
 
 export default {
@@ -243,21 +261,20 @@ export default {
     }
   },
   created() {
-    // 页面初始化
     this.init()
   },
   methods: {
+    // 页面初始化
     init() {
-      // 下拉列表选项
-      // select('enable', '', true).then(result => {
-      //   this.statusOptions = result.data.options
-      // })
       // 获取 & 加工表格数据
       getUserList(this).then(result => {
-        // console.log(result)
         // 全部数据
         this.tableData = result.data.tableData.map(row => {
           this.$set(row, 'userId', row.userId - 100)
+          return row
+        })
+        this.tableData = result.data.tableData.map(row => {
+          this.$set(row, 'edit', false)
           return row
         })
         this.refreshTable()
@@ -270,6 +287,7 @@ export default {
       getUserList(this).then(result => {
         this.userData =
           this.tableData.slice((this.pageNum - 1) * this.pageSize, this.pageNum * this.pageSize)
+        console.log(this.userData)
       }).finally(() => {
         this.tableDataLoading = false
       })
@@ -294,6 +312,20 @@ export default {
           message: result.data.message,
           type: 'success'
         })
+      }).finally(() => {
+        this.tableDataLoading = false
+      })
+    },
+    editInline(row) {
+      this.tableDataLoading = true
+      updateUsers(row).then(result => {
+        // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
+        this.$set(row, 'userAddress', row.userAddress)
+        this.$message({
+          message: result.data.message,
+          type: 'success'
+        })
+        row.edit = !row.edit
       }).finally(() => {
         this.tableDataLoading = false
       })
@@ -382,6 +414,26 @@ export default {
 @import '~@/styles/smart-ui/smart-ui.scss';
 .el-table /deep/ {
   .el-table__row {
+    .cell {
+      padding: 0;
+      .edit,
+      .check,
+      .close {
+        font-size: 16px;
+      }
+      .edit {
+        color: #409eff;
+        text-decoration: underline;
+      }
+      .check {
+        border: 1px solid #67c23a;
+        color: #67c23a;
+      }
+      .close {
+        border: 1px solid #f56c6c;
+        color: #f56c6c;
+      }
+    }
     .el-tag:not(:first-child) {
       margin-left: 5px;
     }

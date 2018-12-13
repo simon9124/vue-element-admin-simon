@@ -12,15 +12,14 @@
                    size="mini"
                    icon="double_arrow_up"
                    @click="toggleFilter">
-          <!-- <i class="icon iconfont el-icon-z045"></i> -->
-          <svg-icon icon-class="double_arrow_up"
-                    style="font-size:12px" /> {{ filterClose }}</el-button>
+          <i class="el-icon-arrow-down"></i>
+          {{ filterClose }}</el-button>
         <el-button v-show="!isShowFilter"
                    v-model="isShowFilter"
                    size="mini"
                    @click="toggleFilter">
-          <svg-icon icon-class="double_arrow_down"
-                    style="font-size:12px" /> {{ filterOpen }}</el-button>
+          <i class="el-icon-arrow-up"></i>
+          {{ filterOpen }}</el-button>
         <!-- <el-button size="mini"
                    class="table-filter-header-search-advanced"
                    @click="openFilterAdvanced($event)">高级检索</el-button> -->
