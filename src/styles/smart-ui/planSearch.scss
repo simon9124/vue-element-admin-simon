@@ -1,0 +1,42 @@
+@import '../variables.scss';
+
+$white: nth($white, 1);
+$gray: nth($grays, 3);
+$blue: nth($blue, 2);
+
+// 通用
+* {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  vertical-align: middle;
+}
+
+.plan-search-container /deep/ {
+  .content-spe-container{
+    width: 80%;
+    margin-top: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    .el-input-group__prepend{
+      width: 100px;
+    }
+    .el-input__inner{
+    }
+  }
+  .content-spe-result{
+    width: 80%;
+    height: 500px;
+    margin-left: 10%;
+    margin-right: 10%;
+    overflow-y: auto;
+    ul li {
+      margin: 10px 10px 30px 10px;
+      list-style-type: none;
+      .upload-user {
+        margin-left: 30px;
+      }
+      a {
+        color: $blue;
+      }
+    }
+  }
+}

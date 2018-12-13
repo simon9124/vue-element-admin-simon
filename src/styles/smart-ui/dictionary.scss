@@ -1,0 +1,25 @@
+.el-select {
+  width: 100%;
+  height: auto;
+  &-dropdown__item {
+    height: 32px;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 14px;
+    border-radius: 0;
+    outline: 0;
+    & /deep/ span {
+      font-size: 14px;
+    }
+  }
+}
+
+.container /deep/ {
+  .el-main {
+    padding: 15px 20px 5px 20px !important;
+  }
+  .gallery-list-col-operation {
+    // padding: 0 5px;
+    margin-top: -5px;
+  }
+}

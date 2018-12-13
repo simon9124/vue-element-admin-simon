@@ -1,0 +1,80 @@
+@import '../variables.scss';
+
+.container /deep/ {
+  $white: nth($white, 1);
+  $gray: nth($grays, 1);
+  $blue: nth($blue, 2);
+  $background: nth($grays, 7);
+  height: 100%;
+  .job-container {
+    background: $white;
+    .option-area {
+      margin: 0px 20px 0px 20px;
+      text-align: right;
+    }
+    .left-panel {
+      padding-right: 0px !important;
+      border-top: 1px solid $gray;
+      border-left: 1px solid $gray;
+      border-bottom: 1px solid $gray;
+      @media (min-width: $screen-sm-min) {
+        min-height: 350px
+      }
+      @media (min-width: $screen-md-min) {
+        min-height: 545px
+      }
+      @media (min-width: $screen-lg-min) {
+        min-height: 851px
+      }
+    }
+    .right-panel {
+      padding-left: 0px !important;
+      border: 1px solid $gray;
+      min-height: 851px;
+      .right-panel-header {
+        height: 45px !important;
+        line-height: 45px;
+        border-bottom: 1px solid $gray;
+        background: $background;
+        .level {
+          float: left;
+          width: 30%;
+          height: 70%;
+        }
+        .options {
+          float: right;
+          text-align: right;
+          width: 70%;
+          height: 70%;
+          button {
+            margin-bottom: 3px;
+          }
+        }
+      }
+      .right-panel-main {
+        max-height: 100%;
+        padding: 0px 0px 0px 10px;
+        overflow: auto;
+        .table-grid-contain {
+          .table-content-spe {
+            height: 804px;
+          }
+          .el-table--medium {
+            height: 804px !important;
+          }
+        }
+      }
+    }
+    .buttons {
+      width: 280px;
+      margin-left: 0px;
+    }
+    .a {
+      text-decoration: underline;
+      color: #0088cc;
+    }
+    .a:hover {
+      color: deeppink;
+    }
+  }
+}

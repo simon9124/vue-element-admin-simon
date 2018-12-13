@@ -1,0 +1,134 @@
+@import '../variables.scss';
+
+.container /deep/ {
+  $white: nth($white, 1);
+  $gray: nth($grays, 1);
+  $blue: nth($blue, 2);
+  $background: nth($grays, 7);
+  height: 100%;
+  .plan-container {
+    background: $white;
+    .option-area {
+      margin: 0px 20px 0px 20px;
+      text-align: right;
+    }
+    .left-panel {
+      padding-right: 0px !important;
+      border-top: 1px solid $gray;
+      border-left: 1px solid $gray;
+      border-bottom: 1px solid $gray;
+      @media (min-width: $screen-sm-min) {
+        min-height: 350px
+      }
+      @media (min-width: $screen-md-min) {
+        min-height: 545px
+      }
+      @media (min-width: $screen-lg-min) {
+        min-height: 851px
+      }
+    }
+    .right-panel {
+      padding-left: 0px !important;
+      border: 1px solid $gray;
+      min-height: 851px;
+      .right-panel-header {
+        height: 45px !important;
+        line-height: 45px;
+        border-bottom: 1px solid $gray;
+        background: $background;
+        .level {
+          float: left;
+          width: 30%;
+          height: 70%;
+        }
+        .options {
+          float: right;
+          text-align: right;
+          width: 70%;
+          height: 70%;
+          button {
+            margin-bottom: 3px;
+          }
+        }
+      }
+      .right-panel-main {
+        max-height: 350px;
+        padding: 0px 0px 0px 10px;
+        overflow: auto;
+      }
+      .el-footer /deep/ {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+      }
+      .right-panel-footer {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        &-header {
+          height: 45px !important;
+          line-height: 45px;
+          border-top: 1px solid $gray;
+          border-bottom: 1px solid $gray;
+          background: $background;
+          .title {
+            margin-left: 20px;
+            float: left;
+            width: 100%;
+            height: 70%;
+          }
+        }
+        &-main {
+          max-height: 400px;
+          .table-grid-contain {
+            width: 90%;
+          }
+          li {
+            list-style-type: none;
+            margin-bottom: 5px;
+          }
+          a {
+            color: $blue
+          }
+          .process-container {
+            width: 50%;
+            float: left;
+            height: 400px;
+            overflow-x: hidden;
+          }
+          .file-container {
+            width: 50%;
+            float: left;
+            height: 400px;
+            overflow-x: hidden;
+            border-right: 1px solid $gray;
+          }
+          .del-btn {
+            width: 22px;
+            height: 22px;
+            margin-left: 20px;
+            cursor: pointer
+          }
+        }
+      }
+    }
+    .buttons {
+      width: 405px;
+      margin-left: 55px;
+      .uploader {
+        float: right;
+      }
+    }
+    .el-table__body {
+      tr {
+        td:nth-child(2) {
+          .cell {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            height: 45px;
+          }
+          text-align: left;
+        }
+      }
+    }
+  }
+}

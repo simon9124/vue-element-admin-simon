@@ -63,6 +63,8 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链'
+    // tables
+
   },
   navbar: {
     logOut: '退出登录',

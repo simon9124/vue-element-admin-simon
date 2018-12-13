@@ -6,11 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/views/layout/Layout'
 
-/* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-// import nestedRouter from './modules/nested'
+/* 路由引入 */
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -30,6 +26,8 @@ import tableRouter from './modules/table'
     noCache: true                if true ,the page will no be cached(default is false)
   }
 **/
+
+/** 1、静态路由**/
 export const constantRouterMap = [{
   path: '/redirect',
   component: Layout,
@@ -39,6 +37,8 @@ export const constantRouterMap = [{
     component: () => import('@/views/redirect/index')
   }]
 },
+
+  /** 登录页**/
 {
   path: '/login',
   component: () => import('@/views/login/index'),
@@ -49,6 +49,8 @@ export const constantRouterMap = [{
   component: () => import('@/views/login/authredirect'),
   hidden: true
 },
+
+  /** 错误输入页 - 常规隐藏**/
 {
   path: '/404',
   component: () => import('@/views/errorPage/404'),
@@ -59,52 +61,25 @@ export const constantRouterMap = [{
   component: () => import('@/views/errorPage/401'),
   hidden: true
 },
+
+  /** 模板页**/
 {
   path: '',
   component: Layout,
   redirect: 'dashboard',
-  children: [{
-    path: 'dashboard',
-    component: () => import('@/views/dashboard/index'),
-    name: 'Dashboard',
-    meta: {
-      title: 'dashboard',
-      icon: 'dashboard',
-      noCache: true
+  children: [
+    // 首页
+    {
+      path: 'dashboard',
+      component: () => import('@/views/dashboard/index'),
+      name: 'Dashboard',
+      meta: {
+        title: 'dashboard',
+        icon: 'dashboard',
+        noCache: true
+      }
     }
-  }]
-},
-{
-  path: '/documentation',
-  component: Layout,
-  redirect: '/documentation/index',
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/documentation/index'),
-    name: 'Documentation',
-    meta: {
-      title: 'documentation',
-      icon: 'documentation',
-      noCache: true
-    }
-  }]
-},
-{
-  path: '/guide',
-  component: Layout,
-  redirect: '/guide/index',
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/guide/index'),
-    name: 'Guide',
-    meta: {
-      title: 'guide',
-      icon: 'guide',
-      noCache: true
-    }
-  }]
+  ]
 }
 ]
 
@@ -116,6 +91,7 @@ export default new Router({
   routes: constantRouterMap
 })
 
+/** 2、动态路由**/
 export const asyncRouterMap = [{
   path: '/permission',
   component: Layout,
@@ -148,247 +124,7 @@ export const asyncRouterMap = [{
   ]
 },
 
-{
-  path: '/icon',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/svg-icons/index'),
-    name: 'Icons',
-    meta: {
-      title: 'icons',
-      icon: 'icon',
-      noCache: true
-    }
-  }]
-},
-
-  /** When your routing table is too long, you can split it into small modules**/
-componentsRouter,
-chartsRouter,
-  // nestedRouter,
-tableRouter,
-
-{
-  path: '/example',
-  component: Layout,
-  redirect: '/example/list',
-  name: 'Example',
-  meta: {
-    title: 'example',
-    icon: 'example'
-  },
-  hidden: true,
-  children: [{
-    path: 'create',
-    component: () => import('@/views/example/create'),
-    name: 'CreateArticle',
-    meta: {
-      title: 'createArticle',
-      icon: 'edit'
-    }
-  },
-  {
-    path: 'edit/:id(\\d+)',
-    component: () => import('@/views/example/edit'),
-    name: 'EditArticle',
-    meta: {
-      title: 'editArticle',
-      noCache: true
-    },
-    hidden: true
-  },
-  {
-    path: 'list',
-    component: () => import('@/views/example/list'),
-    name: 'ArticleList',
-    meta: {
-      title: 'articleList',
-      icon: 'list'
-    }
-  }
-  ]
-},
-
-{
-  path: '/tab',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/tab/index'),
-    name: 'Tab',
-    meta: {
-      title: 'tab',
-      icon: 'tab'
-    }
-  }]
-},
-
-{
-  path: '/error',
-  component: Layout,
-  redirect: 'noredirect',
-  name: 'ErrorPages',
-  meta: {
-    title: 'errorPages',
-    icon: '404'
-  },
-  hidden: true,
-  children: [{
-    path: '401',
-    component: () => import('@/views/errorPage/401'),
-    name: 'Page401',
-    meta: {
-      title: 'page401',
-      noCache: true
-    }
-  },
-  {
-    path: '404',
-    component: () => import('@/views/errorPage/404'),
-    name: 'Page404',
-    meta: {
-      title: 'page404',
-      noCache: true
-    }
-  }
-  ]
-},
-
-{
-  path: '/error-log',
-  component: Layout,
-  redirect: 'noredirect',
-  hidden: true,
-  children: [{
-    path: 'log',
-    component: () => import('@/views/errorLog/index'),
-    name: 'ErrorLog',
-    meta: {
-      title: 'errorLog',
-      icon: 'bug'
-    }
-  }]
-},
-
-{
-  path: '/excel',
-  component: Layout,
-  redirect: '/excel/export-excel',
-  name: 'Excel',
-  meta: {
-    title: 'excel',
-    icon: 'excel'
-  },
-  hidden: true,
-  children: [{
-    path: 'export-excel',
-    component: () => import('@/views/excel/exportExcel'),
-    name: 'ExportExcel',
-    meta: {
-      title: 'exportExcel'
-    }
-  },
-  {
-    path: 'export-selected-excel',
-    component: () => import('@/views/excel/selectExcel'),
-    name: 'SelectExcel',
-    meta: {
-      title: 'selectExcel'
-    }
-  },
-  {
-    path: 'upload-excel',
-    component: () => import('@/views/excel/uploadExcel'),
-    name: 'UploadExcel',
-    meta: {
-      title: 'uploadExcel'
-    }
-  }
-  ]
-},
-
-{
-  path: '/zip',
-  component: Layout,
-  redirect: '/zip/download',
-  alwaysShow: true,
-  meta: {
-    title: 'zip',
-    icon: 'zip'
-  },
-  hidden: true,
-  children: [{
-    path: 'download',
-    component: () => import('@/views/zip/index'),
-    name: 'ExportZip',
-    meta: {
-      title: 'exportZip'
-    }
-  }]
-},
-
-{
-  path: '/theme',
-  component: Layout,
-  redirect: 'noredirect',
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/theme/index'),
-    name: 'Theme',
-    meta: {
-      title: 'theme',
-      icon: 'theme'
-    }
-  }]
-},
-
-{
-  path: '/clipboard',
-  component: Layout,
-  redirect: 'noredirect',
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/clipboard/index'),
-    name: 'ClipboardDemo',
-    meta: {
-      title: 'clipboardDemo',
-      icon: 'clipboard'
-    }
-  }]
-},
-
-{
-  path: '/i18n',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () => import('@/views/i18n-demo/index'),
-    name: 'I18n',
-    meta: {
-      title: 'i18n',
-      icon: 'international'
-    }
-  }]
-},
-
-{
-  path: 'external-link',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: 'https://github.com/PanJiaChen/vue-element-admin',
-    meta: {
-      title: 'externalLink',
-      icon: 'link'
-    }
-  }]
-},
+  /** 路由引入**/
 
 {
   path: '*',

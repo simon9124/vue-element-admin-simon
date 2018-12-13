@@ -1,0 +1,88 @@
+@import '../variables.scss';
+
+.container /deep/ {
+  $white: nth($white, 1);
+  $gray: nth($grays, 1);
+  $blue: nth($blue, 2);
+  $background: nth($grays, 7);
+  height: 100%;
+
+  .bpmn-container {
+    .containers {
+      position: absolute;
+      background-color: $white;
+      width: 100%;
+      @media (min-width: $screen-sm-min) {
+        max-height: 350px
+      }
+      @media (min-width: $screen-md-min) {
+        max-height: 800px
+      }
+      @media (min-width: $screen-lg-min) {
+        max-height: 780px
+      }
+    }
+
+    .canvas {
+      background-color: $white;
+      .bjs-powered-by {
+        display: none;
+      }
+      width: 100%;
+      @media (min-width: $screen-sm-min) {
+        height: 350px
+      }
+      @media (min-width: $screen-md-min) {
+        height: 800px
+      }
+      @media (min-width: $screen-lg-min) {
+        height: 850px
+      }
+    }
+
+    .panel {
+      position: absolute;
+      right: 0;
+      top: 29px;
+      margin-right: 30px;
+      width: 300px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background-color: $white;
+      @media (min-width: $screen-sm-min) {
+        max-height: 350px
+      }
+      @media (min-width: $screen-md-min) {
+        max-height: 800px
+      }
+      @media (min-width: $screen-lg-min) {
+        max-height: 850px
+      }
+      .el-collapse-item__header {
+        padding-left: 10px;
+      }
+    }
+
+    .option {
+      position: absolute;
+      left: 120px;
+      top: 50px;
+      .el-button{
+        padding: 15px 15px 15px 15px;
+        font-size: 20px;
+        z-index: 0;
+      }
+      .upload {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+        left: 102px;
+        height: 53px;
+        width: 50px;
+        opacity: 0;
+        z-index: 10;
+      }
+    }
+  }
+}
