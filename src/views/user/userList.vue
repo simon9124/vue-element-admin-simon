@@ -108,7 +108,7 @@
                 </el-table-column>
                 <el-table-column label="地址"
                                  align="center"
-                                 width="400"
+                                 width="350"
                                  sortable="custom">
                   <!-- 地址栏添加行内编辑功能 -->
                   <template slot-scope="scope">
