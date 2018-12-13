@@ -130,7 +130,7 @@ export const asyncRouterMap = [{
   redirect: '/user/userList',
   meta: {
     title: 'user',
-    icon: 'lock',
+    icon: 'peoples',
     roles: ['admin', 'editor']
   },
   children: [{

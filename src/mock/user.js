@@ -47,5 +47,10 @@ export default {
     return {
       message: '删除成功！'
     }
+  },
+  batctDelete: () => {
+    return {
+      message: '删除成功！'
+    }
   }
 }

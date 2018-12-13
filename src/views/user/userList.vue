@@ -5,7 +5,7 @@
     <div class="content">
       <!-- 表格 -->
       <div class="content-spe">
-        <p class="content-spe-title">用户虚拟数据</p>
+        <p class="content-spe-title">用户列表</p>
         <div class="content-spe-element">
 
           <!-- 表格筛选 -->
@@ -29,10 +29,10 @@
               </el-form-item>
               <el-form-item label="用户状态："
                             prop="userStatus">
-                <component-select type="enable"
+                <!-- <component-select type="enable"
                                   defaultSelected=""
                                   isAll=true
-                                  model="center"></component-select>
+                                  model="center"></component-select> -->
                 <!-- @selectChangeCallBack="handleParamsChange" -->
               </el-form-item>
             </el-form>
@@ -71,8 +71,8 @@
                         :data="userData"
                         v-loading="tableDataLoading"
                         element-loading-text="数据加载中"
-                        element-loading-spinner="el-icon-loading">
-                <!-- @selection-change="handleSelectionChange" -->
+                        element-loading-spinner="el-icon-loading"
+                        @selection-change="handleSelectionChange">
                 <!-- @sort-change="handleSortChange" -->
                 <el-table-column width="50"
                                  type="selection"
@@ -204,7 +204,7 @@
 // import ComponentSelect from '@/components/ComponentSelect'
 import ComponentFilter from '@/components/ComponentFilter'
 // import { select } from '@/api/components/component'
-import { getUserList, updateUsers, deleteUser, batctExecute } from '@/api/user.js'
+import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
 
 export default {
   name: 'user-list',
@@ -254,7 +254,7 @@ export default {
       // })
       // 获取 & 加工表格数据
       getUserList(this).then(result => {
-        console.log(result)
+        // console.log(result)
         // 全部数据
         this.tableData = result.data.tableData.map(row => {
           this.$set(row, 'userId', row.userId - 100)
@@ -317,6 +317,10 @@ export default {
         })
       }).catch(() => { })
     },
+    // 选项发生变化
+    handleSelectionChange(value) {
+      this.multipleSelection = value
+    },
     // 批量操作数据
     batctExecute() {
       // 批量操作
@@ -324,7 +328,49 @@ export default {
       for (const select of this.multipleSelection) {
         delCodes.push(select.userCode)
       }
-      batctExecute(this)
+      // 如果没有选择数据
+      if (this.multipleSelection.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请选择数据！'
+        })
+        return
+      }
+      // 如果没有选择操作
+      else if (this.batchFilterData === '') {
+        this.$message({
+          type: 'warning',
+          message: '请选择批处理操作！'
+        })
+        return
+      }
+      // 如果选择“批量删除”
+      else if (this.batchFilterData === 'delete') {
+        this
+          .$confirm('确定删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+          .then(() => {
+            this.tableDataLoading = true
+            this.multipleSelection.forEach(row => {
+              deleteUser().then(result => {
+                const index = this.tableData.indexOf(row)
+                this.tableData.splice(index, 1)
+                this.refreshTable()
+              })
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+              })
+            })
+          }).catch(() => {
+          })
+          .finally(() => {
+            this.tableDataLoading = false
+          })
+      }
     }
   }
 }
