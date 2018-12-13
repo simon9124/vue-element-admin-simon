@@ -124,6 +124,26 @@ export const asyncRouterMap = [{
   ]
 },
 
+{
+  path: '/user',
+  component: Layout,
+  redirect: '/user/userList',
+  meta: {
+    title: 'user',
+    icon: 'lock',
+    roles: ['admin', 'editor']
+  },
+  children: [{
+    path: 'userList',
+    component: () => import('@/views/user/userList'),
+    name: 'user-list',
+    meta: {
+      title: 'userList',
+      roles: ['admin']
+    }
+  }]
+},
+
   /** 路由引入**/
 
 {
