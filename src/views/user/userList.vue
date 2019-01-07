@@ -11,29 +11,29 @@
           <!-- 表格筛选 -->
           <ComponentFilter>
             <el-form slot="filterForm"
-                     :model="filterFormData"
                      ref="filterFormData"
+                     :model="filterFormData"
                      label-width="70px"
                      label-position="left">
               <el-form-item label="用户名："
                             prop="userName">
                 <el-input v-model="filterFormData.userName"
-                          @keyup.enter.native="refreshTable"
-                          placeholder="请输入用户名"></el-input>
+                          placeholder="请输入用户名"
+                          @keyup.enter.native="refreshTable"></el-input>
               </el-form-item>
               <el-form-item label="用户手机："
                             prop="userMobile">
                 <el-input v-model="filterFormData.userMobile"
-                          @keyup.enter.native="refreshTable"
-                          placeholder="请输入内容"></el-input>
+                          placeholder="请输入内容"
+                          @keyup.enter.native="refreshTable"></el-input>
               </el-form-item>
               <el-form-item label="用户状态："
                             prop="userStatus">
-                <!-- <component-select type="enable"
+                            <!-- <component-select type="enable"
                                   defaultSelected=""
                                   isAll=true
                                   model="center"></component-select> -->
-                <!-- @selectChangeCallBack="handleParamsChange" -->
+                            <!-- @selectChangeCallBack="handleParamsChange" -->
               </el-form-item>
             </el-form>
             <el-button slot="refreshTable"
@@ -49,7 +49,7 @@
                        size="mini"
                        type="success"
                        plain>新增
-              <!-- @click="insert" -->
+                       <!-- @click="insert" -->
             </el-button>
           </ComponentFilter>
 
@@ -63,13 +63,14 @@
               </div>
             </div>
             <div class="table-content-spe">
-              <el-table stripe
+              <el-table v-loading="tableDataLoading"
+                        ref="multipleTable"
+                        :data="userData"
+                        stripe
                         fit
                         border
-                        ref="multipleTable"
+                        highlight-current-row
                         tooltip-effect="dark"
-                        :data="userData"
-                        v-loading="tableDataLoading"
                         element-loading-text="数据加载中"
                         element-loading-spinner="el-icon-loading"
                         @selection-change="handleSelectionChange">
@@ -82,7 +83,7 @@
                                  align="center"
                                  prop="userId"
                                  width="50">
-                </el-table-column> -->
+                  </el-table-column> -->
                 <el-table-column label="用户名"
                                  align="center"
                                  prop="userName"
@@ -114,7 +115,7 @@
                   <template slot-scope="scope">
                     <!-- 非编辑状态 -->
                     <span v-if="scope.row.edit === false">
-                      {{scope.row.userAddress}}
+                      {{ scope.row.userAddress }}
                       <i class="el-icon-edit edit"
                          @click="scope.row.edit = !scope.row.edit"></i>
                     </span>
@@ -147,7 +148,7 @@
                   <template slot-scope="scope">
                     <el-tag v-for="item in scope.row.userRoles"
                             :key="item.value"
-                            size="medium">{{item.roleName}}</el-tag>
+                            size="medium">{{ item.roleName }}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column label="头像"
@@ -165,14 +166,14 @@
                                  fixed="right"
                                  width="150">
                   <template slot-scope="scope">
-                    <!-- <el-tooltip content="编辑"
+                    <el-tooltip content="编辑"
                                 placement="left">
                       <el-button plain
                                  icon="el-icon-edit"
                                  size="mini"
                                  type="primary"
-                                 @click="edit(scope.row)"></el-button>
-                    </el-tooltip> -->
+                                 @click="update(scope.row)"></el-button>
+                    </el-tooltip>
                     <el-tooltip content="删除"
                                 placement="right">
                       <el-button plain
@@ -189,8 +190,8 @@
               <!--批量操作-->
               <el-select v-model="batchFilterData"
                          placeholder="批量操作">
-                <el-option label="批量删除"
-                           key="delete"
+                <el-option key="delete"
+                           label="批量删除"
                            value="delete">
                 </el-option>
 
@@ -201,12 +202,12 @@
                          class="table-content-page-search"
                          @click="batctExecute()">确定</el-button>
               <!--分页-->
-              <el-pagination @size-change="handleSizeChange"
-                             @current-change="handlePageChange"
-                             layout="total, sizes, prev, pager, next, jumper"
-                             :page-sizes="[10, 20, 30, 40, 50, 100]"
+              <el-pagination :page-sizes="[10, 20, 30, 40, 50, 100]"
                              :page-size="10"
-                             :total="tableData.length">
+                             :total="tableData.length"
+                             layout="total, sizes, prev, pager, next, jumper"
+                             @size-change="handleSizeChange"
+                             @current-change="handlePageChange">
               </el-pagination>
             </div>
           </div>
@@ -214,6 +215,27 @@
         </div>
       </div>
     </div>
+
+    <!-- 用户编辑dialog -->
+    <el-dialog :visible.sync="dialogVisible"
+               title="编辑用户">
+      <el-form v-model="userForm">
+        <el-form-item label="用户名"
+                      label-width="200px">
+          <el-input v-model="userForm.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域"
+                      label-width="200px">
+          <el-select v-model="userForm.userName"
+                     placeholder="请选择活动区域">
+            <el-option label="区域一"
+                       value="shanghai"></el-option>
+            <el-option label="区域二"
+                       value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
   </div>
 
@@ -223,9 +245,10 @@
 // import ComponentSelect from '@/components/ComponentSelect'
 import ComponentFilter from '@/components/ComponentFilter'
 import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
+import Sortable from 'sortablejs'
 
 export default {
-  name: 'user-list',
+  name: 'UserList',
   components: {
     // ComponentSelect,
     ComponentFilter
@@ -252,7 +275,10 @@ export default {
       // loading
       tableDataLoading: false,
       // 选项发生改变
-      multipleSelection: []
+      multipleSelection: [],
+      // dialog显示与否
+      dialogVisible: false,
+      userForm: {}
     }
   },
   watch: {
@@ -288,6 +314,10 @@ export default {
         this.userData =
           this.tableData.slice((this.pageNum - 1) * this.pageSize, this.pageNum * this.pageSize)
         console.log(this.userData)
+        // 拖拽排序功能
+        this.$nextTick(() => {
+          this.setSort()
+        })
       }).finally(() => {
         this.tableDataLoading = false
       })
@@ -316,6 +346,7 @@ export default {
         this.tableDataLoading = false
       })
     },
+    // 行内更新用户信息
     editInline(row) {
       this.tableDataLoading = true
       updateUsers(row).then(result => {
@@ -329,6 +360,11 @@ export default {
       }).finally(() => {
         this.tableDataLoading = false
       })
+    },
+    // 打开dialog更新用户信息
+    update(row) {
+      this.dialogVisible = true
+      this.userForm = row
     },
     // 删除1个用户
     del(row) {
@@ -368,17 +404,15 @@ export default {
           message: '请选择数据！'
         })
         return
-      }
-      // 如果没有选择操作
-      else if (this.batchFilterData === '') {
+      } else if (this.batchFilterData === '') {
+        // 如果没有选择操作
         this.$message({
           type: 'warning',
           message: '请选择批处理操作！'
         })
         return
-      }
-      // 如果选择“批量删除”
-      else if (this.batchFilterData === 'delete') {
+      } else if (this.batchFilterData === 'delete') {
+        // 如果选择“批量删除”
         this
           .$confirm('确定删除?', '提示', {
             confirmButtonText: '确定',
@@ -405,6 +439,30 @@ export default {
             this.tableDataLoading = false
           })
       }
+    },
+    // 拖拽排序
+    setSort() {
+      const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      this.sortable = Sortable.create(el, {
+        ghostClass: 'sortable-ghost',
+        // 解决Firefox bug，详见https://github.com/RubaXa/Sortable/issues/1012
+        setData: function(dataTransfer) {
+          dataTransfer.setData('Text', '')
+        },
+        onEnd: evt => {
+          // const array = [{ user: 1 }, { user: 2 }, { user: 3 }, { user: 4 }, { user: 5 }]
+          console.log(this.userData)
+          // const array = this.userData
+          // const targetRow = array.splice(evt.oldIndex, 1)[0]
+          // array.splice(evt.newIndex, 0, targetRow)
+          // console.log(array)
+
+          this.$message({
+            message: '重新排序成功!',
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }
@@ -412,6 +470,11 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import '~@/styles/smart-ui/smart-ui.scss';
+.sortable-ghost {
+  opacity: 0.8;
+  color: #fff !important;
+  background: #42b983 !important;
+}
 .el-table /deep/ {
   .el-table__row {
     .cell {
