@@ -445,22 +445,27 @@ export default {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost',
+        animation: 180,
+        delay: 0,
         // 解决Firefox bug，详见https://github.com/RubaXa/Sortable/issues/1012
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')
         },
         onEnd: evt => {
-          // const array = [{ user: 1 }, { user: 2 }, { user: 3 }, { user: 4 }, { user: 5 }]
+          console.log(evt)
+          //   // const array = [{ user: 1 }, { user: 2 }, { user: 3 }, { user: 4 }, { user: 5 }]
+          //   // console.log(this.userData)
+          //   // const array = this.userData
+          //   // const targetRow = array.splice(evt.oldIndex, 1)[0]
+          //   // array.splice(evt.newIndex, 0, targetRow)
+          //   // console.log(array)
+          // const currRow = this.userData.splice(evt.oldIndex, 1)[0]
+          // this.userData.splice(evt.newIndex, 0, currRow)
           console.log(this.userData)
-          // const array = this.userData
-          // const targetRow = array.splice(evt.oldIndex, 1)[0]
-          // array.splice(evt.newIndex, 0, targetRow)
-          // console.log(array)
-
-          this.$message({
-            message: '重新排序成功!',
-            type: 'success'
-          })
+          //   this.$message({
+          //     message: '重新排序成功!',
+          //     type: 'success'
+          //   })
         }
       })
     }
@@ -470,11 +475,6 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import '~@/styles/smart-ui/smart-ui.scss';
-.sortable-ghost {
-  opacity: 0.8;
-  color: #fff !important;
-  background: #42b983 !important;
-}
 .el-table /deep/ {
   .el-table__row {
     .cell {
