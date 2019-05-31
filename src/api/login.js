@@ -1,4 +1,6 @@
-import request from '@/utils/request'
+import {
+  request
+} from '@/utils'
 
 export function loginByUsername(username, password) {
   const data = {
@@ -23,7 +25,8 @@ export function getUserInfo(token) {
   return request({
     url: '/user/info',
     method: 'get',
-    params: { token }
+    params: {
+      token
+    }
   })
 }
-

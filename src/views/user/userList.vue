@@ -8,13 +8,14 @@
         <p class="content-spe-title">用户列表</p>
         <div class="content-spe-element">
 
-          <!-- 表格筛选 -->
+          <!-- table-filter -->
           <ComponentFilter>
             <el-form slot="filterForm"
                      ref="filterFormData"
                      :model="filterFormData"
-                     label-width="70px"
-                     label-position="left">
+                     :inline="true"
+                     label-width="90px"
+                     class="demo-form-inline">
               <el-form-item label="用户名："
                             prop="userName">
                 <el-input v-model="filterFormData.userName"
@@ -29,32 +30,40 @@
               </el-form-item>
               <el-form-item label="用户状态："
                             prop="userStatus">
-                            <!-- <component-select type="enable"
-                                  defaultSelected=""
-                                  isAll=true
-                                  model="center"></component-select> -->
-                            <!-- @selectChangeCallBack="handleParamsChange" -->
+                <CustomSelect ref="userStatusSelect"
+                              :options="userStatusOptions"
+                              type='userStatus'
+                              defaultSelected=""
+                              isAll='true'
+                              @selectChangeCallBack="handleParamsChange"></CustomSelect>
+              </el-form-item>
+              <el-form-item class="el-form-button">
+                <el-button icon="el-icon-search"
+                           size="mini"
+                           type="primary"
+                           plain
+                           @click="refreshTable">查询
+                </el-button>
+                <el-button icon="el-icon-plus"
+                           size="mini"
+                           type="success"
+                           plain>新增
+                  <!-- @click="insert" -->
+                </el-button>
+                <el-button icon="el-icon-refresh"
+                           size="mini"
+                           type="warning"
+                           plain
+                           @click="clear">清空
+                </el-button>
               </el-form-item>
             </el-form>
-            <el-button slot="refreshTable"
-                       icon="el-icon-search"
-                       size="mini"
-                       type="primary"
-                       plain
-                       @click="refreshTable">查询
-            </el-button>
-            <el-button slot="insert"
-                       class="buttonNewTableData"
-                       icon="el-icon-plus"
-                       size="mini"
-                       type="success"
-                       plain>新增
-                       <!-- @click="insert" -->
-            </el-button>
           </ComponentFilter>
 
-          <!-- 表格内容 -->
+          <!-- table-content -->
           <div class="table-content">
+
+            <!-- header -->
             <div class="table-content-header">
               <i class="el-icon-d-arrow-right"
                  style="font-size:16px"></i>
@@ -62,56 +71,40 @@
               <div class="table-content-header-search">
               </div>
             </div>
+
+            <!-- content -->
             <div class="table-content-spe">
               <el-table v-loading="tableDataLoading"
-                        ref="multipleTable"
-                        :data="userData"
                         stripe
                         fit
                         border
                         highlight-current-row
+                        :data="userList"
                         tooltip-effect="dark"
                         element-loading-text="数据加载中"
                         element-loading-spinner="el-icon-loading"
                         @selection-change="handleSelectionChange">
-                <!-- @sort-change="handleSortChange" -->
-                <el-table-column width="50"
+                <el-table-column width="40"
                                  type="selection"
                                  align="center">
                 </el-table-column>
-                <!-- <el-table-column label="id"
-                                 align="center"
-                                 prop="userId"
-                                 width="50">
-                  </el-table-column> -->
-                <el-table-column label="用户名"
-                                 align="center"
-                                 prop="userName"
-                                 width="150"
-                                 sortable="custom">
+
+                <!-- treeColumns -->
+                <el-table-column v-for="(column, index) in treeColumns"
+                                 :key="index"
+                                 :prop="column.prop"
+                                 :label="column.label"
+                                 :width="column.width?column.width:''"
+                                 :min-width="column.minWidth?column.minWidth:''"
+                                 :sortable="column.sortable"
+                                 align="center">
                 </el-table-column>
-                <el-table-column label="姓名"
-                                 align="center"
-                                 prop="userNickName"
-                                 width="120"
-                                 sortable="custom">
-                </el-table-column>
-                <el-table-column label="手机"
-                                 align="center"
-                                 prop="userMobile"
-                                 width="150"
-                                 sortable="custom">
-                </el-table-column>
-                <el-table-column label="邮箱"
-                                 align="center"
-                                 prop="userMail"
-                                 sortable="custom">
-                </el-table-column>
+
+                <!-- 地址：edit & update -->
                 <el-table-column label="地址"
                                  align="center"
-                                 width="350"
-                                 sortable="custom">
-                  <!-- 地址栏添加行内编辑功能 -->
+                                 min-width="350">
+
                   <template slot-scope="scope">
                     <!-- 非编辑状态 -->
                     <span v-if="scope.row.edit === false">
@@ -120,9 +113,9 @@
                          @click="scope.row.edit = !scope.row.edit"></i>
                     </span>
                     <!-- 编辑状态 -->
-                    <span v-else>
-                      <el-input v-model="scope.row.userAddress"
-                                style="width:280px"></el-input>
+                    <span v-else
+                          class="input-inline">
+                      <el-input v-model="scope.row.userAddress"></el-input>
                       <i class="el-icon-check check"
                          @click="editInline(scope.row)"></i>
                       <i class="el-icon-close close"
@@ -130,41 +123,49 @@
                     </span>
                   </template>
                 </el-table-column>
+
+                <!-- 状态：edit & update -->
                 <el-table-column label="状态"
                                  align="center"
-                                 width="50">
-                  <!-- 状态栏添加行内修改功能 -->
+                                 min-width="60">
                   <template slot-scope="scope">
                     <el-switch v-model="scope.row.userStatus"
-                               :active-value="1"
-                               :inactive-value="0"
+                               active-value="1"
+                               inactive-value="0"
                                @change="handleSwitchChange(scope.row)">
                     </el-switch>
                   </template>
                 </el-table-column>
-                <el-table-column label="权限"
+
+                <!-- 角色 -->
+                <el-table-column label="角色"
                                  align="center"
-                                 min-width="150">
+                                 min-width="360">
                   <template slot-scope="scope">
                     <el-tag v-for="item in scope.row.userRoles"
                             :key="item.value"
-                            size="medium">{{ item.roleName }}</el-tag>
+                            :disable-transitions="true">{{ item.roleName }}
+                    </el-tag>
                   </template>
                 </el-table-column>
+
+                <!-- 头像 -->
                 <el-table-column label="头像"
                                  align="center"
-                                 width="80">
+                                 width="50">
                   <template slot-scope="scope">
                     <img v-if="scope.row.userAvatar!=='' && scope.row.userAvatar!==undefined"
                          :src="scope.row.userAvatar"
-                         width="50"
-                         height="50">
+                         width="30"
+                         height="30">
                   </template>
                 </el-table-column>
+
+                <!-- 操作 -->
                 <el-table-column label="操作"
                                  align="center"
                                  fixed="right"
-                                 width="150">
+                                 min-width="150">
                   <template slot-scope="scope">
                     <el-tooltip content="编辑"
                                 placement="left">
@@ -186,29 +187,60 @@
                 </el-table-column>
               </el-table>
             </div>
-            <div class="table-content-page">
-              <!--批量操作-->
-              <el-select v-model="batchFilterData"
-                         placeholder="批量操作">
-                <el-option key="delete"
-                           label="批量删除"
-                           value="delete">
-                </el-option>
 
-              </el-select>
-              <el-button size="mini"
-                         type="primary"
-                         plain
-                         class="table-content-page-search"
-                         @click="batctExecute()">确定</el-button>
-              <!--分页-->
-              <el-pagination :page-sizes="[10, 20, 30, 40, 50, 100]"
-                             :page-size="10"
-                             :total="tableData.length"
-                             layout="total, sizes, prev, pager, next, jumper"
-                             @size-change="handleSizeChange"
-                             @current-change="handlePageChange">
-              </el-pagination>
+            <!-- page -->
+            <div class="table-content-page">
+              <el-row>
+                <!-- 批量操作 -->
+                <el-col :sm="24"
+                        :md="12"
+                        :lg="8">
+                  <el-select v-model="batchFilterData"
+                             class="table-content-page-batch"
+                             placeholder="批量操作">
+                    <el-option key="delete"
+                               label="批量删除"
+                               value="delete">
+                    </el-option>
+                  </el-select>
+                  <el-button size="mini"
+                             type="primary"
+                             plain
+                             class="table-content-page-search"
+                             @click="batcthExecute()">确定</el-button>
+                </el-col>
+
+                <!--分页-->
+                <el-col :lg="16"
+                        class="table-content-page-pagination hidden-md-and-down">
+                  <el-pagination layout="total, sizes, prev, pager, next, jumper"
+                                 @size-change="handleSizeChange"
+                                 :page-sizes="[10, 20, 30, 40, 50, 100]"
+                                 @current-change="handlePageChange"
+                                 :page-size="10"
+                                 :total="userListAll.length">
+                  </el-pagination>
+                </el-col>
+                <el-col :md="12"
+                        class="table-content-page-pagination hidden-lg-and-up hidden-sm-and-down">
+                  <el-pagination layout="prev, pager, next"
+                                 @size-change="handleSizeChange"
+                                 :page-size="10"
+                                 @current-change="handlePageChange"
+                                 :total="userListAll.length">
+                  </el-pagination>
+                </el-col>
+                <el-col :sm="24"
+                        class="table-content-page-pagination hidden-md-and-up">
+                  <el-pagination layout="prev, pager, next"
+                                 @size-change="handleSizeChange"
+                                 :page-size="10"
+                                 @current-change="handlePageChange"
+                                 :total="userListAll.length">
+                  </el-pagination>
+                </el-col>
+              </el-row>
+
             </div>
           </div>
 
@@ -242,38 +274,77 @@
 </template>
 
 <script>
-// import ComponentSelect from '@/components/ComponentSelect'
+// components
 import ComponentFilter from '@/components/ComponentFilter'
+import CustomSelect from '@/components/ComponentSelect/select'
+// api
 import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
-import Sortable from 'sortablejs'
 
 export default {
   name: 'UserList',
   components: {
-    // ComponentSelect,
+    CustomSelect,
     ComponentFilter
   },
   data() {
     return {
-      // 默认排序
-      defaultSort:
-        "[{'prop':'userName', 'order':'asc' },{ 'prop': 'userMobile', 'order': 'asc'}]",
-      // 原始数据
-      tableData: [],
-      // 要渲染的数据
-      userData: [],
+      // loading
+      tableDataLoading: false,
+      // 表格原始数据
+      tableData: {},
+      // 用户list数据 - 筛选后所有
+      userListAll: [],
+      // 用户list数据 - 当前页面
+      userList: [],
+      // 表格列项
+      treeColumns: [
+        {
+          prop: 'userName',
+          label: '用户名',
+          minWidth: 150,
+          sortable: true
+        },
+        {
+          prop: 'userNickName',
+          label: '姓名',
+          minWidth: 100,
+          sortable: true
+        },
+        {
+          prop: 'userMobile',
+          label: '手机号',
+          minWidth: 120,
+          sortable: true
+        },
+        {
+          prop: 'userMail',
+          label: '邮箱',
+          minWidth: 180
+        }
+      ],
       // 初始化页码
       pageNum: 1,
       // 初始化每页显示数量
       pageSize: 10,
       // 筛选
-      filterFormData: {},
+      filterFormData: {
+        userName: '',
+        userMobile: '',
+        userStatus: ''
+      },
+      // 顶部筛选项
+      userStatusOptions: [
+        {
+          label: '有效',
+          value: 1
+        },
+        {
+          label: '冻结',
+          value: 0
+        }
+      ],
       // 批量操作筛选
       batchFilterData: '',
-      // 下拉列表选项
-      statusOptions: [],
-      // loading
-      tableDataLoading: false,
       // 选项发生改变
       multipleSelection: [],
       // dialog显示与否
@@ -281,117 +352,116 @@ export default {
       userForm: {}
     }
   },
-  watch: {
-    $route(to, from) {
-      this.init()
-    }
-  },
   created() {
     this.init()
   },
   methods: {
-    // 页面初始化
-    init() {
-      // 获取 & 加工表格数据
-      getUserList(this).then(result => {
-        // 全部数据
-        this.tableData = result.data.tableData.map(row => {
-          this.$set(row, 'userId', row.userId - 100)
-          return row
-        })
-        this.tableData = result.data.tableData.map(row => {
-          this.$set(row, 'edit', false)
-          return row
-        })
-        this.refreshTable()
-      }).finally(() => {
-        this.tableDataLoading = false
+    // 表格数据初始化
+    async init() {
+      this.tableData = (await getUserList(this)).data.tableData
+      this.tableData.list.map(row => {
+        this.$set(row, 'edit', false)
+        return row
       })
+      this.refreshTable()
+      this.tableDataLoading = false
+    },
+    // 顶部筛选
+    handleParamsChange(value) {
+      switch (value.type) {
+        case 'userStatus':
+          this.filterFormData.userStatus = value.value
+          break
+      }
+      this.refreshTable()
     },
     // 根据条件渲染页面数据
     refreshTable() {
-      getUserList(this).then(result => {
-        this.userData =
-          this.tableData.slice((this.pageNum - 1) * this.pageSize, this.pageNum * this.pageSize)
-        console.log(this.userData)
-        // 拖拽排序功能
-        this.$nextTick(() => {
-          this.setSort()
-        })
-      }).finally(() => {
-        this.tableDataLoading = false
+      // 全部符合筛选条件的用户 -> 计总数用
+      this.userListAll = this.tableData.list.filter(row => {
+        if (
+          row.userName.indexOf(this.filterFormData.userName) > -1 &&
+          row.userMobile.indexOf(this.filterFormData.userMobile) > -1 &&
+          row.userStatus.indexOf(this.filterFormData.userStatus.toString()) > -1
+        ) {
+          return row
+        }
       })
+      // 在页面要显示的用户
+      this.userList = this.userListAll.slice(
+        (this.pageNum - 1) * this.pageSize,
+        this.pageNum * this.pageSize
+      )
     },
-    // 页码变化
+    // 清空筛选
+    clear() {
+      this.filterFormData = {
+        userName: '',
+        userMobile: '',
+        userStatus: ''
+      }
+      this.$refs.userStatusSelect.handleSelectChange('')
+      this.refreshTable()
+    },
+    // 分页-跳页
     handlePageChange(pageNum) {
       this.pageNum = pageNum
       this.refreshTable()
     },
-    // 每页显示数量变化
+    // 分页-改变页显示数
     handleSizeChange(pageSize) {
       this.pageSize = pageSize
       this.refreshTable()
     },
-    // 更新用户状态
-    handleSwitchChange(row) {
-      this.tableDataLoading = true
-      updateUsers(row).then(result => {
-        // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
-        this.$set(row, 'userStatus', row.userStatus)
-        this.$message({
-          message: result.data.message,
-          type: 'success'
-        })
-      }).finally(() => {
-        this.tableDataLoading = false
+    // 行内更新用户状态
+    async handleSwitchChange(row) {
+      const resultMessage = (await updateUsers(row)).data.message
+      // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
+      this.$set(row, 'userStatus', row.userStatus)
+      this.$message({
+        message: resultMessage,
+        type: 'success'
       })
     },
     // 行内更新用户信息
-    editInline(row) {
-      this.tableDataLoading = true
-      updateUsers(row).then(result => {
-        // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
-        this.$set(row, 'userAddress', row.userAddress)
-        this.$message({
-          message: result.data.message,
-          type: 'success'
-        })
-        row.edit = !row.edit
-      }).finally(() => {
-        this.tableDataLoading = false
+    async editInline(row) {
+      const resultMessage = (await updateUsers(row)).data.message
+      // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
+      this.$set(row, 'userAddress', row.userAddress)
+      this.$message({
+        message: resultMessage,
+        type: 'success'
       })
+      row.edit = !row.edit
     },
     // 打开dialog更新用户信息
     update(row) {
       this.dialogVisible = true
       this.userForm = row
     },
-    // 删除1个用户
-    del(row) {
-      this.$confirm('确认删除该用户吗?', '提示', {
+    // 按钮 - 删除
+    async del(row) {
+      const res = await this.$confirm('确认删除该用户吗？', '提示', {
         type: 'warning'
-      }).then(() => {
-        this.tableDataLoading = true
-        deleteUser().then(result => {
-          // 前端虚拟删除操作 -> 根据row的下标删除该row
-          const index = this.tableData.indexOf(row)
-          this.tableData.splice(index, 1)
-          this.refreshTable()
-          this.$message({
-            message: result.data.message,
-            type: 'success'
-          })
-        }).finally(() => {
-          this.tableDataLoading = false
+      }).catch(() => {})
+      if (res === 'confirm') {
+        // 前端虚拟删除操作 -> 根据row的下标删除该row
+        const resultMessage = (await deleteUser(row)).data.message
+        const index = this.tableData.list.indexOf(row)
+        this.tableData.list.splice(index, 1)
+        this.refreshTable()
+        this.$message({
+          message: resultMessage,
+          type: 'success'
         })
-      }).catch(() => { })
+      }
     },
-    // 选项发生变化
+    // 选项发生变化 - 左下多选
     handleSelectionChange(value) {
       this.multipleSelection = value
     },
     // 批量操作数据
-    batctExecute() {
+    async batcthExecute() {
       // 将选择的数据放在delCodes数组中
       const delCodes = []
       for (const select of this.multipleSelection) {
@@ -412,62 +482,29 @@ export default {
         })
         return
       } else if (this.batchFilterData === 'delete') {
-        // 如果选择“批量删除”
-        this
-          .$confirm('确定删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
+        // 如果选择 "批量删除"
+        const res = await this.$confirm('确认删除？', '提示', {
+          type: 'warning'
+        }).catch(() => {})
+        if (res === 'confirm') {
+          // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
+          this.multipleSelection.forEach(async row => {
+            await deleteUser()
+            const index = this.tableData.list.indexOf(row)
+            this.tableData.list.splice(index, 1)
+            this.refreshTable()
           })
-          .then(() => {
-            this.tableDataLoading = true
-            // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
-            this.multipleSelection.forEach(row => {
-              deleteUser().then(result => {
-                const index = this.tableData.indexOf(row)
-                this.tableData.splice(index, 1)
-                this.refreshTable()
-              })
-              this.$message({
-                message: '删除成功！',
-                type: 'success'
-              })
-            })
-          }).catch(() => {
+          this.$message({
+            message: '删除成功！',
+            type: 'success'
           })
-          .finally(() => {
-            this.tableDataLoading = false
-          })
-      }
-    },
-    // 拖拽排序
-    setSort() {
-      const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-      this.sortable = Sortable.create(el, {
-        ghostClass: 'sortable-ghost',
-        animation: 180,
-        delay: 0,
-        // 解决Firefox bug，详见https://github.com/RubaXa/Sortable/issues/1012
-        setData: function(dataTransfer) {
-          dataTransfer.setData('Text', '')
-        },
-        onEnd: evt => {
-          console.log(evt)
-          //   // const array = [{ user: 1 }, { user: 2 }, { user: 3 }, { user: 4 }, { user: 5 }]
-          //   // console.log(this.userData)
-          //   // const array = this.userData
-          //   // const targetRow = array.splice(evt.oldIndex, 1)[0]
-          //   // array.splice(evt.newIndex, 0, targetRow)
-          //   // console.log(array)
-          // const currRow = this.userData.splice(evt.oldIndex, 1)[0]
-          // this.userData.splice(evt.newIndex, 0, currRow)
-          console.log(this.userData)
-          //   this.$message({
-          //     message: '重新排序成功!',
-          //     type: 'success'
-          //   })
         }
-      })
+      }
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.init()
     }
   }
 }
@@ -475,31 +512,4 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import '~@/styles/smart-ui/smart-ui.scss';
-.el-table /deep/ {
-  .el-table__row {
-    .cell {
-      padding: 0;
-      .edit,
-      .check,
-      .close {
-        font-size: 16px;
-      }
-      .edit {
-        color: #409eff;
-        text-decoration: underline;
-      }
-      .check {
-        border: 1px solid #67c23a;
-        color: #67c23a;
-      }
-      .close {
-        border: 1px solid #f56c6c;
-        color: #f56c6c;
-      }
-    }
-    .el-tag:not(:first-child) {
-      margin-left: 5px;
-    }
-  }
-}
 </style>

@@ -12,7 +12,7 @@ $blue: nth($blue, 2);
 
 .el-input,
 .el-select,
-.el-pagination,
+// .el-pagination,
 .el-button {
   height: 32px;
   vertical-align: middle;
@@ -38,7 +38,7 @@ $blue: nth($blue, 2);
 // 穿透
 .el-input /deep/ input,
 .el-select /deep/ input,
-.el-pagination /deep/ input,
+// .el-pagination /deep/ input,
 .el-textarea /deep/ textarea {
   outline: 0;
   border-radius: 0 !important;
@@ -51,17 +51,25 @@ $blue: nth($blue, 2);
   vertical-align: middle;
 }
 
-.el-pagination /deep/ .el-pagination__jump {
-  height: 32px;
-  margin-top: -2px;
-  margin-left: 15px;
+/*去掉谷歌，火狐下的type="number"中的右边箭头*/
+.el-input /deep/ {
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 }
 
 // 页面
-.container {
+.container /deep/ {
   margin-bottom: 0px !important;
   padding: 30px 30px 30px 30px;
   background: unquote('#f0f2f5');
+  // background: #000;
   position: relative;
 
   .intro {
@@ -72,32 +80,27 @@ $blue: nth($blue, 2);
     color: $white;
   }
 
-  &-big {
+  .container-big {
     font: bold 24px 微软雅黑;
+  }
+
+  .dialog-transfer {
+    .el-tag {
+      margin-left: 5px;
+    }
   }
 
   margin-bottom: 20px;
 }
 
-.content {
+.content /deep/ {
   @media (min-width: $screen-sm-min) {
-    min-height: 350px;
+    min-height: 100%;
   }
-  @media (min-width: $screen-md-min) {
-    min-height: 540px;
-  }
-  @media (min-width: $screen-lg-min) {
-    min-height: 820px;
-  }
+
   .content-spe {
     @media (min-width: $screen-sm-min) {
-      min-height: 350px;
-    }
-    @media (min-width: $screen-md-min) {
-      min-height: 540px;
-    }
-    @media (min-width: $screen-lg-min) {
-      min-height: 820px;
+      min-height: 100%;
     }
 
     margin-bottom: 1px;
@@ -115,6 +118,77 @@ $blue: nth($blue, 2);
 
     &-element {
       padding: 0 20px 20px 20px;
+
+      .table-tree-container {
+        padding: 10px 0 20px;
+
+        .addPerson {
+          padding: 20px 20px 0 20px;
+
+          .el-button {
+            margin-bottom: 20px
+          }
+        }
+      }
+
+      .table-content {
+        &-nojobs {
+          padding: 20px;
+          font-size: 14px;
+        }
+
+        &-container {
+          border: 1px solid #e6e6e6;
+          margin-bottom: 20px;
+
+          &-table {
+            .el-table {
+              border: none;
+            }
+
+            &-buttons {
+              float: right;
+              margin: 20px 0;
+            }
+          }
+
+          &-result {
+
+            &-title {
+              margin: 0;
+              padding: 12px;
+              border-left: 1px solid #e6e6e6;
+            }
+
+            &-content {
+              height: 205px;
+              margin: 0;
+              padding: 10px;
+              background: #000;
+              color: #fff;
+            }
+          }
+        }
+
+        &-submit {
+          margin-top: 15px;
+
+          .el-button {
+            height: 40px;
+          }
+        }
+      }
+
+    }
+  }
+
+  .job-container {
+    .el-aside {
+      width: auto !important;
+
+      &>div {
+        margin: 15px 10px;
+      }
     }
   }
 }
@@ -172,67 +246,31 @@ $blue: nth($blue, 2);
     }
   }
 
-  &-content {
-    background: $white;
-    padding: 0 25px;
-    vertical-align: middle;
+  &-content /deep/ {
+    padding: 20px 10px 10px 10px;
     border-top: 1px solid $gray;
 
-    .el-button {
-      height: 35px;
-    }
-
-    &-inner {
-      margin: 20px 0;
-    }
-
     .el-form {
-      display: inline-block;
-      margin-right: 10px;
-
       &-item {
-        display: inline-block;
-        height: 32px;
-        margin: 0;
+        width: 280px;
 
-        &:not(:first-child) {
-          margin-left: 20px;
+        &__content {
+          width: 180px;
+
+          .el-date-editor {
+            width: 180px;
+          }
         }
       }
 
-      /deep/ label {
-        font-weight: normal;
-        padding: 0;
-        line-height: 32px;
+      .el-form-button {
+        margin-left: 20px;
+        width: auto;
+
+        .el-form-item__content {
+          width: auto;
+        }
       }
-
-      .el-input,
-      .el-select {
-        margin-top: -8px;
-        width: 150px;
-      }
-    }
-
-    span {
-      margin-right: 10px;
-    }
-
-    &-result {
-      padding: 3px 10px;
-      background: $white;
-      border: 1px solid $gray;
-
-      &:hover {
-        background: unquote('#f0f2f5');
-        cursor: pointer;
-      }
-
-      display: inline-block;
-      height: 32px;
-    }
-
-    .buttonNewTableData {
-      float: right;
     }
   }
 }
@@ -291,7 +329,7 @@ $blue: nth($blue, 2);
 
 
 // 表格
-.table-content {
+.table-content /deep/ {
   padding-bottom: 20px;
 
   .table-content-header {
@@ -330,19 +368,16 @@ $blue: nth($blue, 2);
         }
       }
     }
+
+    .table-radios {
+      &-tag {
+        margin-top: 10px;
+      }
+    }
   }
 
   /*动态表格*/
   .table-grid-contain {
-    .table-content-spe {
-      .el-table--border {
-        border-top: 1px solid $gray;
-        border-left: 1px solid $gray;
-        border-right: 1px solid $gray;
-        border-bottom: 0px solid $gray;
-      }
-    }
-
     .table-footer-container {
       border-left: 1px solid $gray;
       border-right: 1px solid $gray;
@@ -351,11 +386,47 @@ $blue: nth($blue, 2);
   }
 
   .table-content-spe {
-    .el-table--border {
-      border-top: 1px solid $gray;
-      border-left: 1px solid $gray;
-      border-right: 1px solid $gray;
-      border-bottom: 0px solid $gray;
+    .el-table__row {
+      .cell {
+        white-space: nowrap;
+        padding: 0;
+
+        .edit,
+        .check,
+        .close {
+          font-size: 16px;
+        }
+
+        .edit {
+          color: #409eff;
+          text-decoration: underline;
+        }
+
+        .check {
+          border: 1px solid #67c23a;
+          color: #67c23a;
+        }
+
+        .close {
+          border: 1px solid #f56c6c;
+          color: #f56c6c;
+        }
+
+        .input-inline {
+          .el-input {
+            width: 280px;
+            height: 30px;
+
+            input {
+              height: 30px;
+            }
+          }
+        }
+
+        div {
+          white-space: nowrap;
+        }
+      }
     }
 
     .inline-edit {
@@ -370,37 +441,70 @@ $blue: nth($blue, 2);
     .el-input {
       width: 50%;
 
-      & /deep/ input {
-        float: left;
+      input {
         text-align: center;
         display: inline-block;
       }
     }
 
+    .el-row {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .el-tag {
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+    }
+
+    .el-button {
+      height: 30px;
+    }
+
     .buttonSort {
-      float: right;
       display: inline-block;
+      width: 30px;
+      padding: 0;
+    }
+
+    .el-table__expanded-cell {
+      padding: 0;
+
+      .el-table {
+        margin-left: 47px;
+        border-left: 1px solid #EBEEF5;
+      }
+
+      .el-form {
+        padding: 20px 50px;
+      }
+    }
+
+    .tableIn-button {
+      height: 40px;
+      margin-top: 20px;
     }
   }
 
   .table-content-page {
-    vertical-align: middle;
-    padding: 12px 20px 12px 20px;
-    border-left: 1px solid $gray;
-    border-right: 1px solid $gray;
-    border-bottom: 1px solid $gray;
+    padding: 12px 20px 2px 20px;
+    border: 1px solid $gray;
+    border-top: none;
 
     &-search {
       margin-left: 5px;
     }
 
-    .el-button {
-      margin-top: -1px;
+    &-pagination {
+      text-align: right;
     }
 
-    .el-pagination {
-      display: inline-block;
-      float: right;
+    .el-col {
+      margin-bottom: 10px;
     }
   }
 }
@@ -499,6 +603,45 @@ $blue: nth($blue, 2);
 
 .form-content {
   margin-top: 30px;
+
+  .el-form {
+
+    .form-content-row {
+      margin-bottom: 20px;
+    }
+
+    .form-content-center {
+      // border: 1px solid #000;
+
+      &-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 15px 0;
+        background: #409EFF;
+        color: #fff;
+      }
+
+      &-content {
+        padding: 20px 30px 10px 0;
+        border: 1px solid #dcdfe6;
+        border-top: none;
+      }
+
+      .remarks {
+        border: 1px solid #dcdfe6;
+      }
+    }
+
+    .approve {
+      margin-top: 15px;
+    }
+
+    &-col-block {
+      height: 30px;
+    }
+  }
+
 
   &-header {
     background: unquote('#f2f2f2');
@@ -626,6 +769,25 @@ $blue: nth($blue, 2);
   }
 }
 
+// 主流程展开项
+.block-plus /deep/ {
+  font-size: 16px;
+
+  .block-plus-form {
+    color: unquote('#99a9bf');
+  }
+
+  .el-form-item {
+    height: 30px;
+    margin: 0 15px 5px 0;
+
+    &__content {
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
+
 // 富文本
 .el-form /deep/ .mce-fullscreen {
   z-index: 1002;
@@ -679,7 +841,7 @@ $blue: nth($blue, 2);
 // codeMirror
 .vue-codemirror-wrap /deep/ {
   .CodeMirror {
-    height: 600px;
+    height: 400px;
     overflow: auto;
     overflow-x: hidden;
   }
@@ -763,6 +925,59 @@ $blue: nth($blue, 2);
   }
 }
 
+// 检索
+.plan-search /deep/ {
+  .content-spe {
+    // padding: 20px;
+    padding-bottom: 10px;
+
+    .plan-search-input {
+      width: 500px;
+    }
+
+    .el-input {
+      display: table;
+
+      &-group__prepend {
+        width: 80px;
+      }
+    }
+
+    .plan-search-result {
+      margin-left: 20px;
+
+      &-list {
+        margin-top: 20px;
+        letter-spacing: 1px;
+
+        &-user {
+          margin-left: 30px;
+        }
+
+        a {
+          color: $blue;
+        }
+
+        &-content {
+          margin-top: 5px;
+          text-align: justify;
+          line-height: 20px;
+        }
+      }
+
+      .el-pagination {
+        float: none;
+        text-align: left;
+        margin-top: 20px;
+
+        .btn-prev {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
 // 滚动条样式
 .CodeMirror-vscrollbar::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -814,5 +1029,20 @@ $blue: nth($blue, 2);
   &-mask-enter,
   &-mask-leave-to {
     opacity: 0;
+  }
+}
+
+// dialog
+.container /deep/,
+.bpmn-container /deep/ {
+  .el-dialog {
+    .el-dialog__body {
+      box-sizing: content-box !important;
+    }
+
+    .deploy {
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
   }
 }

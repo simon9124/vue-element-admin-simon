@@ -5,29 +5,30 @@
   <div class="table-filter">
     <div class="table-filter-header">
       <svg-icon icon-class="filter" />
-      <span>{{ filterName }}</span>
+      <span>{{filterName}}</span>
       <div class="table-filter-header-search">
-        <el-button v-show="isShowFilter"
-                   v-model="isShowFilter"
-                   size="mini"
+        <el-button size="mini"
                    icon="double_arrow_up"
-                   @click="toggleFilter">
-          <i class="el-icon-arrow-down"></i>
-          {{ filterClose }}</el-button>
-        <el-button v-show="!isShowFilter"
                    v-model="isShowFilter"
-                   size="mini"
+                   v-show="isShowFilter"
                    @click="toggleFilter">
-          <i class="el-icon-arrow-up"></i>
-          {{ filterOpen }}</el-button>
+          <!-- <i class="icon iconfont el-icon-z045"></i> -->
+          <svg-icon icon-class="double_arrow_up"
+                    style="font-size:12px" /> {{filterClose}}</el-button>
+        <el-button size="mini"
+                   v-model="isShowFilter"
+                   v-show="!isShowFilter"
+                   @click="toggleFilter">
+          <svg-icon icon-class="double_arrow_down"
+                    style="font-size:12px" /> {{filterOpen}}</el-button>
         <!-- <el-button size="mini"
                    class="table-filter-header-search-advanced"
                    @click="openFilterAdvanced($event)">高级检索</el-button> -->
       </div>
     </div>
     <el-collapse-transition>
-      <div v-show="isShowFilter"
-           class="table-filter-content">
+      <div class="table-filter-content"
+           v-show="isShowFilter">
         <div class="table-filter-content-inner">
           <slot name="filterForm"></slot>
           <slot name="refreshTable"></slot>
@@ -47,7 +48,7 @@ export default {
       isShowFilter: true
     }
   },
-  created() { },
+  created() {},
   props: {
     // 筛选名称
     filterName: {

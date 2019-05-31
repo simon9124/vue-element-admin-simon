@@ -15,9 +15,10 @@ Mock.XHR.prototype.send = function() {
   this.proxy_send(...arguments)
 }
 
-// Mock.setup({
-//   timeout: '350-600'
-// })
+// 延时
+Mock.setup({
+  timeout: '350-600'
+})
 
 // 登录相关
 Mock.mock(/\/login\/login/, 'post', loginAPI.loginByUsername)

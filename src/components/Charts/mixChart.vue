@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div :class="className" :id="id" :style="{height:height,width:width}"></div>
 </template>
 
 <script>
@@ -75,10 +75,8 @@ export default {
           }
         },
         grid: {
-          left: '5%',
-          right: '5%',
           borderWidth: 0,
-          top: 150,
+          top: 110,
           bottom: 95,
           textStyle: {
             color: '#fff'

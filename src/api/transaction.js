@@ -1,4 +1,6 @@
-import request from '@/utils/request'
+import {
+  request
+} from '@/utils'
 
 export function fetchList(query) {
   return request({

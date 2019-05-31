@@ -1,28 +1,47 @@
 <template>
-  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
-    <el-table-column v-if="columns.length===0" width="150">
+  <!-- <el-table :data="data" -->
+  <el-table :data="formatData"
+            :row-style="showRow"
+            v-bind="$attrs">
+    <el-table-column v-if="columns.length===0"
+                     width="150">
       <template slot-scope="scope">
-        <span v-for="space in scope.row._level" :key="space" class="ms-tree-space"/>
-        <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
-          <i v-if="!scope.row._expanded" class="el-icon-plus"/>
-          <i v-else class="el-icon-minus"/>
+        <span v-for="space in scope.row._level"
+              class="ms-tree-space"
+              :key="space"></span>
+        <span class="tree-ctrl"
+              v-if="iconShow(0,scope.row)"
+              @click="toggleExpanded(scope.$index)">
+          <i v-if="!scope.row._expanded"
+             class="el-icon-plus"></i>
+          <i v-else
+             class="el-icon-minus"></i>
         </span>
-        {{ scope.$index }}
+        {{scope.$index}}
       </template>
     </el-table-column>
-    <el-table-column v-for="(column, index) in columns" v-else :key="column.value" :label="column.text" :width="column.width">
+    <el-table-column v-else
+                     v-for="(column, index) in columns"
+                     :key="column.value"
+                     :label="column.text"
+                     :width="column.width">
       <template slot-scope="scope">
-        <!-- Todo -->
-        <!-- eslint-disable-next-line vue/no-confusing-v-for-v-if -->
-        <span v-for="space in scope.row._level" v-if="index === 0" :key="space" class="ms-tree-space"/>
-        <span v-if="iconShow(index,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
-          <i v-if="!scope.row._expanded" class="el-icon-plus"/>
-          <i v-else class="el-icon-minus"/>
+        <span v-if="index === 0"
+              v-for="space in scope.row._level"
+              class="ms-tree-space"
+              :key="space"></span>
+        <span class="tree-ctrl"
+              v-if="iconShow(index,scope.row)"
+              @click="toggleExpanded(scope.$index)">
+          <i v-if="!scope.row._expanded"
+             class="el-icon-plus"></i>
+          <i v-else
+             class="el-icon-minus"></i>
         </span>
-        {{ scope.row[column.value] }}
+        {{scope.row[column.value]}}
       </template>
     </el-table-column>
-    <slot/>
+    <slot></slot>
   </el-table>
 </template>
 
@@ -33,9 +52,8 @@
 */
 import treeToArray from './eval'
 export default {
-  name: 'TreeTable',
+  name: 'treeTable',
   props: {
-    /* eslint-disable */
     data: {
       type: [Array, Object],
       required: true
@@ -61,15 +79,25 @@ export default {
         tmp = this.data
       }
       const func = this.evalFunc || treeToArray
-      const args = this.evalArgs ? Array.concat([tmp, this.expandAll], this.evalArgs) : [tmp, this.expandAll]
+      const args = this.evalArgs
+        ? Array.concat([tmp, this.expandAll], this.evalArgs)
+        : [tmp, this.expandAll]
       return func.apply(null, args)
     }
   },
+  created() {
+    console.log(this.data)
+    // console.log(this.formatData)
+  },
   methods: {
     showRow: function(row) {
-      const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
+      const show = row.row.parent
+        ? row.row.parent._expanded && row.row.parent._show
+        : true
       row.row._show = show
-      return show ? 'animation:treeTableShow 1s;-webkit-animation:treeTableShow 1s;' : 'display:none;'
+      return show
+        ? 'animation:treeTableShow 1s;-webkit-animation:treeTableShow 1s;'
+        : 'display:none;'
     },
     // 切换下级是否展开
     toggleExpanded: function(trIndex) {
@@ -78,50 +106,58 @@ export default {
     },
     // 图标显示
     iconShow(index, record) {
-      return (index === 0 && record.children && record.children.length > 0)
+      return index === 0 && record.children && record.children.length > 0
     }
   }
 }
 </script>
 <style rel="stylesheet/css">
-  @keyframes treeTableShow {
-    from {opacity: 0;}
-    to {opacity: 1;}
+@keyframes treeTableShow {
+  from {
+    opacity: 0;
   }
-  @-webkit-keyframes treeTableShow {
-    from {opacity: 0;}
-    to {opacity: 1;}
+  to {
+    opacity: 1;
   }
+}
+@-webkit-keyframes treeTableShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 </style>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  $color-blue: #2196F3;
-  $space-width: 18px;
-  .ms-tree-space {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    width: $space-width;
-    height: 14px;
-    &::before {
-      content: ""
-    }
+$color-blue: #2196f3;
+$space-width: 18px;
+.ms-tree-space {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  width: $space-width;
+  height: 14px;
+  &::before {
+    content: '';
   }
-  .processContainer{
-    width: 100%;
-    height: 100%;
-  }
-  table td {
-    line-height: 26px;
-  }
+}
+.processContainer {
+  width: 100%;
+  height: 100%;
+}
+table td {
+  line-height: 26px;
+}
 
-  .tree-ctrl{
-    position: relative;
-    cursor: pointer;
-    color: $color-blue;
-    margin-left: -$space-width;
-  }
+.tree-ctrl {
+  position: relative;
+  cursor: pointer;
+  color: $color-blue;
+  margin-left: -$space-width;
+}
 </style>

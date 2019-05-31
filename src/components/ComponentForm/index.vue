@@ -7,7 +7,10 @@
   <div class="content">
     <!-- 用户编辑 -->
     <div class="content-spe">
-      <p class="content-spe-title">{{name}}编辑</p>
+      <p v-if="titleShow"
+         class="content-spe-title">{{name}}编辑</p>
+      <p v-if="spareTitleShow"
+         class="content-spe-title">{{name}}</p>
       <div class="content-spe-element">
         <!-- 表单 -->
         <div class="form-filter">
@@ -16,7 +19,8 @@
           <div class="form-filter-header">
             <div v-if="this.isEdit">
               <svg-icon icon-class="edit" />
-              <span>编辑{{name}}</span>
+              <span v-if="titleShow">编辑{{name}}</span>
+              <span v-if="spareTitleShow">{{name}}</span>
             </div>
             <div v-else>
               <svg-icon icon-class="add" />
@@ -93,6 +97,16 @@ export default {
     },
     // 是否显示展开按钮，默认false
     isShowFilterContent: {
+      Boolean,
+      default: false
+    },
+    // 标题是否显示，默认true
+    titleShow: {
+      Boolean,
+      default: true
+    },
+    // 备用标题显示（非编辑），默认false
+    spareTitleShow: {
       Boolean,
       default: false
     }

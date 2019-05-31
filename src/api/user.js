@@ -1,4 +1,6 @@
-import request from '@/utils/request'
+import {
+  request
+} from '@/utils'
 
 // 获取用户数据（全部）
 export function getUserList(_this) {

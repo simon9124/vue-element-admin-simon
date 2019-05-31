@@ -1,10 +1,11 @@
 import Mock from 'mockjs'
 
-const userList = []
+// const userData = {}
+const list = []
 const count = 45
 
 for (let i = 0; i < count; i++) {
-  userList.push(Mock.mock({
+  list.push(Mock.mock({
     // 自增id
     // 'userId|+1': 1,
     userId: '@increment',
@@ -27,15 +28,20 @@ for (let i = 0; i < count; i++) {
     // Random.dataImage( size, text ) 生成一段随机的 Base64 图片编码
     // userAvatar: +Mock.Random.dataImage('50x50', '#FF6600'),
     userAvatar: "@dataImage('50x50', '头像')",
-    'userStatus|1': ['0', '1']
+    // 'userStatus|1': ['0', '1']
+    'userStatus|1': ['1']
   }))
+}
+
+const tableData = {
+  list: list,
+  total: list.length
 }
 
 export default {
   getUserList: () => {
     return {
-      total: userList.length,
-      tableData: userList
+      tableData
     }
   },
   updateUsers: () => {
@@ -44,11 +50,6 @@ export default {
     }
   },
   deleteUser: () => {
-    return {
-      message: '删除成功！'
-    }
-  },
-  batctDelete: () => {
     return {
       message: '删除成功！'
     }

@@ -1,103 +1,28 @@
 <template>
-  <div :class="computedClasses" class="material-input__component">
+  <div class="material-input__component" :class="computedClasses">
     <div :class="{iconClass:icon}">
-      <i v-if="icon" :class="['el-icon-' + icon]" class="el-input__icon material-input__icon"/>
-      <input
-        v-if="type === 'email'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :required="required"
-        type="email"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <input
-        v-if="type === 'url'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :required="required"
-        type="url"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <input
-        v-if="type === 'number'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :step="step"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :max="max"
-        :min="min"
-        :minlength="minlength"
-        :maxlength="maxlength"
-        :required="required"
-        type="number"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <input
-        v-if="type === 'password'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :max="max"
-        :min="min"
-        :required="required"
-        type="password"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <input
-        v-if="type === 'tel'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :required="required"
-        type="tel"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <input
-        v-if="type === 'text'"
-        :name="name"
-        :placeholder="fillPlaceHolder"
-        v-model="currentValue"
-        :readonly="readonly"
-        :disabled="disabled"
-        :autoComplete="autoComplete"
-        :minlength="minlength"
-        :maxlength="maxlength"
-        :required="required"
-        type="text"
-        class="material-input"
-        @focus="handleMdFocus"
-        @blur="handleMdBlur"
-        @input="handleModelInput">
-      <span class="material-input-bar"/>
+      <i class="el-input__icon material-input__icon" :class="['el-icon-' + icon]" v-if="icon"></i>
+      <input v-if="type === 'email'" type="email" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :required="required" @focus="handleMdFocus"
+        @blur="handleMdBlur" @input="handleModelInput">
+      <input v-if="type === 'url'" type="url" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :required="required" @focus="handleMdFocus"
+        @blur="handleMdBlur" @input="handleModelInput">
+      <input v-if="type === 'number'" type="number" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :step="step" :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :max="max" :min="min" :minlength="minlength"
+        :maxlength="maxlength" :required="required" @focus="handleMdFocus" @blur="handleMdBlur" @input="handleModelInput">
+      <input v-if="type === 'password'" type="password" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :max="max" :min="min" :required="required" @focus="handleMdFocus"
+        @blur="handleMdBlur" @input="handleModelInput">
+      <input v-if="type === 'tel'" type="tel" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :required="required" @focus="handleMdFocus"
+        @blur="handleMdBlur" @input="handleModelInput">
+      <input v-if="type === 'text'" type="text" class="material-input" :name="name" :placeholder="fillPlaceHolder" v-model="currentValue"
+        :readonly="readonly" :disabled="disabled" :autoComplete="autoComplete" :minlength="minlength" :maxlength="maxlength"
+        :required="required" @focus="handleMdFocus" @blur="handleMdBlur" @input="handleModelInput">
+      <span class="material-input-bar"></span>
       <label class="material-label">
-        <slot/>
+        <slot></slot>
       </label>
     </div>
   </div>
@@ -107,9 +32,8 @@
 // source:https://github.com/wemake-services/vue-material-input/blob/master/src/components/MaterialInput.vue
 
 export default {
-  name: 'MdInput',
+  name: 'md-input',
   props: {
-    /* eslint-disable */
     icon: String,
     name: String,
     type: {
@@ -138,13 +62,6 @@ export default {
       default: true
     }
   },
-  data() {
-    return {
-      currentValue: this.value,
-      focus: false,
-      fillPlaceHolder: null
-    }
-  },
   computed: {
     computedClasses() {
       return {
@@ -157,6 +74,13 @@ export default {
   watch: {
     value(newValue) {
       this.currentValue = newValue
+    }
+  },
+  data() {
+    return {
+      currentValue: this.value,
+      focus: false,
+      fillPlaceHolder: null
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div :class="className" :id="id" :style="{height:height,width:width}"></div>
 </template>
 
 <script>
@@ -56,10 +56,6 @@ export default {
       this.chart.setOption(
         {
           backgroundColor: '#08263a',
-          grid: {
-            left: '5%',
-            right: '5%'
-          },
           xAxis: [{
             show: false,
             data: xAxisData

@@ -21,30 +21,29 @@ export default {
       default: 1
     },
     className: {
-      type: String,
-      default: ''
+      type: String
     }
   },
   data() {
     return {
       active: false,
       position: '',
+      currentTop: '',
       width: undefined,
       height: undefined,
-      isSticky: false
+      child: null,
+      stickyHeight: 0
     }
   },
   mounted() {
     this.height = this.$el.getBoundingClientRect().height
     window.addEventListener('scroll', this.handleScroll)
-    window.addEventListener('resize', this.handleReize)
   },
   activated() {
     this.handleScroll()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
-    window.removeEventListener('resize', this.handleReize)
   },
   methods: {
     sticky() {
@@ -54,7 +53,6 @@ export default {
       this.position = 'fixed'
       this.active = true
       this.width = this.width + 'px'
-      this.isSticky = true
     },
     reset() {
       if (!this.active) {
@@ -63,21 +61,15 @@ export default {
       this.position = ''
       this.width = 'auto'
       this.active = false
-      this.isSticky = false
     },
     handleScroll() {
       this.width = this.$el.getBoundingClientRect().width
       const offsetTop = this.$el.getBoundingClientRect().top
-      if (offsetTop < this.stickyTop) {
+      if (offsetTop <= this.stickyTop) {
         this.sticky()
         return
       }
       this.reset()
-    },
-    handleReize() {
-      if (this.isSticky) {
-        this.width = this.$el.getBoundingClientRect().width + 'px'
-      }
     }
   }
 }

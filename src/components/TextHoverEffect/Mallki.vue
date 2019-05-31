@@ -1,8 +1,8 @@
 <template>
-  <a :class="className" class="link--mallki" href="#">
-    {{ text }}
-    <span :data-letters="text"/>
-    <span :data-letters="text"/>
+  <a class="link--mallki" :class="className" href="#">
+    {{text}}
+    <span :data-letters="text"></span>
+    <span :data-letters="text"></span>
   </a>
 </template>
 
@@ -10,8 +10,7 @@
 export default {
   props: {
     className: {
-      type: String,
-      default: ''
+      type: String
     },
     text: {
       type: String,
@@ -21,9 +20,9 @@ export default {
 }
 </script>
 
+
 <style>
 /* Mallki */
-
 .link--mallki {
   font-weight: 800;
   color: #4dd9d5;
@@ -32,10 +31,10 @@ export default {
   transition: color 0.5s 0.25s;
   overflow: hidden;
   position: relative;
-  display: inline-block;
-  line-height: 1;
-  outline: none;
-  text-decoration: none;
+display: inline-block;
+    line-height: 1;
+        outline: none;
+    text-decoration: none;
 }
 
 .link--mallki:hover {
@@ -110,4 +109,5 @@ export default {
   -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
   transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
 }
+
 </style>

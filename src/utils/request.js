@@ -1,7 +1,11 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import {
+  Message
+} from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {
+  getToken
+} from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -73,4 +77,7 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+// export default service
+export {
+  service as request
+}
