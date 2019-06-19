@@ -44,7 +44,7 @@
         .options {
           float: right;
           text-align: right;
-          width: 70%;
+          width: 40%;
           height: 70%;
           button {
             margin-bottom: 3px;
@@ -111,10 +111,14 @@
       }
     }
     .buttons {
-      width: 405px;
+      width: 700px;
       margin-left: 55px;
       .uploader {
         float: right;
+      }
+      .uploaderRepository {
+        margin-left: 10px;
+        float: end;
       }
     }
     .el-table__body {

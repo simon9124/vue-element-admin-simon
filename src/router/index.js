@@ -74,7 +74,7 @@ export const constantRouterMap = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
+        name: 'dashboard',
         meta: {
           title: 'dashboard',
           icon: 'dashboard',
@@ -145,6 +145,27 @@ export const asyncRouterMap = [
       meta: {
         title: 'userList',
         roles: ['admin', 'editor'],
+        keepAlive: true
+      }
+    }]
+  },
+
+  // componentLibrary
+  {
+    path: '/componentLibrary',
+    component: Layout,
+    redirect: '/componentLibrary/gallery',
+    meta: {
+      title: 'componentLibrary',
+      icon: 'component',
+      roles: ['admin', 'editor']
+    },
+    children: [{
+      path: 'gallery',
+      component: () => import('@/views/componentLibrary/gallery'),
+      name: 'gallery',
+      meta: {
+        title: 'gallery',
         keepAlive: true
       }
     }]

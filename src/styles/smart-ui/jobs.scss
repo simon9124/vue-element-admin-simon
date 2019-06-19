@@ -32,6 +32,7 @@
       border: 1px solid $gray;
       min-height: 851px;
       .right-panel-header {
+        //width: 1200px;
         height: 45px !important;
         line-height: 45px;
         border-bottom: 1px solid $gray;
@@ -44,7 +45,7 @@
         .options {
           float: right;
           text-align: right;
-          width: 70%;
+          width: 40%;
           height: 70%;
           button {
             margin-bottom: 3px;

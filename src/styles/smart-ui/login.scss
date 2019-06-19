@@ -1,0 +1,78 @@
+$bg: #2d3a4b;
+$light_gray: #eee;
+$dark_gray: #889aa4;
+$white: #ffffff;
+
+.login-container /deep/ {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: $bg;
+  .login-form {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 520px;
+    padding: 0px 35px 15px 35px;
+  }
+  .title-container {
+    position: relative;
+    .title {
+      font-size: 26px;
+      font-weight: 400;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+    &_login {
+      font-size: 20px;
+    }
+  }
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+    user-select: none;
+  }
+  .buttons {
+    width: 450px;
+    height: 54px;
+    margin-top: 20px;
+    .login-button {
+      width: 20%;
+      margin: 10px 0px 30px 80px;
+      float: left
+    }
+    .register-button {
+      width: 20%;
+      margin: 10px 0px 30px 15px;
+    }
+    .reset-button {
+      width: 20%;
+      margin-left: 170px;
+      margin-top: 15px
+    }
+    .to-login {
+      color: $white;
+      margin-left: 50px;
+      display: inline-block;
+      a {
+        height: 40px;
+        margin-top: 18px;
+        text-decoration: none;
+        display: inline-block;
+      }
+    }
+  }
+}

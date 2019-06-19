@@ -7,6 +7,7 @@
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive">
     </router-view>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -20,3 +21,17 @@ export default {
   }
 }
 </script>
+
+<style>
+#app {
+  background: #f0f2f5;
+}
+/* 解决element-ui表头错位问题 */
+body .el-table th.gutter {
+  display: table-cell !important;
+}
+body .el-table colgroup.gutter {
+  display: table-cell !important;
+}
+</style>
+

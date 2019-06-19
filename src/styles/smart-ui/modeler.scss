@@ -12,12 +12,15 @@
       position: absolute;
       background-color: $white;
       width: 100%;
+
       @media (min-width: $screen-sm-min) {
         max-height: 350px
       }
+
       @media (min-width: $screen-md-min) {
         max-height: 800px
       }
+
       @media (min-width: $screen-lg-min) {
         max-height: 780px
       }
@@ -25,16 +28,21 @@
 
     .canvas {
       background-color: $white;
+
       .bjs-powered-by {
         display: none;
       }
+
       width: 100%;
+
       @media (min-width: $screen-sm-min) {
         height: 350px
       }
+
       @media (min-width: $screen-md-min) {
         height: 800px
       }
+
       @media (min-width: $screen-lg-min) {
         height: 850px
       }
@@ -49,15 +57,19 @@
       overflow-y: auto;
       overflow-x: hidden;
       background-color: $white;
+
       @media (min-width: $screen-sm-min) {
         max-height: 350px
       }
+
       @media (min-width: $screen-md-min) {
         max-height: 800px
       }
+
       @media (min-width: $screen-lg-min) {
         max-height: 850px
       }
+
       .el-collapse-item__header {
         padding-left: 10px;
       }
@@ -67,11 +79,13 @@
       position: absolute;
       left: 120px;
       top: 50px;
-      .el-button{
+
+      .el-button {
         padding: 15px 15px 15px 15px;
         font-size: 20px;
         z-index: 0;
       }
+
       .upload {
         position: absolute;
         right: 0px;

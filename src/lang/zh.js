@@ -2,7 +2,10 @@ export default {
   route: {
     dashboard: '首页',
     /** tables**/
-    userList: '用户列表'
+    userList: '用户列表',
+    /** componentLibrary**/
+    componentLibrary: '组件库',
+    gallery: '图片库'
   },
   navbar: {
     logOut: '退出登录',

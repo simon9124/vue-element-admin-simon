@@ -64,6 +64,12 @@ $blue: nth($blue, 2);
   }
 }
 
+// .el-pagination /deep/ .el-pagination__jump {
+//   height: 32px;
+//   margin-top: -2px;
+//   margin-left: 15px;
+// }
+
 // 页面
 .container /deep/ {
   margin-bottom: 0px !important;
@@ -95,13 +101,31 @@ $blue: nth($blue, 2);
 
 .content /deep/ {
   @media (min-width: $screen-sm-min) {
+    // min-height: 350px;
     min-height: 100%;
   }
 
+  // @media (min-width: $screen-md-min) {
+  //   min-height: 540px;
+  // }
+
+  // @media (min-width: $screen-lg-min) {
+  //   min-height: 820px;
+  // }
+
   .content-spe {
     @media (min-width: $screen-sm-min) {
+      // min-height: 350px;
       min-height: 100%;
     }
+
+    // @media (min-width: $screen-md-min) {
+    //   min-height: 540px;
+    // }
+
+    // @media (min-width: $screen-lg-min) {
+    //   min-height: 820px;
+    // }
 
     margin-bottom: 1px;
     background: $white;
@@ -272,6 +296,68 @@ $blue: nth($blue, 2);
         }
       }
     }
+
+    // background: $white;
+    // padding: 0 25px;
+    // vertical-align: middle;
+    // border-top: 1px solid $gray;
+
+    // .el-button {
+    //   height: 35px;
+    // }
+
+    // &-inner {
+    //   margin: 20px 0;
+    // }
+
+    // .el-form {
+    //   display: inline-block;
+    //   margin-right: 10px;
+
+    //   &-item {
+    //     display: inline-block;
+    //     height: 32px;
+    //     margin: 0;
+
+    //     &:not(:first-child) {
+    //       margin-left: 20px;
+    //     }
+    //   }
+
+    //   /deep/ label {
+    //     font-weight: normal;
+    //     padding: 0;
+    //     line-height: 32px;
+    //   }
+
+    //   .el-input,
+    //   .el-select {
+    //     margin-top: -8px;
+    //     width: 150px;
+    //   }
+    // }
+
+    // span {
+    //   margin-right: 10px;
+    // }
+
+    // &-result {
+    //   padding: 3px 10px;
+    //   background: $white;
+    //   border: 1px solid $gray;
+
+    //   &:hover {
+    //     background: unquote('#f0f2f5');
+    //     cursor: pointer;
+    //   }
+
+    //   display: inline-block;
+    //   height: 32px;
+    // }
+
+    // .buttonNewTableData {
+    //   float: right;
+    // }
   }
 }
 
@@ -378,6 +464,15 @@ $blue: nth($blue, 2);
 
   /*动态表格*/
   .table-grid-contain {
+    .table-content-spe {
+      .el-table--border {
+        // border-top: 1px solid $gray;
+        // border-left: 1px solid $gray;
+        // border-right: 1px solid $gray;
+        // border-bottom: 0px solid $gray;
+      }
+    }
+
     .table-footer-container {
       border-left: 1px solid $gray;
       border-right: 1px solid $gray;
@@ -386,45 +481,20 @@ $blue: nth($blue, 2);
   }
 
   .table-content-spe {
+    .el-table--border {
+      // border-top: 1px solid $gray;
+      // border-left: 1px solid $gray;
+      // border-right: 1px solid $gray;
+      // border-bottom: 0px solid $gray;
+    }
+
     .el-table__row {
       .cell {
         white-space: nowrap;
-        padding: 0;
-
-        .edit,
-        .check,
-        .close {
-          font-size: 16px;
-        }
-
-        .edit {
-          color: #409eff;
-          text-decoration: underline;
-        }
-
-        .check {
-          border: 1px solid #67c23a;
-          color: #67c23a;
-        }
-
-        .close {
-          border: 1px solid #f56c6c;
-          color: #f56c6c;
-        }
-
-        .input-inline {
-          .el-input {
-            width: 280px;
-            height: 30px;
-
-            input {
-              height: 30px;
-            }
-          }
-        }
 
         div {
           white-space: nowrap;
+
         }
       }
     }
@@ -442,6 +512,7 @@ $blue: nth($blue, 2);
       width: 50%;
 
       input {
+        float: left;
         text-align: center;
         display: inline-block;
       }
@@ -466,6 +537,7 @@ $blue: nth($blue, 2);
     }
 
     .buttonSort {
+      // float: right;
       display: inline-block;
       width: 30px;
       padding: 0;

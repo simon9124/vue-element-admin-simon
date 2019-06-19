@@ -1,6 +1,7 @@
 .el-select {
   width: 100%;
   height: auto;
+
   &-dropdown__item {
     height: 32px;
     vertical-align: middle;
@@ -8,6 +9,7 @@
     line-height: 14px;
     border-radius: 0;
     outline: 0;
+
     & /deep/ span {
       font-size: 14px;
     }
@@ -18,8 +20,24 @@
   .el-main {
     padding: 15px 20px 5px 20px !important;
   }
+
   .gallery-list-col-operation {
     // padding: 0 5px;
     margin-top: -5px;
+  }
+
+  .tinymce-gallery {
+    &>div:nth-child(3) {
+      top: 0 !important;
+    }
+  }
+
+  .el-textarea.is-disabled .el-textarea__inner,
+  .el-input.is-disabled .el-input__inner,
+  .el-select .el-input.is-disabled .el-input__inner {
+    background-color: #F2F6FC;
+    border-color: #dcdfe6;
+    color: #606266;
+    cursor: pointer;
   }
 }

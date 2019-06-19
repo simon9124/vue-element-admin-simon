@@ -4,6 +4,7 @@ import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
 import userAPI from './user'
+import galleryAPI from './gallery'
 
 // 修复在使用 MockJS 情况下，设置 withCredentials = true，且未被拦截的跨域请求丢失 Cookies 的问题
 // https://github.com/nuysoft/Mock/issues/300
@@ -42,5 +43,10 @@ Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
 Mock.mock(/\/user\/list/, 'get', userAPI.getUserList)
 Mock.mock(/\/user\/update/, 'put', userAPI.updateUsers)
 Mock.mock(/\/user\/delete/, 'delete', userAPI.deleteUser)
+
+// 图片库
+Mock.mock(/\/photo\/list/, 'get', galleryAPI.getPhotoList)
+Mock.mock(/\/photo\/update/, 'put', galleryAPI.updatePhoto)
+Mock.mock(/\/photo\/delete/, 'delete', galleryAPI.deletePhoto)
 
 export default Mock
