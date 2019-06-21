@@ -18,24 +18,30 @@
 -->
 <template>
   <el-dialog :title="title"
+             :width="width"
              :visible.sync="visible"
              :before-close="closeHandler"
-             :width="width"
              @open="openHandler"
              custom-class="dialog"
              element-loading-text="数据加载中"
              element-loading-spinner="el-icon-loading"
              element-loading-background="rgba(0, 0, 0, 0.8)"
              v-loading="loading"
-             top="20vh">
+             top="10vh">
 
-    <div type='PhotoGallery'>
+    <!-- 图片库 -->
+    <div v-if="type='PhotoGallery'">
       <Gallery :visible="visible"
                :type="type"
-               :picList="picList"
+               :picListOrg="picList"
                :galleryList="galleryList"
+               @picDelHandler="picDelHandler"
+               @picsDelHandler="picsDelHandler"
+               @insertFavor="insertFavor"
+               @deleteFavor="deleteFavor"
                @picClickHander="picClickHander"></Gallery>
     </div>
+
     <!-- <div v-if="type == 'UploadExcel'">
       <uploadExcel :uploadResult="uploadResult"
                    @httpRequestHandler="httpRequestHandler"></uploadExcel>
@@ -101,17 +107,25 @@ export default {
     // HtmlTest
   },
   props: {
+    /*
+      公共
+    */
     // 标题
     title: {
       String,
       default: '提示'
     },
-    // 控件是否可见
+    // 弹窗宽度
+    width: {
+      String,
+      default: '60%'
+    },
+    // 弹窗是否可见
     visible: {
       Boolean,
       default: false
     },
-    // 组件类型
+    // 类型
     type: {
       String,
       // required: true,
@@ -122,20 +136,20 @@ export default {
       Boolean,
       default: false
     },
-    // 数据列表 - 图片库
+
+    /*
+      图片库
+    */
+    // 数据列表
     picList: {
       type: Array,
       default: () => []
     },
+
     // Excel 上传结果
     uploadResult: {
       String,
       default: ''
-    },
-    // 弹窗宽度
-    width: {
-      String,
-      default: '60%'
     }
   },
   watch: {
@@ -145,33 +159,56 @@ export default {
   },
   data() {
     return {
-      // gallery选中的内容
+      // 图片list数据 - 被选中的
       galleryList: []
     }
   },
   methods: {
+    /*
+      公共
+    */
+    // 弹窗dialog回调
     openHandler() {
-      // 弹窗dialog回调
       this.$emit('openHandler', this.isVisable)
     },
+    // 关闭按钮回调
     closeHandler() {
-      // 确认按钮回调
       this.$emit('closeHandler', this.isVisable)
     },
+    // 确认按钮回调
     confirmHandler() {
-      // 确认按钮回调
-      // console.debug(this.galleryList)
       this.$emit('confirmHandler', {
         visable: this.isVisable,
         galleryList: this.galleryList
       })
     },
+    // 上传请求回调
     httpRequestHandler(param) {
-      // 上传请求回调
       this.$emit('httpRequestHandler', param)
     },
+
+    /*
+      图片库
+    */
+    // 改变图片选中状态
     picClickHander(selectList) {
       this.galleryList = selectList
+    },
+    // 批量删除图片
+    picsDelHandler(selectList) {
+      this.$emit('picsDelHandler', selectList)
+    },
+    // 删除单张图片
+    picDelHandler(pic) {
+      this.$emit('picDelHandler', pic)
+    },
+    // 用户收藏
+    insertFavor(pic) {
+      this.$emit('insertFavor', pic)
+    },
+    // 用户取消收藏
+    deleteFavor(pic) {
+      this.$emit('deleteFavor', pic)
     }
   }
 }

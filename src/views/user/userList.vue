@@ -213,29 +213,32 @@
                 <!--分页-->
                 <el-col :lg="16"
                         class="table-content-page-pagination hidden-md-and-down">
-                  <el-pagination layout="total, sizes, prev, pager, next, jumper"
-                                 @size-change="handleSizeChange"
-                                 :page-sizes="[10, 20, 30, 40, 50, 100]"
+                  <el-pagination @size-change="handleSizeChange"
                                  @current-change="handlePageChange"
+                                 :page-sizes="[10, 20, 30, 40, 50, 100]"
                                  :page-size="10"
+                                 :pager-count="5"
+                                 layout="total, sizes, prev, pager, next, jumper"
                                  :total="userListAll.length">
                   </el-pagination>
                 </el-col>
                 <el-col :md="12"
                         class="table-content-page-pagination hidden-lg-and-up hidden-sm-and-down">
-                  <el-pagination layout="prev, pager, next"
-                                 @size-change="handleSizeChange"
-                                 :page-size="10"
+                  <el-pagination @size-change="handleSizeChange"
                                  @current-change="handlePageChange"
+                                 :page-size="10"
+                                 :pager-count="5"
+                                 layout="prev, pager, next"
                                  :total="userListAll.length">
                   </el-pagination>
                 </el-col>
                 <el-col :sm="24"
                         class="table-content-page-pagination hidden-md-and-up">
-                  <el-pagination layout="prev, pager, next"
-                                 @size-change="handleSizeChange"
-                                 :page-size="10"
+                  <el-pagination @size-change="handleSizeChange"
                                  @current-change="handlePageChange"
+                                 :page-size="10"
+                                 :pager-count="5"
+                                 layout="prev, pager, next"
                                  :total="userListAll.length">
                   </el-pagination>
                 </el-col>

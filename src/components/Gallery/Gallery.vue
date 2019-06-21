@@ -1,7 +1,8 @@
 <template>
-  <div v-loading="loading">
+  <div>
     <el-container class="gallery-container gallery">
       <el-container class="gallery-container">
+
         <!-- 左侧筛选 -->
         <el-aside width="15%"
                   class="gallery-container-aside">
@@ -16,18 +17,20 @@
             </template>
           </el-menu>
         </el-aside>
-        <!-- 内容列表 -->
+
+        <!-- 右侧内容 -->
         <el-main style="text-align:right">
+
+          <!-- 顶部操作 -->
           <div class="gallery-list-header">
             <div class="gallery-list-search">
               <el-input v-model="filterFormData.uploadName"
-                        :placeholder="placeholder"
-                        @keyup.native.enter="selectListByType()"
-                        style="margin-right:5px"></el-input>
+                        :placeholder="this.type === 'PhotoGallery'?'图片标题':'脚本标题'"
+                        @keyup.native.enter="refreshGallery()"></el-input>
               <el-button icon="el-icon-search"
                          size="mini"
                          type="primary"
-                         @click="selectListByType()"
+                         @click="refreshGallery()"
                          plain>搜索
               </el-button>
               <el-button size="mini"
@@ -41,7 +44,7 @@
                        accept=".jpg,.png,.bmp,jpge,"
                        multiple
                        action=""
-                       :http-request="httpRequestHandler"
+                       :http-request="()=>{}"
                        :limit=100
                        :on-exceed="handleExceed"
                        :before-upload="upload"
@@ -52,26 +55,32 @@
                          type="success">本地上传</el-button>
             </el-upload>
           </div>
+
+          <!-- list列表 -->
           <el-row :gutter="20"
                   class="gallery-list-row">
             <template v-for="(pic,index) in picList">
               <el-col :span="6"
-                      :key="picList[index].value">
+                      :key="pic.value">
                 <div class="gallery-list-col">
+
+                  <!-- 图片 -->
                   <div class="gallery-list-col-img"
                        ref="imgBox"
                        :style="imgBox"
-                       @click="picList[index].select=!picList[index].select;picClickHander()">
-                    <img :src="picList[index].uploadLocalUrl">
+                       @click="picClickHander(pic)">
+                    <img :src="pic.uploadLocalUrl">
                     <div class="gallery-list-col-mask"
-                         v-show="picList[index].select">
+                         v-show="pic.select">
                       <i class="el-icon-check"></i>
                     </div>
                     <div class="gallery-list-col-glass">
                       <i class="el-icon-zoom-in"
-                         @click.prevent.stop="picGlass(index)"></i>
+                         @click.prevent.stop="picGlass(pic)"></i>
                     </div>
                   </div>
+
+                  <!-- 编辑框 -->
                   <div class="gallery-list-col-edit">
                     <span v-show="!pic.edit"
                           class="gallery-list-col-edit-picName"
@@ -98,7 +107,10 @@
                                class="gallery-list-button"
                                @click="pic.edit=!pic.edit"></el-button>
                   </div>
+
+                  <!-- 操作栏 -->
                   <div class="gallery-list-col-operation">
+
                     <!-- 收藏 -->
                     <el-tooltip v-show="pic.uploadIsfavorite"
                                 content="取消收藏"
@@ -107,8 +119,10 @@
                                  size="mini"
                                  type="warning"
                                  class="gallery-list-button"
-                                 @click="deleteFavor(index)"></el-button>
+                                 @click="deleteFavor(pic)"></el-button>
                     </el-tooltip>
+
+                    <!-- 非收藏 -->
                     <el-tooltip v-show="!pic.uploadIsfavorite"
                                 content="收藏"
                                 placement="top">
@@ -117,9 +131,10 @@
                                  size="mini"
                                  type="warning"
                                  class="gallery-list-button"
-                                 @click="insertFavor(index)"></el-button>
+                                 @click="insertFavor(pic)"></el-button>
                     </el-tooltip>
 
+                    <!-- 重命名 -->
                     <el-tooltip content="重命名"
                                 placement="top">
                       <el-button plain
@@ -129,6 +144,8 @@
                                  class="gallery-list-button"
                                  @click="pic.edit=true"></el-button>
                     </el-tooltip>
+
+                    <!-- 复制url -->
                     <el-tooltip content="复制"
                                 placement="top">
                       <!-- <el-button plain
@@ -139,6 +156,8 @@
                                  v-clipboard:copy='picList[index].uploadLocalUrl'
                                  v-clipboard:success='clipboardSuccess'></el-button> -->
                     </el-tooltip>
+
+                    <!-- 删除 -->
                     <el-tooltip content="删除"
                                 placement="top">
                       <el-button plain
@@ -146,19 +165,24 @@
                                  size="mini"
                                  type="danger"
                                  class="gallery-list-button"
-                                 @click="picDelHandler(index)"></el-button>
+                                 @click="picDelHandler(pic)"></el-button>
                     </el-tooltip>
+
                   </div>
+
                 </div>
               </el-col>
             </template>
           </el-row>
-          <el-pagination @current-change="handleCurrentChangeHandler"
-                         :current-page.sync="pageNum"
+
+          <!-- 分页 -->
+          <el-pagination @current-change="handlePageChange"
                          :page-size="pageSize"
-                         :total='total'
-                         layout="prev, pager, next, jumper">
+                         :pager-count="5"
+                         layout="total, prev, pager, next, jumper"
+                         :total='picListAll.length'>
           </el-pagination>
+
           <!-- 图片放大 -->
           <div class="gallery-list-bigMask"
                v-if="picBigShow"
@@ -168,6 +192,7 @@
                  :src="picUrl"
                  @click.prevent.stop="picBigSelect">
           </div>
+
         </el-main>
 
       </el-container>
@@ -200,80 +225,75 @@ export default {
       type: String,
       default: 'PhotoGallery'
     },
-    // 数据列表
-    picList: {
+    // 原始总数据列表
+    picListOrg: {
       type: Array,
       default: () => []
     }
   },
   data() {
     return {
-      // 选中列表
-      selectList: [],
+      // 图片list数据 - 筛选后所有
+      picListAll: [],
+      // 图片list数据 - 当前页面
+      picList: [],
+      // 初始化页码
+      pageNum: 1,
+      // 初始化每页显示数量
+      pageSize: 8,
+      // 筛选
+      filterFormData: {
+        uploadName: '',
+        uploadIsfavorite: ''
+      },
       // 左侧筛选栏
       filters: [
         { key: 'all', label: '全部', total: 0 },
         { key: 'favorites', label: '我的收藏', total: 0 }
       ],
-      // 左侧筛选条件
-      filter: 'total',
-      // 按名称筛选
-      filterFormData: {},
-      // 一页显示12条
-      pageSize: 12,
-      // 图片数量
-      total: 0,
-      // 当前页
-      pageNum: 1,
-      // 标题搜索
-      picSearch: '',
-      // 查询提示
-      placeholder: '图片标题',
-      // 图片库loading
-      loading: false,
-      // 单张图片url（放大）
-      picUrl: '',
-      // 单张图片放大，默认隐藏
-      picBigShow: false,
       // 动态图片style
       imgBox: {
         width: '100%',
         height: ''
       },
       // 记录屏幕宽度默认值
-      screenWidth: document.body.clientWidth
+      screenWidth: document.body.clientWidth,
+      // 图片list数据 - 被选中的
+      selectList: [],
+      // 单张放大图片，默认隐藏
+      picBigShow: false,
+      // 单张图片url（放大）
+      picUrl: ''
     }
   },
   watch: {
     visible(value) {
       if (value) {
-        this.selectListByType()
+        this.init()
       } else {
         this.pageNum = 1
-        // this.picList = []
-        this.filterFormData = {}
+        this.filterFormData = {
+          uploadName: '',
+          uploadIsfavorite: ''
+        }
       }
     },
-    // 监听屏幕缩放
-    screenWidth(val) {
-      if (!this.timer) {
-        this.screenWidth = val
-        this.timer = true
-        const that = this
-        setTimeout(function() {
-          // that.screenWidth = that.$store.state.canvasWidth
-          // console.log(that.screenWidth)
-          that.timer = false
-        }, 400)
+    picListOrg: {
+      deep: true,
+      handler: function() {
+        this.refreshGallery()
+      }
+    },
+    filters: {
+      deep: true,
+      handler: function(val) {
+        this.filters = val
       }
     }
   },
   mounted() {
     // 页面第一次加载
-    this.selectListByType()
-    if (this.type === 'PhotoGallery') {
-      this.placeholder = '图片标题'
-    }
+    this.init()
     // 挂在reisze 事件
     const that = this
     window.onresize = () => {
@@ -291,70 +311,131 @@ export default {
     }
   },
   methods: {
-    openHandler(isVisable) {
-      // 弹出窗口加载图片
-    },
-    selectListByType() {
-      // this.loading = true
+    // dialog初始化
+    init() {
       // 根据业务类型查询结果列表
       if (this.type === 'PhotoGallery') {
-        // 获取缓存页码
-        if (localStorage.getItem('pageNum')) {
-          this.pageNum = parseInt(localStorage.getItem('pageNum'))
-        }
-        // 图片库类型 -> 根据左侧边栏选择要调用的方法
-        // selectPhotoByPage(this, this.filter, this.pageNum)
-        //   .then(result => {
-        //     // console.debug('selectListByType: %s' + JSON.stringify(result))
-        //     this.picList = result.data.tableData.list
-        //     // 图片名称去后缀
-        //     for (const i in this.picList) {
-        //       const picName = this.picList[i].uploadName
-        //       const picSuffix = picName.lastIndexOf('.')
-        //       if (picSuffix !== -1) {
-        //         this.picList[i].uploadName = picName.substring(0, picSuffix)
-        //       }
-        //     }
-        //     this.pageNum = result.data.tableData.pageNum
-        //     this.total = result.data.tableData.total
-        //     this.filters[0].total = result.data.countTotal
-        //     this.filters[1].total = result.data.countFavorite
-        //     this.loading = false
-        // 数据加载完后，获取imgBox的宽度，并设置其高度
-        this.$nextTick(() => {
-          const imgBox = this.$refs.imgBox
-          // console.log(imgBox)
-          if (this.visible) {
-            const wImgbox = imgBox[0].getBoundingClientRect().width
-            // console.log(wImgbox)
-            this.imgBox.height = 0.6 * wImgbox + 'px'
-          }
+        // 为每张图片添加select属性
+        this.picListOrg.map(pic => {
+          this.$set(pic, 'select', false)
+          return pic
         })
-        //   })
-        //   .catch(error => {
-        //     console.error(error)
-        //     this.loading = false
-        //   })
+        // 数据筛选
+        this.refreshGallery()
+        // 数据加载完后，若有筛选到的数据 -> 获取imgBox的宽度，并设置其高度
+        if (this.picList.length > 0) {
+          this.$nextTick(() => {
+            const imgBox = this.$refs.imgBox
+            // console.log(imgBox)
+            if (this.visible) {
+              const wImgbox = imgBox[0].getBoundingClientRect().width
+              // console.log(wImgbox)
+              this.imgBox.height = 0.6 * wImgbox + 'px'
+            }
+          })
+        }
       }
     },
+    // 左侧filters栏数据
+    getFiltersData() {
+      // 计算总favourate数据
+      var favoriteCount = 0
+      this.picListOrg.forEach(pic => {
+        if (pic.uploadIsfavorite === 1) {
+          favoriteCount += 1
+        }
+      })
+      // 渲染左侧filters栏的数据
+      this.filters.forEach(filter => {
+        if (filter.key === 'all') {
+          filter.total = this.picListOrg.length
+        } else if (filter.key === 'favorites') {
+          filter.total = favoriteCount
+        }
+      })
+    },
+    // 根据条件筛选图片数据
+    refreshGallery() {
+      // 左侧filters栏数据
+      this.getFiltersData()
+      // 全部符合筛选条件的图片 -> 计总数用
+      this.picListAll = this.picListOrg.filter(pic => {
+        if (
+          pic.uploadName.indexOf(this.filterFormData.uploadName) > -1 &&
+          pic.uploadIsfavorite
+            .toString()
+            .indexOf(this.filterFormData.uploadIsfavorite.toString()) > -1
+        ) {
+          return pic
+        }
+      })
+      // 在页码要显示的图片
+      this.picList = this.picListAll.slice(
+        (this.pageNum - 1) * this.pageSize,
+        this.pageNum * this.pageSize
+      )
+    },
+    // 根据左侧边栏调用数据
     asideSelect(key) {
-      // 根据左侧边栏调用数据
       switch (key) {
         case 'all':
-          this.filter = 'total'
+          this.filterFormData.uploadIsfavorite = ''
           this.pageNum = 1
-          this.selectListByType()
+          this.refreshGallery()
           break
         case 'favorites':
-          this.filter = 'favorite'
+          this.filterFormData.uploadIsfavorite = '1'
           this.pageNum = 1
-          this.selectListByType()
+          this.refreshGallery()
           break
       }
     },
+    // 分页-跳页
+    handlePageChange(pageNum) {
+      this.pageNum = pageNum
+      this.refreshGallery()
+    },
+    // 改变图片选中状态
+    picClickHander(pic) {
+      this.selectList = []
+      pic.select = !pic.select
+      this.picList.map(pic => {
+        if (pic.select === true) {
+          // this.selectList.push(pic.uploadCode)
+          this.selectList.push(pic)
+        }
+      })
+      this.$emit('picClickHander', this.selectList)
+    },
+    // 批量删除图片
+    picsDelHandler() {
+      this.$emit('picsDelHandler', this.selectList)
+    },
+    // 删除单张图片
+    picDelHandler(pic) {
+      this.$emit('picDelHandler', pic)
+    },
+    // 重命名图片
+    picUpdate(index) {
+      // const uploadPic = {
+      //   uploadCode: this.picListOrg[index].uploadCode,
+      //   uploadName: this.picListOrg[index].uploadName
+      // }
+      // updatePhoto(uploadPic).then(result => {
+      //   this.init()
+      // })
+    },
+    // 用户收藏
+    insertFavor(pic) {
+      this.$emit('insertFavor', pic)
+    },
+    // 用户取消收藏
+    deleteFavor(pic) {
+      this.$emit('deleteFavor', pic)
+    },
+    // 批量上传
     upload(files) {
-      // 批量上传
-      this.loading = true
+      // this.loading = true
       if (this.type === 'PhotoGallery') {
         // 图片库类型
         const form = new FormData()
@@ -362,7 +443,7 @@ export default {
         // uploadByType(form, this.type)
         //   .then(res => {
         //     this.loading = false
-        //     this.selectListByType()
+        //     this.init()
         //   })
         //   .catch(error => {
         //     this.loading = false
@@ -370,92 +451,30 @@ export default {
         //   })
       }
     },
-    httpRequestHandler() {
-      // 覆盖默认上传行为
+    // 批量上传 - 最大文件数量限制
+    handleExceed(files, fileList) {
+      this.$message.warning(`最多选择 100 个文件`)
     },
+    // 复制图片链接
     clipboardSuccess() {
-      // 复制图片链接
       this.$message({
         message: '图片链接复制成功',
         type: 'success',
         duration: 1500
       })
     },
-    picDelHandler(index) {
-      // 删除单张图片
-      // console.log(this.picList[index].uploadCode)
-      // deletePhotoByCode(this.picList[index].uploadCode, this)
+    // 点击放大图片
+    picGlass(pic) {
+      this.picUrl = pic.uploadLocalUrl
+      this.picBigShow = true
     },
-    picsDelHandler() {
-      // 批量删除图片
-      // const delCodes = []
-      // this.picList.map(pic => {
-      //   if (pic.select === true) {
-      //     delCodes.push(pic.uploadCode)
-      //   }
-      // })
-      // console.debug('picsDelHandler: %s' + delCodes.join(','))
-      // deletePhotoByCodeArray(delCodes, this)
-    },
-    picClickHander() {
-      // 改变图片选中状态
-      // this.selectList = []
-      // this.picList.map(pic => {
-      //   if (pic.select === true) {
-      //     this.selectList.push(pic.uploadLocalUrl)
-      //   }
-      // })
-      // this.$emit('picClickHander', this.selectList)
-    },
-    picGlass(index) {
-      // 点击放大图片
-      // this.picUrl = this.picList[index].uploadLocalUrl
-      // this.picBigShow = true
-    },
+    // 点击放大后的图片
     picBigSelect() {
-      // 点击放大后的图片
-      // console.log('图片被选中')
+      console.log('图片被选中')
     },
+    // 放大后滚动鼠标滚轴
     picBigZoom() {
-      // 放大后滚动鼠标滚轴
       // console.log('1')
-    },
-    picUpdate(index) {
-      // 重命名图片
-      // const uploadPic = {
-      //   uploadCode: this.picList[index].uploadCode,
-      //   uploadName: this.picList[index].uploadName
-      // }
-      // updatePhoto(uploadPic).then(result => {
-      //   this.selectListByType()
-      // })
-    },
-    handleCurrentChangeHandler(pageNum) {
-      // 翻页
-      this.pageNum = pageNum
-      // 页码缓存
-      localStorage.setItem('pageNum', this.pageNum)
-      this.selectListByType()
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`最多选择 100 个文件`)
-    },
-    insertFavor(index) {
-      // 用户收藏
-      // const favorPhoto = {
-      //   uploadCode: this.picList[index].uploadCode
-      // }
-      // insertFavoritePhoto(favorPhoto).then(result => {
-      //   // console.log(result)
-      //   this.selectListByType()
-      // })
-    },
-    deleteFavor(index) {
-      // 用户取消收藏
-      // deleteFavoritePhoto(this.picList[index].uploadCode, this).then(result => {
-      //   // console.log(result)
-      //   this.selectListByType()
-      // })
     }
   }
 }
