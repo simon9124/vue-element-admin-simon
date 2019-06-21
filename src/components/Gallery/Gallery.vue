@@ -481,5 +481,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import '../../styles/gallery.scss';
+@import '../../styles/components/gallery.scss';
 </style>

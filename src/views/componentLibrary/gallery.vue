@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import '~@/styles/smart-ui/smart-ui.scss';
+@import '../../styles/smart-ui/smart-ui.scss';
 .container /deep/ {
   .el-dialog {
     .el-dialog__body {
