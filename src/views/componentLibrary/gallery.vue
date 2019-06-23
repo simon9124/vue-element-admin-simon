@@ -21,6 +21,7 @@
                       @insertFavor="insertFavor"
                       @deleteFavor="deleteFavor"
                       @picReName="picReName"
+                      @picsUpload="picsUpload"
                       @confirmHandler="confirmHandler"></vue-dialog>
 
         </div>
@@ -114,6 +115,17 @@ export default {
       const resultMessage = (await updatePhoto(pic.uploadCode)).data.message;
       this.$set(pic, 'uploadIsfavorite', 0);
       this.getResultMessage(resultMessage);
+    },
+    // 批量上传图片
+    picsUpload(files) {
+      this.$message({
+        message: '在此调用上传接口，f12可查看上传的图片',
+        type: 'success'
+      });
+      console.log(files);
+      const form = new FormData();
+      form.append('file', files);
+      // uploadByType(form)
     },
     // 确认按钮
     confirmHandler(params) {

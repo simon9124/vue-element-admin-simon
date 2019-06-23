@@ -40,6 +40,7 @@
                @insertFavor="insertFavor"
                @deleteFavor="deleteFavor"
                @picReName="picReName"
+               @picsUpload="picsUpload"
                @picClickHander="picClickHander"></Gallery>
     </div>
 
@@ -214,6 +215,10 @@ export default {
     // 用户取消收藏
     deleteFavor(pic) {
       this.$emit('deleteFavor', pic);
+    },
+    // 批量上传图片
+    picsUpload(files) {
+      this.$emit('picsUpload', files);
     }
   }
 };

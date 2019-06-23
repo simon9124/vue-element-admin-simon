@@ -45,9 +45,9 @@
                        multiple
                        action=""
                        :http-request="()=>{}"
-                       :limit="100"
+                       :limit="10"
                        :on-exceed="handleExceed"
-                       :before-upload="upload"
+                       :before-upload="picsUpload"
                        :show-file-list="false"
                        auto-upload
                        style="display:inline-block">
@@ -75,7 +75,7 @@
                       <i class="el-icon-check"></i>
                     </div>
                     <div class="gallery-list-col-glass">
-                      <i class="el-icon-zoom-in"
+                      <i class="el-icon-search"
                          @click.prevent.stop="picGlass(pic)"></i>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
                     </span>
                     <el-input v-show="pic.edit"
                               v-model="pic.uploadName"
-                              @keyup.native.enter="picReName(pic)"></el-input>
+                              @keyup.native.enter="pic.edit=!pic.edit;picReName(pic)"></el-input>
                     <el-button v-show="pic.edit"
                                icon="el-icon-check"
                                size="mini"
@@ -428,27 +428,18 @@ export default {
     deleteFavor(pic) {
       this.$emit('deleteFavor', pic);
     },
-    // 批量上传
-    upload(files) {
-      // this.loading = true
-      if (this.type === 'PhotoGallery') {
-        // 图片库类型
-        const form = new FormData();
-        form.append('file', files);
-        // uploadByType(form, this.type)
-        //   .then(res => {
-        //     this.loading = false
-        //     this.init()
-        //   })
-        //   .catch(error => {
-        //     this.loading = false
-        //     console.error(error)
-        //   })
+    // 批量上传图片
+    picsUpload(files) {
+      const isJPG = files.type === 'image/jpeg' || 'image/png';
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');
+      } else {
+        this.$emit('picsUpload', files);
       }
     },
     // 批量上传 - 最大文件数量限制
     handleExceed(files, fileList) {
-      this.$message.warning(`最多选择 100 个文件`);
+      this.$message.warning(`最多选择 10 张图片`);
     },
     // 复制图片链接
     clipboardSuccess() {
