@@ -191,6 +191,8 @@
             <img class="gallery-list-bigMask-img"
                  :src="picUrl"
                  @click.prevent.stop="picBigSelect">
+                 <!-- <a class="gallery-list-bigMask-text"
+               @click="showOrgPic('https://www.baidu.com')">查看原图</a> -->
           </div>
 
         </el-main>
@@ -443,6 +445,11 @@ export default {
       this.picUrl = pic.uploadLocalUrl;
       this.picBigShow = true;
     },
+    // 查看原图
+    // showOrgPic() {
+    //   const url = this.picUrl
+    //   window.open(url, '_blank');
+    // },
     // 点击放大后的图片
     picBigSelect() {
       console.log('图片被选中');
