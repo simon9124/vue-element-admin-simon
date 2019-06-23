@@ -33,12 +33,13 @@
     <div v-if="type='PhotoGallery'">
       <Gallery :visible="visible"
                :type="type"
-               :picListOrg="picList"
-               :galleryList="galleryList"
+               :pic-list-org="picList"
+               :gallery-list="galleryList"
                @picDelHandler="picDelHandler"
                @picsDelHandler="picsDelHandler"
                @insertFavor="insertFavor"
                @deleteFavor="deleteFavor"
+               @picReName="picReName"
                @picClickHander="picClickHander"></Gallery>
     </div>
 
@@ -81,23 +82,23 @@
     <span slot="footer"
           class="dialog-footer"
           v-if="type !== 'ScriptCreate'">
-      <el-button @click="this.closeHandler">取 消</el-button>
+      <el-button @click="closeHandler">取 消</el-button>
       <el-button type="primary"
-                 @click="this.confirmHandler">确 定</el-button>
+                 @click="confirmHandler">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
 // import UploadExcel from './UploadExcel'
-import Gallery from '../Gallery/Gallery'
+import Gallery from '../Gallery/Gallery';
 // import ScriptList from './Script'
 // import ScriptCreate from './ScriptCreate'
 // import ScriptFilter from './ScriptFilter'
 // import HtmlTest from './HtmlTest'
 
 export default {
-  name: 'vue-dialog',
+  name: 'VueDialog',
   components: {
     // UploadExcel,
     Gallery
@@ -112,28 +113,28 @@ export default {
     */
     // 标题
     title: {
-      String,
+      type: String,
       default: '提示'
     },
     // 弹窗宽度
     width: {
-      String,
+      type: String,
       default: '60%'
     },
     // 弹窗是否可见
     visible: {
-      Boolean,
+      type: Boolean,
       default: false
     },
     // 类型
     type: {
-      String,
+      type: String,
       // required: true,
       default: 'UploadExcel'
     },
     // loading
     loading: {
-      Boolean,
+      type: Boolean,
       default: false
     },
 
@@ -148,7 +149,7 @@ export default {
 
     // Excel 上传结果
     uploadResult: {
-      String,
+      type: String,
       default: ''
     }
   },
@@ -161,7 +162,7 @@ export default {
     return {
       // 图片list数据 - 被选中的
       galleryList: []
-    }
+    };
   },
   methods: {
     /*
@@ -169,22 +170,22 @@ export default {
     */
     // 弹窗dialog回调
     openHandler() {
-      this.$emit('openHandler', this.isVisable)
+      this.$emit('openHandler', this.isVisable);
     },
     // 关闭按钮回调
     closeHandler() {
-      this.$emit('closeHandler', this.isVisable)
+      this.$emit('closeHandler', this.isVisable);
     },
     // 确认按钮回调
     confirmHandler() {
       this.$emit('confirmHandler', {
         visable: this.isVisable,
         galleryList: this.galleryList
-      })
+      });
     },
     // 上传请求回调
     httpRequestHandler(param) {
-      this.$emit('httpRequestHandler', param)
+      this.$emit('httpRequestHandler', param);
     },
 
     /*
@@ -192,26 +193,30 @@ export default {
     */
     // 改变图片选中状态
     picClickHander(selectList) {
-      this.galleryList = selectList
+      this.galleryList = selectList;
     },
     // 批量删除图片
     picsDelHandler(selectList) {
-      this.$emit('picsDelHandler', selectList)
+      this.$emit('picsDelHandler', selectList);
     },
     // 删除单张图片
     picDelHandler(pic) {
-      this.$emit('picDelHandler', pic)
+      this.$emit('picDelHandler', pic);
+    },
+    // 重命名图片
+    picReName(pic) {
+      this.$emit('picReName', pic);
     },
     // 用户收藏
     insertFavor(pic) {
-      this.$emit('insertFavor', pic)
+      this.$emit('insertFavor', pic);
     },
     // 用户取消收藏
     deleteFavor(pic) {
-      this.$emit('deleteFavor', pic)
+      this.$emit('deleteFavor', pic);
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

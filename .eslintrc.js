@@ -180,7 +180,8 @@ module.exports = {
       'avoidEscape': true,
       'allowTemplateLiterals': true
     }],
-    'semi': [2, 'never'],
+    // 'semi': [2, 'never'],
+    'semi': [0, 'never'],
     'semi-spacing': [2, {
       'before': false,
       'after': true
