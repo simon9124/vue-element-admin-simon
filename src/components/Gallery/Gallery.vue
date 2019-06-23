@@ -148,13 +148,13 @@
                     <!-- 复制url -->
                     <el-tooltip content="复制"
                                 placement="top">
-                                <!-- <el-button plain
+                      <el-button plain
                                  icon="el-icon-share"
                                  size="mini"
                                  type="success"
                                  class="gallery-list-button"
-                                 v-clipboard:copy='picList[index].uploadLocalUrl'
-                                 v-clipboard:success='clipboardSuccess'></el-button> -->
+                                 v-clipboard:copy="pic.uploadLocalUrl"
+                                 v-clipboard:success="clipboardSuccess"></el-button>
                     </el-tooltip>
 
                     <!-- 删除 -->
@@ -201,17 +201,6 @@
 </template>
 
 <script>
-// import {
-//   selectPhotoByPage,
-//   // selectFavoritePhotoByPage,
-//   insertFavoritePhoto,
-//   deleteFavoritePhoto,
-//   deletePhotoByCode,
-//   deletePhotoByCodeArray,
-//   updatePhoto,
-//   uploadByType
-// } from '../api/PhotoGallery'
-
 export default {
   name: 'Gallery',
   props: {

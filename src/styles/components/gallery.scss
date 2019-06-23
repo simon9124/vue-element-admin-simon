@@ -180,7 +180,8 @@ i {
           width: 60%;
           height: 24px;
           line-height: 24px;
-          vertical-align: text-bottom;
+          // vertical-align: text-bottom;
+          vertical-align: baseline;
         }
 
         .el-button {
@@ -275,7 +276,8 @@ i {
   }
 
   //
-  .gallery-list-col:hover .gallery-list-col-glass {
+  // .gallery-list-col:hover .gallery-list-col-glass {
+  .gallery-list-col-img:hover .gallery-list-col-glass {
     display: block;
   }
 }

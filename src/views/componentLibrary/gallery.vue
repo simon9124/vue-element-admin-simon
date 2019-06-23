@@ -36,16 +36,6 @@
 import VueDialog from '@/components/Dialog/VueDialog';
 // api
 import { getPhotoList, deletePhoto, updatePhoto } from '@/api/gallery.js';
-// import {
-//   selectPhotoByPage,
-//   // selectFavoritePhotoByPage,
-//   insertFavoritePhoto,
-//   deleteFavoritePhoto,
-//   deletePhotoByCode,
-//   deletePhotoByCodeArray,
-//   updatePhoto,
-//   uploadByType
-// } from '../api/PhotoGallery'
 
 export default {
   name: 'Gallery',
@@ -130,8 +120,13 @@ export default {
     // 确认按钮
     confirmHandler(params) {
       this.visible = false;
+      var selectPicName = '';
+      params.galleryList.forEach(pic => {
+        selectPicName += pic.uploadName + ',';
+      });
+      selectPicName = selectPicName.substring(0, selectPicName.length - 1);
       this.$message({
-        message: '被选中的图片：' + params.galleryList,
+        message: '被选中的图片：' + selectPicName,
         type: 'success'
       });
     },
