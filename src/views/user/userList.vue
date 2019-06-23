@@ -113,9 +113,9 @@
                          @click="scope.row.edit = !scope.row.edit"></i>
                     </span>
                     <!-- 编辑状态 -->
-                    <span v-else
-                          class="input-inline">
-                      <el-input v-model="scope.row.userAddress"></el-input>
+                    <span v-else>
+                      <el-input class="address-input-inline"
+                                v-model="scope.row.userAddress"></el-input>
                       <i class="el-icon-check check"
                          @click="editInline(scope.row)"></i>
                       <i class="el-icon-close close"
@@ -421,20 +421,14 @@ export default {
       const resultMessage = (await updateUsers(row)).data.message;
       // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
       this.$set(row, 'userStatus', row.userStatus);
-      this.$message({
-        message: resultMessage,
-        type: 'success'
-      });
+      this.getResultMessage(resultMessage);
     },
     // 行内更新用户信息
     async editInline(row) {
       const resultMessage = (await updateUsers(row)).data.message;
       // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
       this.$set(row, 'userAddress', row.userAddress);
-      this.$message({
-        message: resultMessage,
-        type: 'success'
-      });
+      this.getResultMessage(resultMessage);
       row.edit = !row.edit;
     },
     // 打开dialog更新用户信息
@@ -453,10 +447,7 @@ export default {
         const index = this.tableData.list.indexOf(row);
         this.tableData.list.splice(index, 1);
         this.refreshTable();
-        this.$message({
-          message: resultMessage,
-          type: 'success'
-        });
+        this.getResultMessage(resultMessage);
       }
     },
     // 选项发生变化 - 左下多选
@@ -497,12 +488,16 @@ export default {
             this.tableData.list.splice(index, 1);
             this.refreshTable();
           });
-          this.$message({
-            message: '删除成功！',
-            type: 'success'
-          });
+          this.getResultMessage('删除成功！');
         }
       }
+    },
+    // 回显message数据
+    getResultMessage(resultMessage) {
+      this.$message({
+        message: resultMessage,
+        type: 'success'
+      });
     }
   },
   watch: {

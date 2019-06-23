@@ -512,10 +512,14 @@ $blue: nth($blue, 2);
       width: 50%;
 
       input {
-        float: left;
+        // float: left;
         text-align: center;
         display: inline-block;
       }
+    }
+
+    .address-input-inline {
+      width: 280px;
     }
 
     .el-row {

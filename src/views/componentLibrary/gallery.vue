@@ -57,10 +57,12 @@ export default {
       galleryData: {}
     };
   },
+  created() {
+    this.getPhotoList();
+  },
   methods: {
     // 打开dialog弹框
-    async openDialog() {
-      await this.getPhotoList();
+    openDialog() {
       this.visible = true;
     },
     // 获取数据
