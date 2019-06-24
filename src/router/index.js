@@ -171,6 +171,174 @@ export const asyncRouterMap = [
     }]
   },
 
+  // charts
+  {
+    path: '/chart',
+    component: Layout,
+    redirect: '/chart/line',
+    meta: {
+      title: 'chart',
+      icon: 'chart',
+      roles: ['admin', 'editor']
+    },
+    children: [
+
+      {
+        path: 'line',
+        component: () => import('@/views/chart/line'),
+        name: 'chart-line',
+        meta: {
+          title: 'chartLine',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'histogram',
+        component: () => import('@/views/chart/histogram'),
+        name: 'chart-histogram',
+        meta: {
+          title: 'chartHistogram',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'bar',
+        component: () => import('@/views/chart/bar'),
+        name: 'chart-bar',
+        meta: {
+          title: 'chartBar',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'pie',
+        component: () => import('@/views/chart/pie'),
+        name: 'chart-pie',
+        meta: {
+          title: 'chartPie',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'ring',
+        component: () => import('@/views/chart/ring'),
+        name: 'chart-ring',
+        meta: {
+          title: 'chartRing',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'waterfall',
+        component: () => import('@/views/chart/waterfall'),
+        name: 'chart-waterfall',
+        meta: {
+          title: 'chartWaterfall',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'funnel',
+        component: () => import('@/views/chart/funnel'),
+        name: 'chart-funnel',
+        meta: {
+          title: 'chartFunnel',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'radar',
+        component: () => import('@/views/chart/radar'),
+        name: 'chart-radar',
+        meta: {
+          title: 'chartRadar',
+          keepAlive: true
+        }
+      },
+      // {
+      //   path: 'map',
+      //   component: () => import('@/views/chart/map'),
+      //   name: 'chart-map',
+      //   meta: {
+      //     title: 'chartMap',
+      //     keepAlive: true
+      //   }
+      // },
+      {
+        path: 'sankey',
+        component: () => import('@/views/chart/sankey'),
+        name: 'chart-sankey',
+        meta: {
+          title: 'chartSankey',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'heatmap',
+        component: () => import('@/views/chart/heatmap'),
+        name: 'chart-heatmap',
+        meta: {
+          title: 'chartHeatmap',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'scatter',
+        component: () => import('@/views/chart/scatter'),
+        name: 'chart-scatter',
+        meta: {
+          title: 'chartScatter',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'candle',
+        component: () => import('@/views/chart/candle'),
+        name: 'chart-candle',
+        meta: {
+          title: 'chartCandle',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'gauge',
+        component: () => import('@/views/chart/gauge'),
+        name: 'chart-gauge',
+        meta: {
+          title: 'chartGauge',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'tree',
+        component: () => import('@/views/chart/tree'),
+        name: 'chart-tree',
+        meta: {
+          title: 'chartTree',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'liquidfill',
+        component: () => import('@/views/chart/liquidfill'),
+        name: 'chart-liquidfill',
+        meta: {
+          title: 'chartLiquidfill',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'wordcloud',
+        component: () => import('@/views/chart/wordcloud'),
+        name: 'chart-wordcloud',
+        meta: {
+          title: 'chartWordcloud',
+          keepAlive: true
+        }
+      }
+    ]
+  },
+
   /** 路由引入**/
 
   {

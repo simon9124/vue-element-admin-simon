@@ -5,7 +5,27 @@ export default {
     userList: '用户列表',
     /** componentLibrary**/
     componentLibrary: '组件库',
-    gallery: '图片库'
+    gallery: '图片库',
+    /** chart**/
+    chart: '图表',
+    chartLine: '折线图',
+    chartHistogram: '柱状图',
+    chartBar: '条形图',
+    chartPie: '饼图',
+    chartRing: '环图',
+    chartWaterfall: '瀑布图',
+    chartFunnel: '漏斗图',
+    chartRadar: '雷达图',
+    chartMap: '地图',
+    chartSankey: '桑葚图',
+    chartHeatmap: '热力图',
+    chartScatter: '散点图',
+    chartCandle: 'K线图',
+    chartGauge: '仪表盘',
+    chartTree: '树图',
+    chartLiquidfill: '水球图',
+    chartWordcloud: '词云图'
+
   },
   navbar: {
     logOut: '退出登录',
