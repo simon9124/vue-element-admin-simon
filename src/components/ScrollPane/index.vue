@@ -1,6 +1,10 @@
 <template>
-  <div class="scroll-container" ref="scrollContainer" @wheel.prevent="handleScroll">
-    <div class="scroll-wrapper" ref="scrollWrapper" :style="{left: left + 'px'}">
+  <div class="scroll-container"
+       ref="scrollContainer"
+       @wheel.prevent="handleScroll">
+    <div class="scroll-wrapper"
+         ref="scrollWrapper"
+         :style="{left: left + 'px'}">
       <slot></slot>
     </div>
   </div>
@@ -31,7 +35,10 @@ export default {
           if (this.left < -($wrapperWidth - $containerWidth + padding)) {
             this.left = this.left
           } else {
-            this.left = Math.max(this.left + eventDelta, $containerWidth - $wrapperWidth - padding)
+            this.left = Math.max(
+              this.left + eventDelta,
+              $containerWidth - $wrapperWidth - padding
+            )
           }
         } else {
           this.left = 0
@@ -47,7 +54,10 @@ export default {
       if ($targetLeft < -this.left) {
         // tag in the left
         this.left = -$targetLeft + padding
-      } else if ($targetLeft + padding > -this.left && $targetLeft + $targetWidth < -this.left + $containerWidth - padding) {
+      } else if (
+        $targetLeft + padding > -this.left &&
+        $targetLeft + $targetWidth < -this.left + $containerWidth - padding
+      ) {
         // tag in the current view
         // eslint-disable-line
       } else {
@@ -66,7 +76,7 @@ export default {
   overflow: hidden;
   width: 100%;
   .scroll-wrapper {
-    position: absolute;
+    // position: absolute;
   }
 }
 </style>
