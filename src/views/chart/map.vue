@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       chartData: {
+        // key: 'oBvDtR6nzWtVchkY4cLHtnah1VVZQKRK',
         columns: ['位置', '税收', '人口', '面积'],
         rows: [
           { 位置: '吉林', 税收: 123, 人口: 123, 面积: 92134 },

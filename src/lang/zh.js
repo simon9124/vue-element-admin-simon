@@ -24,7 +24,10 @@ export default {
     chartGauge: '仪表盘',
     chartTree: '树图',
     chartLiquidfill: '水球图',
-    chartWordcloud: '词云图'
+    chartWordcloud: '词云图',
+    /** map**/
+    map: '地图',
+    mapCity: '城市'
 
   },
   navbar: {

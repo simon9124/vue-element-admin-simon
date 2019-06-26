@@ -339,6 +339,30 @@ export const asyncRouterMap = [
     ]
   },
 
+  // map
+  {
+    path: '/map',
+    component: Layout,
+    redirect: '/map/city',
+    meta: {
+      title: 'map',
+      icon: 'map',
+      roles: ['admin', 'editor']
+    },
+    children: [
+
+      {
+        path: 'city',
+        component: () => import('@/views/map/city'),
+        name: 'map-city',
+        meta: {
+          title: 'mapCity',
+          keepAlive: true
+        }
+      }
+    ]
+  },
+
   /** 路由引入**/
 
   {
