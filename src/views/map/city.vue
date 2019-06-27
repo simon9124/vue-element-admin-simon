@@ -11,11 +11,12 @@
 
           <el-form ref="filterFormData"
                    :inline="true"
-                   label-width="60px"
-                   class="demo-form-inline">
-            <el-form-item label="城市：">
+                   label-width="120px"
+                   class="demo-form-inline"
+                   @submit.native.prevent>
+            <el-form-item label="省份/城市/区县：">
               <el-input v-model="city"
-                        placeholder="请输入城市/城市拼音"></el-input>
+                        placeholder="请输入省份/城市/区县"></el-input>
             </el-form-item>
           </el-form>
           <baidu-map class="bm-view"

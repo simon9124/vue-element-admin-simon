@@ -27,7 +27,8 @@ export default {
     chartWordcloud: '词云图',
     /** map**/
     map: '地图',
-    mapCity: '城市'
+    mapCity: '地区切换',
+    mapController: '控件切换'
 
   },
   navbar: {

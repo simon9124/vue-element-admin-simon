@@ -15,7 +15,8 @@
                      :model="filterFormData"
                      :inline="true"
                      label-width="90px"
-                     class="demo-form-inline">
+                     class="demo-form-inline"
+                     @submit.native.prevent>
               <el-form-item label="用户名："
                             prop="userName">
                 <el-input v-model="filterFormData.userName"

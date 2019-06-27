@@ -37,6 +37,7 @@ Vue.use(VCharts)
 // baidu-map
 import BaiduMap from 'vue-baidu-map'
 Vue.use(BaiduMap, {
+  // https://github.com/ElemeFE/v-charts/blob/master/examples/pages/bmap.vue
   ak: 'oBvDtR6nzWtVchkY4cLHtnah1VVZQKRK'
 })
 

@@ -359,6 +359,15 @@ export const asyncRouterMap = [
           title: 'mapCity',
           keepAlive: true
         }
+      },
+      {
+        path: 'controller',
+        component: () => import('@/views/map/controller'),
+        name: 'map-controller',
+        meta: {
+          title: 'mapController',
+          keepAlive: true
+        }
       }
     ]
   },
