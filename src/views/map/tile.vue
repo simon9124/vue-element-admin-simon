@@ -24,8 +24,14 @@
             <el-form-item label="交通路况图：">
               <el-switch v-model="showTrafficPng"
                          active-text="显示"
+                         inactive-text="隐藏">
+              </el-switch>
+            </el-form-item>
+            <el-form-item label="热力图：">
+              <el-switch v-model="showHeatmap"
+                         active-text="显示"
                          inactive-text="隐藏"
-                         @change="toggleTilePng(showTilePng)">
+                         @change="toggleHeatmap(showHeatmap)">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -50,6 +56,13 @@
                         :predict-date="{weekday: 7, hour: 12}">
             </bm-traffic>
 
+            <!-- 热力图 -->
+            <bml-heatmap v-if="showHeatmap"
+                         :data="heatData"
+                         :max="100"
+                         :radius="20">
+            </bml-heatmap>
+
           </baidu-map>
 
         </div>
@@ -61,7 +74,12 @@
 </template>
 
 <script>
+import { BmlHeatmap } from 'vue-baidu-map';
+
 export default {
+  components: {
+    BmlHeatmap
+  },
   data() {
     return {
       // 默认地图中心
@@ -74,7 +92,17 @@ export default {
       tileUrlTemplate:
         '//lbsyun.baidu.com/jsdemo/demo/tiles/{Z}/tile{X}_{Y}.png',
       // 瓦片图层显示与否 - 交通路况
-      showTrafficPng: false
+      showTrafficPng: false,
+      // 热力图显示与否
+      showHeatmap: false,
+      // 热力图数据
+      heatData: [
+        { lng: 116.405231, lat: 39.911368, count: 81 },
+        { lng: 116.408261, lat: 39.911984, count: 100 },
+        { lng: 116.409787, lat: 39.910658, count: 15 },
+        { lng: 116.407392, lat: 39.916532, count: 51 },
+        { lng: 116.405479, lat: 39.914703, count: 72 }
+      ]
     };
   },
   created() {
@@ -96,12 +124,15 @@ export default {
         this.zoom = this.zoomOrg;
       }
     },
-    // 回显message数据
-    getResultMessage(type, text) {
-      this.$message({
-        message: text,
-        type: type === true ? 'success' : 'warning'
-      });
+    // switch切换热力图显示
+    toggleHeatmap(showHeatmap) {
+      if (showHeatmap === true) {
+        this.center = { lng: 116.404, lat: 39.915 };
+        this.zoom = 14;
+      } else {
+        this.center = this.centerOrg;
+        this.zoom = this.zoomOrg;
+      }
     }
   }
 };

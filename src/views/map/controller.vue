@@ -21,13 +21,6 @@
               </el-switch>
             </el-form-item>
             <el-form-item>
-              <el-switch v-model="showTilePng"
-                         active-text="瓦片图显示"
-                         inactive-text="瓦片图隐藏"
-                         @change="toggleTilePng(showTilePng)">
-              </el-switch>
-            </el-form-item>
-            <el-form-item>
               <el-switch v-model="maptype"
                          active-text="地图类型 "
                          inactive-text="城市列表"
@@ -88,12 +81,6 @@
             <!-- 全景 -->
             <bm-panorama v-else></bm-panorama>
 
-            <!-- 瓦片图层 -->
-            <bm-tile v-if="showTilePng"
-                     :is-transparent-png="true"
-                     :tile-url-template="tileUrlTemplate">
-            </bm-tile>
-
           </baidu-map>
         </div>
 
@@ -116,12 +103,7 @@ export default {
       // 地图类型 or 城市列表 -> true or false
       maptype: false,
       // 地图类型 or 城市列表 -> true or false
-      geolocation: false,
-      // 瓦片图层显示与否
-      showTilePng: false,
-      // 瓦片图层网址模板
-      tileUrlTemplate:
-        '//lbsyun.baidu.com/jsdemo/demo/tiles/{Z}/tile{X}_{Y}.png'
+      geolocation: false
     };
   },
   unmount() {
@@ -137,19 +119,6 @@ export default {
     viewchanged(type) {
       console.log(type);
     },
-    // switch切换瓦片图显示
-    async toggleTilePng(showTilePng) {
-      const res = await this.$confirm(
-        '已切换清华校园微观图，是否查看？',
-        '提示',
-        {
-          type: 'warning'
-        }
-      ).catch(() => {});
-      if (res === 'confirm') {
-        this.center = { lng: 116.332782, lat: 40.007978 };
-      }
-    },
     // 定位成功后
     locationSuccess(point) {
       console.log(point);
@@ -160,13 +129,6 @@ export default {
         }`
       );
     },
-    // 回显message数据
-    getResultMessage(type, text) {
-      this.$message({
-        message: text,
-        type: type === true ? 'success' : 'warning'
-      });
-    },
     // 开启测距功能
     openDistanceTool(e) {
       const { distanceTool } = this;
@@ -175,6 +137,13 @@ export default {
     // 显示测距结果
     setDistanceToolInstance({ map }) {
       this.distanceTool = new DistanceTool(map, { lineStroke: 2 });
+    },
+    // 回显message数据
+    getResultMessage(type, text) {
+      this.$message({
+        message: text,
+        type: type === true ? 'success' : 'warning'
+      });
     }
   }
 };
