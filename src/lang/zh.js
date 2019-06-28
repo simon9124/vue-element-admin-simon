@@ -28,7 +28,8 @@ export default {
     /** map**/
     map: '地图',
     mapCity: '地区切换',
-    mapController: '控件切换'
+    mapController: '控件切换',
+    mapTile: '图层覆盖'
 
   },
   navbar: {

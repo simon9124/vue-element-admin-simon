@@ -368,6 +368,15 @@ export const asyncRouterMap = [
           title: 'mapController',
           keepAlive: true
         }
+      },
+      {
+        path: 'tile',
+        component: () => import('@/views/map/tile'),
+        name: 'map-tile',
+        meta: {
+          title: 'mapTile',
+          keepAlive: true
+        }
       }
     ]
   },
