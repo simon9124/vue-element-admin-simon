@@ -93,4 +93,13 @@ export default {
     }
   }
 }
+.bm-view /deep/.map-search-result > div > div > ol::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #dbdada;
+}
+.bm-view /deep/.map-search-result > div > div > ol::-webkit-scrollbar-thumb {
+  background: #cccccc;
+}
+.bm-view /deep/.map-search-result > div > div > ol::-webkit-scrollbar {
+  width: 5px;
+}
 </style>
