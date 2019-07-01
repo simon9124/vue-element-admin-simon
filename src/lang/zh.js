@@ -27,10 +27,10 @@ export default {
     chartWordcloud: '词云图',
     /** map**/
     map: '地图',
-    mapCity: '地区切换',
+    mapCity: '地区搜索',
     mapController: '控件切换',
-    mapTile: '图层覆盖'
-
+    mapTile: '图层覆盖',
+    mapSearch: '路线检索'
   },
   navbar: {
     logOut: '退出登录',

@@ -377,6 +377,15 @@ export const asyncRouterMap = [
           title: 'mapTile',
           keepAlive: true
         }
+      },
+      {
+        path: 'search',
+        component: () => import('@/views/map/search'),
+        name: 'map-search',
+        meta: {
+          title: 'mapSearch',
+          keepAlive: true
+        }
       }
     ]
   },
