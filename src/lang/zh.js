@@ -1,8 +1,10 @@
 export default {
   route: {
     dashboard: '首页',
-    /** tables**/
+    /** authority**/
+    authority: '权限管理',
     userList: '用户列表',
+    articleList: '文章列表',
     /** componentLibrary**/
     componentLibrary: '组件库',
     gallery: '图片库',

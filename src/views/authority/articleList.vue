@@ -5,7 +5,7 @@
     <div class="content">
       <!-- 表格 -->
       <div class="content-spe">
-        <p class="content-spe-title">用户列表</p>
+        <p class="content-spe-title">{{ $t('route.articleList') }}</p>
         <div class="content-spe-element">
 
           <!-- table-filter -->
@@ -166,7 +166,7 @@
                 <el-table-column label="操作"
                                  align="center"
                                  fixed="right"
-                                 min-width="150">
+                                 min-width="200">
                   <template slot-scope="scope">
                     <el-tooltip content="编辑"
                                 placement="left">
@@ -176,14 +176,34 @@
                                  type="primary"
                                  @click="update(scope.row)"></el-button>
                     </el-tooltip>
-                    <el-tooltip content="删除"
+                    <Button plain
+                            tooltip
+                            icon="el-icon-delete"
+                            size="mini"
+                            type="danger"
+                            placement="right"
+                            content="删除"
+                            @click="del(scope.row)"></Button>
+
+                            <!-- <el-tooltip content="删除"
                                 placement="right">
                       <el-button plain
                                  icon="el-icon-delete"
                                  size="mini"
                                  type="danger"
                                  @click="del(scope.row)"></el-button>
-                    </el-tooltip>
+                    </el-tooltip> -->
+
+                            <!-- Button组件 -->
+                            <!-- <Button plain
+                            tooltip
+                            icon="el-icon-edit"
+                            size="mini"
+                            type="primary"
+                            placement="right"
+                            content="删除"
+                            @click="click(scope.row)"></Button> -->
+
                   </template>
                 </el-table-column>
               </el-table>
@@ -279,16 +299,18 @@
 
 <script>
 // components
-import ComponentFilter from '@/components/ComponentFilter';
-import CustomSelect from '@/components/ComponentSelect/select';
+import ComponentFilter from '@/components/ComponentFilter'
+import CustomSelect from '@/components/ComponentSelect/select'
+import Button from '@/components/Authority/authorityButton'
 // api
-import { getUserList, updateUsers, deleteUser } from '@/api/user.js';
+import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
 
 export default {
   name: 'UserList',
   components: {
     CustomSelect,
-    ComponentFilter
+    ComponentFilter,
+    Button
   },
   data() {
     return {
@@ -354,30 +376,30 @@ export default {
       // dialog显示与否
       dialogVisible: false,
       userForm: {}
-    };
+    }
   },
   created() {
-    this.init();
+    this.init()
   },
   methods: {
     // 表格数据初始化
     async init() {
-      this.tableData = (await getUserList(this)).data.tableData;
+      this.tableData = (await getUserList(this)).data.tableData
       this.tableData.list.map(row => {
-        this.$set(row, 'edit', false);
-        return row;
-      });
-      this.refreshTable();
-      this.tableDataLoading = false;
+        this.$set(row, 'edit', false)
+        return row
+      })
+      this.refreshTable()
+      this.tableDataLoading = false
     },
     // 顶部筛选
     handleParamsChange(value) {
       switch (value.type) {
         case 'userStatus':
-          this.filterFormData.userStatus = value.value;
-          break;
+          this.filterFormData.userStatus = value.value
+          break
       }
-      this.refreshTable();
+      this.refreshTable()
     },
     // 根据条件渲染页面数据
     refreshTable() {
@@ -388,14 +410,14 @@ export default {
           row.userMobile.indexOf(this.filterFormData.userMobile) > -1 &&
           row.userStatus.indexOf(this.filterFormData.userStatus.toString()) > -1
         ) {
-          return row;
+          return row
         }
-      });
+      })
       // 在页面要显示的用户
       this.userList = this.userListAll.slice(
         (this.pageNum - 1) * this.pageSize,
         this.pageNum * this.pageSize
-      );
+      )
     },
     // 清空筛选
     clear() {
@@ -403,93 +425,93 @@ export default {
         userName: '',
         userMobile: '',
         userStatus: ''
-      };
-      this.$refs.userStatusSelect.handleSelectChange('');
-      this.refreshTable();
+      }
+      this.$refs.userStatusSelect.handleSelectChange('')
+      this.refreshTable()
     },
     // 分页-跳页
     handlePageChange(pageNum) {
-      this.pageNum = pageNum;
-      this.refreshTable();
+      this.pageNum = pageNum
+      this.refreshTable()
     },
     // 分页-改变页显示数
     handleSizeChange(pageSize) {
-      this.pageSize = pageSize;
-      this.refreshTable();
+      this.pageSize = pageSize
+      this.refreshTable()
     },
     // 行内更新用户状态
     async handleSwitchChange(row) {
-      const resultMessage = (await updateUsers(row)).data.message;
+      const resultMessage = (await updateUsers(row)).data.message
       // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
-      this.$set(row, 'userStatus', row.userStatus);
-      this.getResultMessage(resultMessage);
+      this.$set(row, 'userStatus', row.userStatus)
+      this.getResultMessage(resultMessage)
     },
     // 行内更新用户信息
     async editInline(row) {
-      const resultMessage = (await updateUsers(row)).data.message;
+      const resultMessage = (await updateUsers(row)).data.message
       // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
-      this.$set(row, 'userAddress', row.userAddress);
-      this.getResultMessage(resultMessage);
-      row.edit = !row.edit;
+      this.$set(row, 'userAddress', row.userAddress)
+      this.getResultMessage(resultMessage)
+      row.edit = !row.edit
     },
     // 打开dialog更新用户信息
     update(row) {
-      this.dialogVisible = true;
-      this.userForm = row;
+      this.dialogVisible = true
+      this.userForm = row
     },
     // 按钮 - 删除
     async del(row) {
       const res = await this.$confirm('确认删除该用户吗？', '提示', {
         type: 'warning'
-      }).catch(() => {});
+      }).catch(() => {})
       if (res === 'confirm') {
         // 前端虚拟删除操作 -> 根据row的下标删除该row
-        const resultMessage = (await deleteUser(row)).data.message;
-        const index = this.tableData.list.indexOf(row);
-        this.tableData.list.splice(index, 1);
-        this.refreshTable();
-        this.getResultMessage(resultMessage);
+        const resultMessage = (await deleteUser(row)).data.message
+        const index = this.tableData.list.indexOf(row)
+        this.tableData.list.splice(index, 1)
+        this.refreshTable()
+        this.getResultMessage(resultMessage)
       }
     },
     // 选项发生变化 - 左下多选
     handleSelectionChange(value) {
-      this.multipleSelection = value;
+      this.multipleSelection = value
     },
     // 批量操作数据
     async batcthExecute() {
       // 将选择的数据放在delCodes数组中
-      const delCodes = [];
+      const delCodes = []
       for (const select of this.multipleSelection) {
-        delCodes.push(select.userCode);
+        delCodes.push(select.userCode)
       }
       // 如果没有选择数据
       if (this.multipleSelection.length === 0) {
         this.$message({
           type: 'warning',
           message: '请选择数据！'
-        });
-        return;
+        })
+        return
       } else if (this.batchFilterData === '') {
         // 如果没有选择操作
         this.$message({
           type: 'warning',
           message: '请选择批处理操作！'
-        });
-        return;
+        })
+        return
       } else if (this.batchFilterData === 'delete') {
         // 如果选择 "批量删除"
         const res = await this.$confirm('确认删除？', '提示', {
           type: 'warning'
-        }).catch(() => {});
+        }).catch(() => {})
         if (res === 'confirm') {
           // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
           this.multipleSelection.forEach(async row => {
-            await deleteUser();
-            const index = this.tableData.list.indexOf(row);
-            this.tableData.list.splice(index, 1);
-            this.refreshTable();
-          });
-          this.getResultMessage('删除成功！');
+            await deleteUser()
+            const index = this.tableData.list.indexOf(row)
+            this.tableData.list.splice(index, 1)
+            this.refreshTable()
+          })
+          this.getResultMessage('删除成功！')
         }
       }
     },
@@ -498,17 +520,17 @@ export default {
       this.$message({
         message: resultMessage,
         type: 'success'
-      });
+      })
     }
   },
   watch: {
     $route(to, from) {
-      this.init();
+      this.init()
     }
   }
-};
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import "../../styles/smart-ui/smart-ui.scss";
+@import '../../styles/smart-ui/smart-ui.scss';
 </style>

@@ -25,6 +25,11 @@
                              slot="append"
                              type="primary"
                              icon="el-icon-search"></el-button>
+
+                  <el-button class="map-search-button"
+                             slot="append"
+                             type="primary"
+                             icon="el-icon-search"></el-button>
                 </el-input>
               </bm-auto-complete>
             </bm-control>
@@ -34,6 +39,11 @@
                              :auto-viewport="true"
                              class="map-search-result"
                              @searchcomplete="searchcomplete"></bm-local-search>
+
+            <bm-transit start="百度大厦"
+                        end="北京邮电大学西门"
+                        :auto-viewport="true"
+                        location="北京"></bm-transit>
           </baidu-map>
 
         </div>
@@ -51,18 +61,18 @@ export default {
       city: '北京',
       // 检索框
       keyword: ''
-    };
+    }
   },
   methods: {
     searchcomplete(results) {
-      console.log(results);
+      console.log(results)
     }
   }
-};
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import "../../styles/smart-ui/smart-ui.scss";
+@import '../../styles/smart-ui/smart-ui.scss';
 .bm-view /deep/ {
   width: 100%;
   height: 400px;
@@ -86,13 +96,17 @@ export default {
     top: 50px;
     left: 10px;
     width: 304px;
-    max-height: calc(100vh - 430px);
+    // max-height: calc(100vh - 430px);
     & > div {
-      max-height: calc(100vh - 430px);
+      // max-height: calc(100vh - 430px);
       & > div {
-        max-height: calc(100vh - 455px);
+        // max-height: calc(100vh - 455px);
+        & + div {
+          margin-top: 0 !important;
+        }
         & > ol {
           max-height: calc(100vh - 455px);
+          min-height: 250px;
           overflow-x: auto;
         }
       }
