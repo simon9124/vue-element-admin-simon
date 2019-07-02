@@ -32,7 +32,8 @@
             <!-- 搜索结果 -->
             <bm-local-search :keyword="keyword"
                              :auto-viewport="true"
-                             class="map-search-result"></bm-local-search>
+                             class="map-search-result"
+                             @searchcomplete="searchcomplete"></bm-local-search>
           </baidu-map>
 
         </div>
@@ -51,6 +52,11 @@ export default {
       // 检索框
       keyword: ''
     };
+  },
+  methods: {
+    searchcomplete(results) {
+      console.log(results);
+    }
   }
 };
 </script>
@@ -60,10 +66,10 @@ export default {
 .bm-view /deep/ {
   width: 100%;
   height: 400px;
-  min-height: calc(100vh - 320px);
+  min-height: calc(100vh - 260px);
   position: relative;
   .map-search-input {
-    width: 300px;
+    width: 350px;
     position: absolute;
     top: 10px;
     left: 10px;
@@ -79,7 +85,7 @@ export default {
     position: absolute;
     top: 50px;
     left: 10px;
-    width: 300px;
+    width: 304px;
     max-height: calc(100vh - 430px);
     & > div {
       max-height: calc(100vh - 430px);
