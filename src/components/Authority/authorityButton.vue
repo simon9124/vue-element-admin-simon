@@ -1,3 +1,8 @@
+<!--
+  ** element组件二次封装 - Button按钮 - 页面级别 **
+  1.vuex 获取 roles & canOperatePages -> 共同决定是否可操作
+  2.参数：基本同element
+-->
 <template>
   <div style="display:inline-block;margin:0 10px">
     <el-button v-if="!tooltip"
@@ -23,9 +28,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   data() {
-    return {
-      canOperatePage: ['articleList']
-    }
+    return {}
   },
   props: {
     // 接收父组件传来的值 - button相关
@@ -60,19 +63,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['roles'])
+    ...mapGetters(['roles', 'canOperatePages'])
   },
   methods: {
     buttonClick() {
       if (
         this.roles.includes('admin') ||
-        this.canOperatePage.includes(this.$route.meta.title)
+        this.canOperatePages.includes(this.$route.meta.title)
       ) {
         this.$emit('click', '')
       } else {
         this.$message({
           type: 'error',
-          message: '您没有权限'
+          message: '您的用户级别没有权限进行此操作'
         })
       }
     }

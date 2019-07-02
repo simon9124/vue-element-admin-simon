@@ -3,8 +3,8 @@ export default {
     dashboard: '首页',
     /** authority**/
     authority: '权限管理',
-    userList: '用户列表',
-    articleList: '文章列表',
+    userList: '用户管理',
+    articleList: '内容管理',
     /** componentLibrary**/
     componentLibrary: '组件库',
     gallery: '图片库',
