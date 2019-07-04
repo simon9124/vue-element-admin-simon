@@ -176,15 +176,8 @@
                                  type="primary"
                                  @click="update(scope.row)"></el-button>
                     </el-tooltip>
-                    <!-- <el-tooltip content="删除"
-                                placement="right">
-                      <el-button plain
-                                 icon="el-icon-delete"
-                                 size="mini"
-                                 type="danger"
-                                 @click="del(scope.row)"></el-button>
-                    </el-tooltip> -->
-                    <Button plain
+                    <Button style="marginLeft:10px"
+                            plain
                             tooltip
                             icon="el-icon-delete"
                             size="mini"

@@ -5,7 +5,7 @@
     <div class="content">
       <!-- 表格 -->
       <div class="content-spe">
-        <p class="content-spe-title">{{ $t('route.articleList') }}</p>
+        <p class="content-spe-title">{{ $t('route.userList') }}</p>
         <div class="content-spe-element">
 
           <!-- table-filter -->
@@ -166,7 +166,7 @@
                 <el-table-column label="操作"
                                  align="center"
                                  fixed="right"
-                                 min-width="200">
+                                 min-width="150">
                   <template slot-scope="scope">
                     <el-tooltip content="编辑"
                                 placement="left">
@@ -176,7 +176,8 @@
                                  type="primary"
                                  @click="update(scope.row)"></el-button>
                     </el-tooltip>
-                    <Button plain
+                    <Button style="marginLeft:10px"
+                            plain
                             tooltip
                             icon="el-icon-delete"
                             size="mini"
@@ -184,25 +185,6 @@
                             placement="right"
                             content="删除"
                             @click="del(scope.row)"></Button>
-
-                            <!-- <el-tooltip content="删除"
-                                placement="right">
-                      <el-button plain
-                                 icon="el-icon-delete"
-                                 size="mini"
-                                 type="danger"
-                                 @click="del(scope.row)"></el-button>
-                    </el-tooltip> -->
-
-                            <!-- Button组件 -->
-                            <!-- <Button plain
-                            tooltip
-                            icon="el-icon-edit"
-                            size="mini"
-                            type="primary"
-                            placement="right"
-                            content="删除"
-                            @click="click(scope.row)"></Button> -->
 
                   </template>
                 </el-table-column>

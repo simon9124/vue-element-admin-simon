@@ -4,7 +4,7 @@
   2.参数：基本同element
 -->
 <template>
-  <div style="display:inline-block;margin:0 10px">
+  <span style="display:inline-block">
     <el-button v-if="!tooltip"
                :plain="plain"
                :icon="icon"
@@ -20,7 +20,7 @@
                  :type="type"
                  @click="buttonClick()"></el-button>
     </el-tooltip>
-  </div>
+  </span>
 </template>
 
 <script>
