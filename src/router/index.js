@@ -132,30 +132,30 @@ export const asyncRouterMap = [
   {
     path: '/authority',
     component: Layout,
-    redirect: '/authority/userList',
+    redirect: '/authority/userManage',
     meta: {
       title: 'authority',
-      icon: 'peoples',
+      icon: 'authority',
       roles: ['admin', 'editor']
     },
     children: [
 
       {
-        path: 'userList',
-        component: () => import('@/views/authority/userList'),
-        name: 'user-list',
+        path: 'userManage',
+        component: () => import('@/views/authority/userManage'),
+        name: 'user-manage',
         meta: {
-          title: 'userList',
+          title: 'userManage',
           roles: ['admin', 'editor'],
           keepAlive: true
         }
       },
       {
-        path: 'articleList',
-        component: () => import('@/views/authority/articleList'),
-        name: 'article-list',
+        path: 'articleManage',
+        component: () => import('@/views/authority/articleManage'),
+        name: 'article-manage',
         meta: {
-          title: 'articleList',
+          title: 'articleManage',
           roles: ['admin', 'editor'],
           keepAlive: true
         }
