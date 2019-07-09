@@ -113,8 +113,17 @@
                              align="center">
               <template slot-scope="scope">
                 <div class="buttons">
-                  <el-tooltip content="编辑"
+                  <el-tooltip content="执行"
                               placement="left">
+                    <el-button plain
+                               icon="el-icon-caret-right"
+                               size="mini"
+                               type="success"
+                               :disabled="scope.row.execLoading"
+                               @click="executeJob(scope.row)"></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="编辑"
+                              placement="top">
                     <el-button plain
                                icon="el-icon-edit"
                                size="mini"
@@ -122,21 +131,12 @@
                                @click="openJobClickHandler(true, scope.row)"></el-button>
                   </el-tooltip>
                   <el-tooltip content="删除"
-                              placement="top">
+                              placement="right">
                     <el-button plain
                                icon="el-icon-delete"
                                size="mini"
                                type="danger"
                                @click="del(scope.row)"></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="执行"
-                              placement="right">
-                    <el-button plain
-                               icon="el-icon-caret-right"
-                               size="mini"
-                               type="success"
-                               :disabled="scope.row.execLoading"
-                               @click="executeJob(scope.row)"></el-button>
                   </el-tooltip>
                 </div>
               </template>
@@ -293,6 +293,9 @@ export default {
     isShowInsert: {
       type: Boolean,
       default: true
+    },
+    jobsSelectedCode: {
+      type: String
     }
   },
   data() {

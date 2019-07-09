@@ -159,6 +159,16 @@ export const asyncRouterMap = [
           roles: ['admin', 'editor'],
           keepAlive: true
         }
+      },
+      {
+        path: 'roleManage',
+        component: () => import('@/views/authority/roleManage'),
+        name: 'role-manage',
+        meta: {
+          title: 'roleManage',
+          roles: ['admin', 'editor'],
+          keepAlive: true
+        }
       }
 
     ]

@@ -3,8 +3,13 @@ import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
-import userAPI from './user'
-import galleryAPI from './gallery'
+import {
+  userAPI,
+  roleAPI
+} from './authority'
+import {
+  galleryAPI
+} from './componentLibrary'
 
 // 修复在使用 MockJS 情况下，设置 withCredentials = true，且未被拦截的跨域请求丢失 Cookies 的问题
 // https://github.com/nuysoft/Mock/issues/300
@@ -39,11 +44,17 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 // 账单相关
 Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
 
-// 用户相关
+/* 权限 */
+// 用户管理
 Mock.mock(/\/user\/list/, 'get', userAPI.getUserList)
-Mock.mock(/\/user\/update/, 'put', userAPI.updateUsers)
+Mock.mock(/\/user\/update/, 'put', userAPI.updateUser)
 Mock.mock(/\/user\/delete/, 'delete', userAPI.deleteUser)
+// 角色管理
+Mock.mock(/\/role\/list/, 'get', roleAPI.getRoleList)
+Mock.mock(/\/role\/update/, 'put', roleAPI.updateRole)
+Mock.mock(/\/role\/delete/, 'delete', roleAPI.deleteRole)
 
+/* 组件库 */
 // 图片库
 Mock.mock(/\/photo\/list/, 'get', galleryAPI.getPhotoList)
 Mock.mock(/\/photo\/update/, 'put', galleryAPI.updatePhoto)

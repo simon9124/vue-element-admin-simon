@@ -5,7 +5,7 @@
     <div class="content">
       <!-- 表格 -->
       <div class="content-spe">
-        <p class="content-spe-title">{{ $t('route.userList') }}</p>
+        <p class="content-spe-title">{{ $t('route.roleManage') }}</p>
         <div class="content-spe-element">
 
           <!-- table-filter -->
@@ -17,25 +17,19 @@
                      label-width="90px"
                      class="demo-form-inline"
                      @submit.native.prevent>
-              <el-form-item label="用户名："
-                            prop="userName">
-                <el-input v-model="filterFormData.userName"
-                          placeholder="请输入用户名"
+              <el-form-item label="角色名："
+                            prop="roleName">
+                <el-input v-model="filterFormData.roleName"
+                          placeholder="请输入角色名"
                           @keyup.enter.native="refreshTable"></el-input>
               </el-form-item>
-              <el-form-item label="用户手机："
-                            prop="userMobile">
-                <el-input v-model="filterFormData.userMobile"
-                          placeholder="请输入内容"
-                          @keyup.enter.native="refreshTable"></el-input>
-              </el-form-item>
-              <el-form-item label="用户状态："
-                            prop="userStatus">
-                <CustomSelect ref="userStatusSelect"
-                              :options="userStatusOptions"
-                              type="userStatus"
+              <el-form-item label="角色状态："
+                            prop="roleStatus">
+                <CustomSelect ref="roleStatusSelect"
+                              :options="roleStatusOptions"
+                              type="roleStatus"
                               default-selected=""
-                              is-all="true"
+                              :is-all="true"
                               @selectChangeCallBack="handleParamsChange"></CustomSelect>
               </el-form-item>
               <el-form-item class="el-form-button">
@@ -80,7 +74,7 @@
                         fit
                         border
                         highlight-current-row
-                        :data="userList"
+                        :data="roleList"
                         tooltip-effect="dark"
                         element-loading-text="数据加载中"
                         element-loading-spinner="el-icon-loading"
@@ -101,36 +95,12 @@
                                  align="center">
                 </el-table-column>
 
-                <!-- 地址：edit & update -->
-                <el-table-column label="地址"
-                                 align="center"
-                                 min-width="350">
-
-                  <template slot-scope="scope">
-                    <!-- 非编辑状态 -->
-                    <span v-if="scope.row.edit === false">
-                      {{ scope.row.userAddress }}
-                      <i class="el-icon-edit edit"
-                         @click="scope.row.edit = !scope.row.edit"></i>
-                    </span>
-                    <!-- 编辑状态 -->
-                    <span v-else>
-                      <el-input class="address-input-inline"
-                                v-model="scope.row.userAddress"></el-input>
-                      <i class="el-icon-check check"
-                         @click="editInline(scope.row)"></i>
-                      <i class="el-icon-close close"
-                         @click="scope.row.edit = !scope.row.edit"></i>
-                    </span>
-                  </template>
-                </el-table-column>
-
                 <!-- 状态：edit & update -->
                 <el-table-column label="状态"
                                  align="center"
                                  min-width="60">
                   <template slot-scope="scope">
-                    <el-switch v-model="scope.row.userStatus"
+                    <el-switch v-model="scope.row.roleStatus"
                                active-value="1"
                                inactive-value="0"
                                @change="handleSwitchChange(scope.row)">
@@ -147,18 +117,6 @@
                             :key="item.value"
                             :disable-transitions="true">{{ item.roleName }}
                     </el-tag>
-                  </template>
-                </el-table-column>
-
-                <!-- 头像 -->
-                <el-table-column label="头像"
-                                 align="center"
-                                 width="50">
-                  <template slot-scope="scope">
-                    <img v-if="scope.row.userAvatar!=='' && scope.row.userAvatar!==undefined"
-                         :src="scope.row.userAvatar"
-                         width="30"
-                         height="30">
                   </template>
                 </el-table-column>
 
@@ -222,7 +180,7 @@
                                  :page-size="10"
                                  :pager-count="5"
                                  layout="total, sizes, prev, pager, next, jumper"
-                                 :total="userListAll.length">
+                                 :total="roleListAll.length">
                   </el-pagination>
                 </el-col>
                 <el-col :md="12"
@@ -232,7 +190,7 @@
                                  :page-size="10"
                                  :pager-count="5"
                                  layout="prev, pager, next"
-                                 :total="userListAll.length">
+                                 :total="roleListAll.length">
                   </el-pagination>
                 </el-col>
                 <el-col :sm="24"
@@ -242,7 +200,7 @@
                                  :page-size="10"
                                  :pager-count="5"
                                  layout="prev, pager, next"
-                                 :total="userListAll.length">
+                                 :total="roleListAll.length">
                   </el-pagination>
                 </el-col>
               </el-row>
@@ -260,11 +218,11 @@
       <el-form v-model="userForm">
         <el-form-item label="用户名"
                       label-width="200px">
-          <el-input v-model="userForm.userName"></el-input>
+          <el-input v-model="userForm.roleName"></el-input>
         </el-form-item>
         <el-form-item label="活动区域"
                       label-width="200px">
-          <el-select v-model="userForm.userName"
+          <el-select v-model="userForm.roleName"
                      placeholder="请选择活动区域">
             <el-option label="区域一"
                        value="shanghai"></el-option>
@@ -281,14 +239,14 @@
 
 <script>
 // components
-import ComponentFilter from '@/components/ComponentFilter'
-import CustomSelect from '@/components/ComponentSelect/select'
-import Button from '@/components/Authority/authorityButton'
+import ComponentFilter from '@/components/ComponentFilter';
+import CustomSelect from '@/components/ComponentSelect/select';
+import Button from '@/components/Authority/authorityButton';
 // api
-import { getUserList, updateUsers, deleteUser } from '@/api/user.js'
+import { getUserList, updateUser, deleteUser } from '@/api/authority/role.js';
 
 export default {
-  name: 'UserList',
+  name: 'UserManage',
   components: {
     CustomSelect,
     ComponentFilter,
@@ -301,33 +259,22 @@ export default {
       // 表格原始数据
       tableData: {},
       // 用户list数据 - 筛选后所有
-      userListAll: [],
+      roleListAll: [],
       // 用户list数据 - 当前页面
-      userList: [],
+      roleList: [],
       // 表格列项
       treeColumns: [
         {
-          prop: 'userName',
-          label: '用户名',
+          prop: 'roleName',
+          label: '角色名',
           minWidth: 150,
           sortable: true
         },
         {
-          prop: 'userNickName',
-          label: '姓名',
-          minWidth: 100,
+          prop: 'roleKey',
+          label: '角色标识',
+          minWidth: 150,
           sortable: true
-        },
-        {
-          prop: 'userMobile',
-          label: '手机号',
-          minWidth: 120,
-          sortable: true
-        },
-        {
-          prop: 'userMail',
-          label: '邮箱',
-          minWidth: 180
         }
       ],
       // 初始化页码
@@ -336,12 +283,11 @@ export default {
       pageSize: 10,
       // 筛选
       filterFormData: {
-        userName: '',
-        userMobile: '',
-        userStatus: ''
+        roleName: '',
+        roleStatus: ''
       },
       // 顶部筛选项
-      userStatusOptions: [
+      roleStatusOptions: [
         {
           label: '有效',
           value: 1
@@ -358,142 +304,132 @@ export default {
       // dialog显示与否
       dialogVisible: false,
       userForm: {}
-    }
+    };
   },
   created() {
-    this.init()
+    this.init();
   },
   methods: {
     // 表格数据初始化
     async init() {
-      this.tableData = (await getUserList(this)).data.tableData
+      this.tableData = (await getUserList(this)).data.tableData;
       this.tableData.list.map(row => {
-        this.$set(row, 'edit', false)
-        return row
-      })
-      this.refreshTable()
-      this.tableDataLoading = false
+        this.$set(row, 'edit', false);
+        return row;
+      });
+      this.refreshTable();
+      this.tableDataLoading = false;
     },
     // 顶部筛选
     handleParamsChange(value) {
       switch (value.type) {
-        case 'userStatus':
-          this.filterFormData.userStatus = value.value
-          break
+        case 'roleStatus':
+          this.filterFormData.roleStatus = value.value;
+          break;
       }
-      this.refreshTable()
+      this.refreshTable();
     },
     // 根据条件渲染页面数据
     refreshTable() {
       // 全部符合筛选条件的用户 -> 计总数用
-      this.userListAll = this.tableData.list.filter(row => {
+      this.roleListAll = this.tableData.list.filter(row => {
         if (
-          row.userName.indexOf(this.filterFormData.userName) > -1 &&
-          row.userMobile.indexOf(this.filterFormData.userMobile) > -1 &&
-          row.userStatus.indexOf(this.filterFormData.userStatus.toString()) > -1
+          row.roleName.indexOf(this.filterFormData.roleName) > -1 &&
+          row.roleStatus.indexOf(this.filterFormData.roleStatus.toString()) > -1
         ) {
-          return row
+          return row;
         }
-      })
+      });
       // 在页面要显示的用户
-      this.userList = this.userListAll.slice(
+      this.roleList = this.roleListAll.slice(
         (this.pageNum - 1) * this.pageSize,
         this.pageNum * this.pageSize
-      )
+      );
     },
     // 清空筛选
     clear() {
       this.filterFormData = {
-        userName: '',
-        userMobile: '',
-        userStatus: ''
-      }
-      this.$refs.userStatusSelect.handleSelectChange('')
-      this.refreshTable()
+        roleName: '',
+        roleStatus: ''
+      };
+      this.$refs.roleStatusSelect.handleSelectChange('');
+      this.refreshTable();
     },
     // 分页-跳页
     handlePageChange(pageNum) {
-      this.pageNum = pageNum
-      this.refreshTable()
+      this.pageNum = pageNum;
+      this.refreshTable();
     },
     // 分页-改变页显示数
     handleSizeChange(pageSize) {
-      this.pageSize = pageSize
-      this.refreshTable()
+      this.pageSize = pageSize;
+      this.refreshTable();
     },
     // 行内更新用户状态
     async handleSwitchChange(row) {
-      const resultMessage = (await updateUsers(row)).data.message
-      // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.userStatus
-      this.$set(row, 'userStatus', row.userStatus)
-      this.getResultMessage(resultMessage)
-    },
-    // 行内更新用户信息
-    async editInline(row) {
-      const resultMessage = (await updateUsers(row)).data.message
-      // 前端虚拟更新操作 -> 将选中row的userAddress更新为新的row.userAddress
-      this.$set(row, 'userAddress', row.userAddress)
-      this.getResultMessage(resultMessage)
-      row.edit = !row.edit
+      const resultMessage = (await updateUser(row)).data.message;
+      // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.roleStatus
+      this.$set(row, 'roleStatus', row.roleStatus);
+      this.getResultMessage(resultMessage);
     },
     // 打开dialog更新用户信息
     update(row) {
-      this.dialogVisible = true
-      this.userForm = row
+      this.dialogVisible = true;
+      this.userForm = row;
     },
     // 按钮 - 删除
     async del(row) {
-      const res = await this.$confirm('确认删除该用户吗？', '提示', {
+      const res = await this.$confirm('确认删除该角色吗？', '提示', {
         type: 'warning'
-      }).catch(() => {})
+      }).catch(() => {});
       if (res === 'confirm') {
         // 前端虚拟删除操作 -> 根据row的下标删除该row
-        const resultMessage = (await deleteUser(row)).data.message
-        const index = this.tableData.list.indexOf(row)
-        this.tableData.list.splice(index, 1)
-        this.refreshTable()
-        this.getResultMessage(resultMessage)
+        const resultMessage = (await deleteUser(row)).data.message;
+        const index = this.tableData.list.indexOf(row);
+        this.tableData.list.splice(index, 1);
+        this.refreshTable();
+        this.getResultMessage(resultMessage);
       }
     },
     // 选项发生变化 - 左下多选
     handleSelectionChange(value) {
-      this.multipleSelection = value
+      this.multipleSelection = value;
     },
     // 批量操作数据
     async batcthExecute() {
       // 将选择的数据放在delCodes数组中
-      const delCodes = []
+      const delCodes = [];
       for (const select of this.multipleSelection) {
-        delCodes.push(select.userCode)
+        delCodes.push(select.userCode);
       }
       // 如果没有选择数据
       if (this.multipleSelection.length === 0) {
         this.$message({
           type: 'warning',
           message: '请选择数据！'
-        })
-        return
+        });
+        return;
       } else if (this.batchFilterData === '') {
         // 如果没有选择操作
         this.$message({
           type: 'warning',
           message: '请选择批处理操作！'
-        })
-        return
+        });
+        return;
       } else if (this.batchFilterData === 'delete') {
         // 如果选择 "批量删除"
         const res = await this.$confirm('确认删除？', '提示', {
           type: 'warning'
-        }).catch(() => {})
+        }).catch(() => {});
         if (res === 'confirm') {
           // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
           this.multipleSelection.forEach(async row => {
-            await deleteUser()
-            const index = this.tableData.list.indexOf(row)
-            this.tableData.list.splice(index, 1)
-            this.refreshTable()
-          })
-          this.getResultMessage('删除成功！')
+            await deleteUser();
+            const index = this.tableData.list.indexOf(row);
+            this.tableData.list.splice(index, 1);
+            this.refreshTable();
+          });
+          this.getResultMessage('删除成功！');
         }
       }
     },
@@ -502,17 +438,17 @@ export default {
       this.$message({
         message: resultMessage,
         type: 'success'
-      })
+      });
     }
   },
   watch: {
     $route(to, from) {
-      this.init()
+      this.init();
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import '../../styles/smart-ui/smart-ui.scss';
+@import "../../styles/smart-ui/smart-ui.scss";
 </style>

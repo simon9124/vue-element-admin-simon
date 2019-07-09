@@ -2,9 +2,10 @@ export default {
   route: {
     dashboard: '首页',
     /** authority**/
-    authority: '权限管理',
-    userList: '用户管理',
-    articleList: '内容管理',
+    authority: '权限',
+    userManage: '用户管理',
+    articleManage: '内容管理',
+    roleManage: '角色管理',
     /** componentLibrary**/
     componentLibrary: '组件库',
     gallery: '图片库',

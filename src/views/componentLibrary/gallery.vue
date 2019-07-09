@@ -35,7 +35,11 @@
 // components
 import VueDialog from '@/components/Dialog/VueDialog';
 // api
-import { getPhotoList, deletePhoto, updatePhoto } from '@/api/gallery.js';
+import {
+  getPhotoList,
+  deletePhoto,
+  updatePhoto
+} from '@/api/componentLibrary/gallery.js';
 
 export default {
   name: 'Gallery',

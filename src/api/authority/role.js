@@ -6,15 +6,15 @@ import {
 export function getUserList(_this) {
   _this.tableDataLoading = true
   return request({
-    url: '/user/list',
+    url: '/role/list',
     method: 'get'
   })
 }
 
 // 更新用户数据
-export function updateUsers(data) {
+export function updateUser(data) {
   return request({
-    url: '/user/update',
+    url: '/role/update',
     method: 'put',
     data
   })
@@ -23,7 +23,7 @@ export function updateUsers(data) {
 // 删除1行数据
 export function deleteUser() {
   return request({
-    url: '/user/delete',
+    url: '/role/delete',
     method: 'delete'
   })
 }
