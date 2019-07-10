@@ -62,7 +62,7 @@
             <div class="table-content-header">
               <i class="el-icon-d-arrow-right"
                  style="font-size:16px"></i>
-              <span>用户列表</span>
+              <span>角色列表</span>
               <div class="table-content-header-search">
               </div>
             </div>
@@ -212,25 +212,23 @@
       </div>
     </div>
 
-    <!-- 用户编辑dialog -->
+    <!-- 角色编辑dialog -->
     <el-dialog :visible.sync="dialogVisible"
-               title="编辑用户">
-      <el-form v-model="userForm">
-        <el-form-item label="用户名"
-                      label-width="200px">
-          <el-input v-model="userForm.roleName"></el-input>
+               :title="dialogTitle">
+      <el-form v-model="roleForm"
+               label-width="80px"
+               @submit.native.prevent>
+        <el-form-item label="角色名">
+          <el-input v-model="roleForm.roleName"></el-input>
         </el-form-item>
-        <el-form-item label="活动区域"
-                      label-width="200px">
-          <el-select v-model="userForm.roleName"
-                     placeholder="请选择活动区域">
-            <el-option label="区域一"
-                       value="shanghai"></el-option>
-            <el-option label="区域二"
-                       value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="角色标识">
+          <el-input v-model="roleForm.roleKey"></el-input>
+        </el-form-item>
+        <el-form-item label="角色权限">
+          <CheckBoxTree :check-box-items="checkBoxItems"></CheckBoxTree>
         </el-form-item>
       </el-form>
+
     </el-dialog>
 
   </div>
@@ -242,6 +240,7 @@
 import ComponentFilter from '@/components/ComponentFilter';
 import CustomSelect from '@/components/ComponentSelect/select';
 import Button from '@/components/Authority/authorityButton';
+import CheckBoxTree from '@/components/Tree/checkBoxTree';
 // api
 import { getUserList, updateUser, deleteUser } from '@/api/authority/role.js';
 
@@ -250,7 +249,8 @@ export default {
   components: {
     CustomSelect,
     ComponentFilter,
-    Button
+    Button,
+    CheckBoxTree
   },
   data() {
     return {
@@ -258,9 +258,9 @@ export default {
       tableDataLoading: false,
       // 表格原始数据
       tableData: {},
-      // 用户list数据 - 筛选后所有
+      // 角色list数据 - 筛选后所有
       roleListAll: [],
-      // 用户list数据 - 当前页面
+      // 角色list数据 - 当前页面
       roleList: [],
       // 表格列项
       treeColumns: [
@@ -303,7 +303,11 @@ export default {
       multipleSelection: [],
       // dialog显示与否
       dialogVisible: false,
-      userForm: {}
+      // dialog标题
+      dialogTitle: '',
+      // row表单数据
+      roleForm: {},
+      checkBoxItems: []
     };
   },
   created() {
@@ -313,10 +317,14 @@ export default {
     // 表格数据初始化
     async init() {
       this.tableData = (await getUserList(this)).data.tableData;
-      this.tableData.list.map(row => {
-        this.$set(row, 'edit', false);
-        return row;
+      this.tableData.list.forEach(row => {
+        // const canOperatePages = [];
+        // row.canOperatePages.forEach(page => {
+        //   canOperatePages.push({ edit: page });
+        // });
+        // this.$set(row, "canOperatePages", canOperatePages);
       });
+      // console.log(this.tableData.list);
       this.refreshTable();
       this.tableDataLoading = false;
     },
@@ -331,7 +339,7 @@ export default {
     },
     // 根据条件渲染页面数据
     refreshTable() {
-      // 全部符合筛选条件的用户 -> 计总数用
+      // 全部符合筛选条件的角色 -> 计总数用
       this.roleListAll = this.tableData.list.filter(row => {
         if (
           row.roleName.indexOf(this.filterFormData.roleName) > -1 &&
@@ -340,7 +348,7 @@ export default {
           return row;
         }
       });
-      // 在页面要显示的用户
+      // 在页面要显示的角色
       this.roleList = this.roleListAll.slice(
         (this.pageNum - 1) * this.pageSize,
         this.pageNum * this.pageSize
@@ -365,17 +373,19 @@ export default {
       this.pageSize = pageSize;
       this.refreshTable();
     },
-    // 行内更新用户状态
+    // 行内更新角色状态
     async handleSwitchChange(row) {
       const resultMessage = (await updateUser(row)).data.message;
       // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.roleStatus
       this.$set(row, 'roleStatus', row.roleStatus);
       this.getResultMessage(resultMessage);
     },
-    // 打开dialog更新用户信息
+    // 打开dialog更新角色信息
     update(row) {
+      this.dialogTitle = row.roleName;
       this.dialogVisible = true;
-      this.userForm = row;
+      this.checkBoxItems = row.canOperatePages;
+      this.roleForm = row;
     },
     // 按钮 - 删除
     async del(row) {
@@ -451,4 +461,12 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "../../styles/smart-ui/smart-ui.scss";
+.container /deep/ {
+  .el-form {
+    .el-form-item__content {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+  }
+}
 </style>
