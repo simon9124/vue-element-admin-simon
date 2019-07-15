@@ -8,7 +8,9 @@
              node-key="id"
              :indent="25"
              accordion
-             :default-expanded-keys="[1.1]">
+             :default-expanded-keys="[1,1.1]"
+             empty-text=""
+             @check="nodeCheck">
       <span class="custom-tree-node"
             slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
@@ -28,87 +30,16 @@ export default {
   data() {
     return {
       isChecked: false
-      // checkBoxItems: [
-      //   {
-      //     id: 1,
-      //     label: '权限',
-      //     children: [
-      //       {
-      //         id: 1.1,
-      //         label: '用户管理',
-      //         children: [
-      //           {
-      //             label: '新增'
-      //           },
-      //           {
-      //             label: '查看'
-      //           },
-      //           {
-      //             label: '修改'
-      //           },
-      //           {
-      //             label: '删除'
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         label: '文章管理',
-      //         children: [
-      //           {
-      //             label: '新增'
-      //           },
-      //           {
-      //             label: '查看'
-      //           },
-      //           {
-      //             label: '修改'
-      //           },
-      //           {
-      //             label: '删除'
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         label: '代码管理',
-      //         children: [
-      //           {
-      //             label: '新增'
-      //           },
-      //           {
-      //             label: '查看'
-      //           },
-      //           {
-      //             label: '修改'
-      //           },
-      //           {
-      //             label: '删除'
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         label: '角色管理',
-      //         children: [
-      //           {
-      //             label: '新增'
-      //           },
-      //           {
-      //             label: '查看'
-      //           },
-      //           {
-      //             label: '修改'
-      //           },
-      //           {
-      //             label: '删除'
-      //           }
-      //         ]
-      //       }
-      //     ]
-      //   }
-      // ]
     };
   },
-  created() {},
-  methods: {}
+  created() {
+    console.log(this.checkBoxItems);
+  },
+  methods: {
+    nodeCheck(data, check) {
+      console.log(check);
+    }
+  }
 };
 </script>
 
@@ -122,9 +53,13 @@ export default {
     .el-tree-node__children {
       .el-tree-node__children {
         height: 35px;
+        padding-left: 50px;
         .el-tree-node {
           display: inline-block;
           width: 80px;
+          .el-tree-node__content {
+            padding-left: 0 !important;
+          }
         }
       }
     }

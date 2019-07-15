@@ -3,7 +3,7 @@ import {
 } from '@/utils'
 
 // 获取用户数据（全部）
-export function getUserList(_this) {
+export function getRoleList(_this) {
   _this.tableDataLoading = true
   return request({
     url: '/role/list',
@@ -12,7 +12,7 @@ export function getUserList(_this) {
 }
 
 // 更新用户数据
-export function updateUser(data) {
+export function updateRole(data) {
   return request({
     url: '/role/update',
     method: 'put',
@@ -21,7 +21,7 @@ export function updateUser(data) {
 }
 
 // 删除1行数据
-export function deleteUser() {
+export function deleteRole() {
   return request({
     url: '/role/delete',
     method: 'delete'

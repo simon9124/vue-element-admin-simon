@@ -228,7 +228,12 @@
           <CheckBoxTree :check-box-items="checkBoxItems"></CheckBoxTree>
         </el-form-item>
       </el-form>
-
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary"
+                   @click="dialogSubmit">确 定</el-button>
+      </span>
     </el-dialog>
 
   </div>
@@ -236,13 +241,15 @@
 </template>
 
 <script>
+// function
+import { computedCheckTree } from '@/components/Tree/computedCheckTree.js';
 // components
 import ComponentFilter from '@/components/ComponentFilter';
 import CustomSelect from '@/components/ComponentSelect/select';
 import Button from '@/components/Authority/authorityButton';
 import CheckBoxTree from '@/components/Tree/checkBoxTree';
 // api
-import { getUserList, updateUser, deleteUser } from '@/api/authority/role.js';
+import { getRoleList, updateRole, deleteRole } from '@/api/authority/role.js';
 
 export default {
   name: 'UserManage',
@@ -316,13 +323,13 @@ export default {
   methods: {
     // 表格数据初始化
     async init() {
-      this.tableData = (await getUserList(this)).data.tableData;
+      this.tableData = (await getRoleList(this)).data.tableData;
       this.tableData.list.forEach(row => {
-        // const canOperatePages = [];
-        // row.canOperatePages.forEach(page => {
-        //   canOperatePages.push({ edit: page });
-        // });
-        // this.$set(row, "canOperatePages", canOperatePages);
+        this.$set(
+          row,
+          'canOperatePages',
+          computedCheckTree(row.canOperatePage)
+        );
       });
       // console.log(this.tableData.list);
       this.refreshTable();
@@ -375,7 +382,7 @@ export default {
     },
     // 行内更新角色状态
     async handleSwitchChange(row) {
-      const resultMessage = (await updateUser(row)).data.message;
+      const resultMessage = (await updateRole(row)).data.message;
       // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.roleStatus
       this.$set(row, 'roleStatus', row.roleStatus);
       this.getResultMessage(resultMessage);
@@ -383,9 +390,15 @@ export default {
     // 打开dialog更新角色信息
     update(row) {
       this.dialogTitle = row.roleName;
-      this.dialogVisible = true;
       this.checkBoxItems = row.canOperatePages;
       this.roleForm = row;
+      this.dialogVisible = true;
+    },
+    // 表单按钮 - 确认
+    async dialogSubmit() {
+      const resultMessage = (await updateRole(this.roleForm)).data.message;
+      this.getResultMessage(resultMessage);
+      this.dialogVisible = false;
     },
     // 按钮 - 删除
     async del(row) {
@@ -394,7 +407,7 @@ export default {
       }).catch(() => {});
       if (res === 'confirm') {
         // 前端虚拟删除操作 -> 根据row的下标删除该row
-        const resultMessage = (await deleteUser(row)).data.message;
+        const resultMessage = (await deleteRole(row)).data.message;
         const index = this.tableData.list.indexOf(row);
         this.tableData.list.splice(index, 1);
         this.refreshTable();
@@ -434,7 +447,7 @@ export default {
         if (res === 'confirm') {
           // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
           this.multipleSelection.forEach(async row => {
-            await deleteUser();
+            await deleteRole();
             const index = this.tableData.list.indexOf(row);
             this.tableData.list.splice(index, 1);
             this.refreshTable();
