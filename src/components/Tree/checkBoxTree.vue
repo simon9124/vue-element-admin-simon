@@ -21,7 +21,7 @@
 </template>
 <script>
 export default {
-  name: "CheckboxTree",
+  name: 'CheckboxTree',
   props: {
     checkBoxItems: {
       type: Array,
