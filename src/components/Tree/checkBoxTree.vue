@@ -8,7 +8,8 @@
              node-key="id"
              :indent="25"
              accordion
-             :default-expanded-keys="[1,1.1]"
+             :default-expanded-keys="[1,2,3,4]"
+             :default-checked-keys="defaultCheckedKeys"
              empty-text=""
              @check="nodeCheck">
       <span class="custom-tree-node"
@@ -20,20 +21,19 @@
 </template>
 <script>
 export default {
-  name: 'CheckboxTree',
+  name: "CheckboxTree",
   props: {
     checkBoxItems: {
+      type: Array,
+      default: () => []
+    },
+    defaultCheckedKeys: {
       type: Array,
       default: () => []
     }
   },
   data() {
-    return {
-      isChecked: false
-    };
-  },
-  created() {
-    console.log(this.checkBoxItems);
+    return {};
   },
   methods: {
     nodeCheck(data, check) {
