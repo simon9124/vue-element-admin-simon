@@ -43,7 +43,7 @@
                            size="mini"
                            type="success"
                            plain>新增
-                           <!-- @click="insert" -->
+                  <!-- @click="insert" -->
                 </el-button>
                 <el-button icon="el-icon-refresh"
                            size="mini"
@@ -227,7 +227,11 @@
         <el-form-item label="角色权限">
           <CheckBoxTree :check-box-items="checkBoxItems"
                         :default-checked-keys="defaultCheckedKeys"
-                        ref="CheckBoxTree"></CheckBoxTree>
+                        :defaultExpandedKeys="defaultExpandedKeys"
+                        ref="CheckBoxTree"
+                        @checkNodes="checkNodesChange"
+                        @addCheckNodes="addCheckNodes"
+                        @minCheckNodes="minCheckNodes"></CheckBoxTree>
         </el-form-item>
       </el-form>
       <span slot="footer"
@@ -244,17 +248,17 @@
 
 <script>
 // function
-import { computedCheckTree } from '@/components/Tree/computedCheckTree.js';
+import { computedCheckTree } from "@/components/Tree/computedCheckTree.js";
 // components
-import ComponentFilter from '@/components/ComponentFilter';
-import CustomSelect from '@/components/ComponentSelect/select';
-import Button from '@/components/Authority/authorityButton';
-import CheckBoxTree from '@/components/Tree/checkBoxTree';
+import ComponentFilter from "@/components/ComponentFilter";
+import CustomSelect from "@/components/ComponentSelect/select";
+import Button from "@/components/Authority/authorityButton";
+import CheckBoxTree from "@/components/Tree/checkBoxTree";
 // api
-import { getRoleList, updateRole, deleteRole } from '@/api/authority/role.js';
+import { getRoleList, updateRole, deleteRole } from "@/api/authority/role.js";
 
 export default {
-  name: 'UserManage',
+  name: "UserManage",
   components: {
     CustomSelect,
     ComponentFilter,
@@ -274,14 +278,14 @@ export default {
       // 表格列项
       treeColumns: [
         {
-          prop: 'roleName',
-          label: '角色名',
+          prop: "roleName",
+          label: "角色名",
           minWidth: 150,
           sortable: true
         },
         {
-          prop: 'roleKey',
-          label: '角色标识',
+          prop: "roleKey",
+          label: "角色标识",
           minWidth: 150,
           sortable: true
         }
@@ -292,34 +296,56 @@ export default {
       pageSize: 10,
       // 筛选
       filterFormData: {
-        roleName: '',
-        roleStatus: ''
+        roleName: "",
+        roleStatus: ""
       },
       // 顶部筛选项
       roleStatusOptions: [
         {
-          label: '有效',
+          label: "有效",
           value: 1
         },
         {
-          label: '冻结',
+          label: "冻结",
           value: 0
         }
       ],
       // 批量操作筛选
-      batchFilterData: '',
+      batchFilterData: "",
       // 选项发生改变
       multipleSelection: [],
       // dialog显示与否
       dialogVisible: false,
       // dialog标题
-      dialogTitle: '',
+      dialogTitle: "",
       // row表单数据
       roleForm: {},
       // row表单checkBox数据 - 全部
       checkBoxItems: [],
       // row表单checkBox数据 - 默认选中项
-      defaultCheckedKeys: []
+      defaultCheckedKeys: [],
+      // row表单checkBox数据 - 默认展开项
+      defaultExpandedKeys: [
+        "1-1-1",
+        "1-1-2",
+        "1-1-3",
+        "1-1-4",
+        "1-2-1",
+        "1-2-2",
+        "1-2-3",
+        "1-2-4",
+        "1-3-1",
+        "1-3-2",
+        "1-3-3",
+        "1-3-4",
+        "1-4-1",
+        "1-4-2",
+        "1-4-3",
+        "1-4-4"
+      ],
+      // row表单checkBox数据 - 被选中的选项回调
+      checkNodes: [],
+      checkNodesAdd: []
     };
   },
   created() {
@@ -332,7 +358,7 @@ export default {
       this.tableData.list.forEach(row => {
         this.$set(
           row,
-          'canOperatePages',
+          "canOperatePages",
           computedCheckTree(row.canOperatePage)
         );
       });
@@ -343,7 +369,7 @@ export default {
     // 顶部筛选
     handleParamsChange(value) {
       switch (value.type) {
-        case 'roleStatus':
+        case "roleStatus":
           this.filterFormData.roleStatus = value.value;
           break;
       }
@@ -369,10 +395,10 @@ export default {
     // 清空筛选
     clear() {
       this.filterFormData = {
-        roleName: '',
-        roleStatus: ''
+        roleName: "",
+        roleStatus: ""
       };
-      this.$refs.roleStatusSelect.handleSelectChange('');
+      this.$refs.roleStatusSelect.handleSelectChange("");
       this.refreshTable();
     },
     // 分页-跳页
@@ -388,8 +414,8 @@ export default {
     // 行内更新角色状态
     async handleSwitchChange(row) {
       const resultMessage = (await updateRole(row)).data.message;
-      // 前端虚拟更新操作 -> 将选中row的userStatus更新为新的row.roleStatus
-      this.$set(row, 'roleStatus', row.roleStatus);
+      // 前端虚拟更新操作 -> 将选中row的roleStatus更新为新的row.roleStatus
+      this.$set(row, "roleStatus", row.roleStatus);
       this.getResultMessage(resultMessage);
     },
     // 打开dialog更新角色信息
@@ -397,6 +423,7 @@ export default {
       this.roleForm = row;
       this.dialogTitle = row.roleName;
       this.checkBoxItems = row.canOperatePages;
+      // console.log(this.checkBoxItems);
       this.defaultCheckedKey();
       this.dialogVisible = true;
     },
@@ -416,18 +443,72 @@ export default {
         });
       });
     },
+    // CheckBoxTree组件传递方法 - 选项被选中/取消选中
+    checkNodesChange(data) {
+      // 选出非祖父的父节点 -> 若该节点被选中则存入checkNodes数组
+      const checkNodes = [];
+      data.forEach((node, i) => {
+        if (node.children !== undefined) {
+          if (node.children[0].children === undefined) {
+            checkNodes.push(node.label);
+          }
+        }
+      });
+      // console.log(checkNodes);
+      this.checkNodes = checkNodes;
+    },
+    // CheckBoxTree组件传递方法 - 新增被选中的选项
+    addCheckNodes(data) {
+      this.checkNodesAdd.push(data);
+    },
+    // CheckBoxTree组件传递方法 - 从checkNodesAdd中删除被取消的选项
+    minCheckNodes(data) {
+      this.checkNodesAdd.forEach((node, i) => {
+        if (node.id === data.id) {
+          this.checkNodesAdd.splice(i, 1);
+        }
+      });
+      // console.log(this.checkNodesAdd);
+    },
     // 表单按钮 - 确认
     async dialogSubmit() {
       const resultMessage = (await updateRole(this.roleForm)).data.message;
+      this.roleList.forEach(role => {
+        // 1.设置被选中的非祖父父节点
+        if (role.roleName === this.roleForm.roleName) {
+          role.canOperatePage["权限"] = this.checkNodes;
+          this.$set(
+            role,
+            "canOperatePages",
+            computedCheckTree(role.canOperatePage)
+          );
+          // 2.根据checkNodesAdd - 找到相对应的选项 - 设置节点的check为true
+          this.checkNodesAdd.forEach(node => {
+            // console.log(node);
+            role.canOperatePages.forEach(page => {
+              page.children.forEach(item => {
+                if (item.label === node.parent) {
+                  // console.log(item);
+                  item.children.forEach(el => {
+                    if (el.label === node.label) {
+                      el.check = true;
+                    }
+                  });
+                }
+              });
+            });
+          });
+        }
+      });
       this.getResultMessage(resultMessage);
       this.dialogVisible = false;
     },
     // 按钮 - 删除
     async del(row) {
-      const res = await this.$confirm('确认删除该角色吗？', '提示', {
-        type: 'warning'
+      const res = await this.$confirm("确认删除该角色吗？", "提示", {
+        type: "warning"
       }).catch(() => {});
-      if (res === 'confirm') {
+      if (res === "confirm") {
         // 前端虚拟删除操作 -> 根据row的下标删除该row
         const resultMessage = (await deleteRole(row)).data.message;
         const index = this.tableData.list.indexOf(row);
@@ -450,23 +531,23 @@ export default {
       // 如果没有选择数据
       if (this.multipleSelection.length === 0) {
         this.$message({
-          type: 'warning',
-          message: '请选择数据！'
+          type: "warning",
+          message: "请选择数据！"
         });
         return;
-      } else if (this.batchFilterData === '') {
+      } else if (this.batchFilterData === "") {
         // 如果没有选择操作
         this.$message({
-          type: 'warning',
-          message: '请选择批处理操作！'
+          type: "warning",
+          message: "请选择批处理操作！"
         });
         return;
-      } else if (this.batchFilterData === 'delete') {
+      } else if (this.batchFilterData === "delete") {
         // 如果选择 "批量删除"
-        const res = await this.$confirm('确认删除？', '提示', {
-          type: 'warning'
+        const res = await this.$confirm("确认删除？", "提示", {
+          type: "warning"
         }).catch(() => {});
-        if (res === 'confirm') {
+        if (res === "confirm") {
           // 前端虚拟批量删除操作 -> 给multipleSelection里的每个row做单独删除
           this.multipleSelection.forEach(async row => {
             await deleteRole();
@@ -474,7 +555,7 @@ export default {
             this.tableData.list.splice(index, 1);
             this.refreshTable();
           });
-          this.getResultMessage('删除成功！');
+          this.getResultMessage("删除成功！");
         }
       }
     },
@@ -482,7 +563,7 @@ export default {
     getResultMessage(resultMessage) {
       this.$message({
         message: resultMessage,
-        type: 'success'
+        type: "success"
       });
     }
   },

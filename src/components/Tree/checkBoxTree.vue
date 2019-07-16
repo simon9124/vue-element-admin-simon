@@ -7,11 +7,11 @@
              show-checkbox
              node-key="id"
              :indent="25"
-             accordion
-             :default-expanded-keys="[1,2,3,4]"
+             :default-expanded-keys="defaultExpandedKeys"
              :default-checked-keys="defaultCheckedKeys"
              empty-text=""
-             @check="nodeCheck">
+             @check="nodeCheck"
+             @check-change="nodeCheckChange">
       <span class="custom-tree-node"
             slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
@@ -21,12 +21,19 @@
 </template>
 <script>
 export default {
-  name: 'CheckboxTree',
+  name: "CheckboxTree",
   props: {
+    // 选项
     checkBoxItems: {
       type: Array,
       default: () => []
     },
+    // 默认展开项
+    defaultExpandedKeys: {
+      type: Array,
+      default: () => []
+    },
+    // 被选中的项
     defaultCheckedKeys: {
       type: Array,
       default: () => []
@@ -36,8 +43,17 @@ export default {
     return {};
   },
   methods: {
+    // 当有选项被选中/被取消选中 -> 将数据传递给父组件
     nodeCheck(data, check) {
-      console.log(check);
+      this.$emit("checkNodes", check.checkedNodes);
+    },
+    // 被选中/取消选中的选项 -> 将数据传递给父组件
+    nodeCheckChange(data, check, child) {
+      if (child === false && check === true) {
+        this.$emit("addCheckNodes", data);
+      } else if (child === false && check === false) {
+        this.$emit("minCheckNodes", data);
+      }
     }
   }
 };

@@ -6,7 +6,8 @@ const list = [
     roleKey: 'admin',
     roleStatus: '1',
     canOperatePage: {
-      '权限': ['用户管理', '文章管理', '代码管理']
+      '权限': ['用户管理', '文章管理', '代码管理'],
+      '系统': []
     }
   },
   {
@@ -15,9 +16,9 @@ const list = [
     roleKey: 'super',
     roleStatus: '1',
     canOperatePage: {
-      '权限': ['用户管理', '文章管理', '角色管理', '代码管理']
-    },
-    canOperatePages: []
+      '权限': ['用户管理', '文章管理', '角色管理', '代码管理'],
+      '系统': []
+    }
   },
   {
     roleId: 3,
@@ -25,9 +26,9 @@ const list = [
     roleKey: 'developer',
     roleStatus: '1',
     canOperatePage: {
-      '权限': ['代码管理']
-    },
-    canOperatePages: []
+      '权限': ['代码管理'],
+      '系统': []
+    }
   },
   {
     roleId: 4,
@@ -35,9 +36,9 @@ const list = [
     roleKey: 'editor',
     roleStatus: '1',
     canOperatePage: {
-      '权限': ['文章管理']
-    },
-    canOperatePages: []
+      '权限': ['文章管理'],
+      '系统': []
+    }
   },
   {
     roleId: 5,
@@ -45,9 +46,9 @@ const list = [
     roleKey: 'vistor',
     roleStatus: '1',
     canOperatePage: {
-      '权限': []
-    },
-    canOperatePages: []
+      '权限': [],
+      '系统': []
+    }
   }
 ]
 
