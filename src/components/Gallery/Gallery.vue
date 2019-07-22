@@ -442,6 +442,8 @@ export default {
     },
     // 点击放大图片
     picGlass(pic) {
+      console.log(pic);
+      
       this.picUrl = pic.uploadLocalUrl;
       this.picBigShow = true;
     },
