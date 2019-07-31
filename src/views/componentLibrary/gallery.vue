@@ -11,8 +11,8 @@
           <el-button type="text"
                      @click="openDialog">点击打开图片库</el-button>
           <vue-dialog :visible="visible"
+                      width="70%"
                       title="图片库"
-                      width="80%"
                       type="PhotoGallery"
                       :pic-list="galleryData.list"
                       @closeHandler="visible=false"
@@ -125,14 +125,16 @@ export default {
     confirmHandler(params) {
       this.visible = false;
       var selectPicName = '';
-      params.galleryList.forEach(pic => {
-        selectPicName += pic.uploadName + ',';
-      });
-      selectPicName = selectPicName.substring(0, selectPicName.length - 1);
-      this.$message({
-        message: '被选中的图片：' + selectPicName,
-        type: 'success'
-      });
+      if (params.galleryList.length !== 0) {
+        params.galleryList.forEach(pic => {
+          selectPicName += pic.uploadName + '，';
+        });
+        selectPicName = selectPicName.substring(0, selectPicName.length - 1);
+        this.$message({
+          message: '被选中的图片：' + selectPicName,
+          type: 'success'
+        });
+      }
     },
     // 回显message数据
     getResultMessage(resultMessage) {
@@ -150,7 +152,8 @@ export default {
 .container /deep/ {
   .el-dialog {
     .el-dialog__body {
-      padding: 20px 10px 0 10px;
+      // padding: 20px 10px 0 10px;
+      padding: 10px 0 0 0;
     }
   }
 }
