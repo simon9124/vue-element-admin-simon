@@ -256,6 +256,25 @@ i {
       background: rgba(0, 0, 0, 0.5);
       z-index: 1003;
 
+      &-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1004;
+        padding: 30px 20px;
+        font-size: 18px;
+        height: auto !important;
+
+        &-left {
+          left: 20%;
+        }
+
+        &-right {
+          right: 20%;
+        }
+      }
+
+
       &-img {
         position: fixed;
         top: 0px;

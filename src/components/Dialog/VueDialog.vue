@@ -19,6 +19,7 @@
 <template>
   <el-dialog :title="title"
              :width="width"
+             :top="top"
              :visible.sync="visible"
              :before-close="closeHandler"
              @open="openHandler"
@@ -26,12 +27,12 @@
              element-loading-text="数据加载中"
              element-loading-spinner="el-icon-loading"
              element-loading-background="rgba(0, 0, 0, 0.8)"
-             v-loading="loading"
-             top="10vh">
+             v-loading="loading">
 
     <!-- 图片库 -->
     <div v-if="type='PhotoGallery'">
       <Gallery :visible="visible"
+               :page-size="pageSize"
                :type="type"
                :pic-list-org="picList"
                :gallery-list="galleryList"
@@ -112,6 +113,11 @@ export default {
     /*
       公共
     */
+    //  Dialog CSS 中的 margin-top 值
+    top: {
+      type: String,
+      default: '15vh'
+    },
     // 标题
     title: {
       type: String,
@@ -147,7 +153,11 @@ export default {
       type: Array,
       default: () => []
     },
-
+    // 初始化每页显示数量
+    pageSize: {
+      type: Number,
+      default: 8
+    },
     // Excel 上传结果
     uploadResult: {
       type: String,

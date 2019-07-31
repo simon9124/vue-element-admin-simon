@@ -11,10 +11,12 @@
           <el-button type="text"
                      @click="openDialog">点击打开图片库</el-button>
           <vue-dialog :visible="visible"
-                      width="70%"
+                      width="80%"
+                      top="5vh"
                       title="图片库"
                       type="PhotoGallery"
                       :pic-list="galleryData.list"
+                      :page-size="8"
                       @closeHandler="visible=false"
                       @picDelHandler="picDelHandler"
                       @picsDelHandler="picsDelHandler"

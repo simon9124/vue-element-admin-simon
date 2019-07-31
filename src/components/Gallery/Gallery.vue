@@ -59,7 +59,7 @@
           <!-- list列表 -->
           <el-row :gutter="20"
                   class="gallery-list-row">
-            <template v-for="pic in picList">
+            <template v-for="(pic,i) in picList">
               <el-col :span="6"
                       :key="pic.value">
                 <div class="gallery-list-col">
@@ -76,7 +76,7 @@
                     </div>
                     <div class="gallery-list-col-glass">
                       <i class="el-icon-search"
-                         @click.prevent.stop="picGlass(pic)"></i>
+                         @click.prevent.stop="picGlass(pic,i)"></i>
                     </div>
                   </div>
 
@@ -188,11 +188,19 @@
                v-if="picBigShow"
                @click.prevent.stop="picBigShow=!picBigShow"
                @mousewheel="picBigZoom">
+            <el-button class="gallery-list-bigMask-button gallery-list-bigMask-button-left"
+                       type="info"
+                       icon="el-icon-arrow-left"
+                       @click.stop="picBigLeft"></el-button>
+            <el-button class="gallery-list-bigMask-button gallery-list-bigMask-button-right"
+                       type="info"
+                       icon="el-icon-arrow-right"
+                       @click.stop="picBigRight"></el-button>
             <img class="gallery-list-bigMask-img"
                  :src="picUrl"
                  @click.prevent.stop="picBigSelect">
-            <!-- <a class="gallery-list-bigMask-text"
-               @click="showOrgPic('https://www.baidu.com')">查看原图</a> -->
+                 <!-- <a class="gallery-list-bigMask-text"
+               @click="showOrgPic()">查看原图</a> -->
           </div>
 
         </el-main>
@@ -204,7 +212,7 @@
 
 <script>
 export default {
-  name: "Gallery",
+  name: 'Gallery',
   props: {
     // 弹窗是否可见
     visible: {
@@ -214,12 +222,17 @@ export default {
     // 类型
     type: {
       type: String,
-      default: "PhotoGallery"
+      default: 'PhotoGallery'
     },
     // 原始总数据列表
     picListOrg: {
       type: Array,
       default: () => []
+    },
+    // 初始化每页显示数量
+    pageSize: {
+      type: Number,
+      default: 8
     }
   },
   data() {
@@ -230,22 +243,20 @@ export default {
       picList: [],
       // 初始化页码
       pageNum: 1,
-      // 初始化每页显示数量
-      pageSize: 8,
       // 筛选
       filterFormData: {
-        uploadName: "",
-        uploadIsfavorite: ""
+        uploadName: '',
+        uploadIsfavorite: ''
       },
       // 左侧筛选栏
       filters: [
-        { key: "all", label: "全部", total: 0 },
-        { key: "favorites", label: "我的收藏", total: 0 }
+        { key: 'all', label: '全部', total: 0 },
+        { key: 'favorites', label: '我的收藏', total: 0 }
       ],
       // 动态图片style
       imgBox: {
-        width: "100%",
-        height: ""
+        width: '100%',
+        height: ''
       },
       // 记录屏幕宽度默认值
       screenWidth: document.body.clientWidth,
@@ -254,7 +265,9 @@ export default {
       // 单张放大图片，默认隐藏
       picBigShow: false,
       // 单张图片url（放大）
-      picUrl: ""
+      picUrl: '',
+      // 图片在当前页面的索引值
+      index: 0
     };
   },
   watch: {
@@ -264,8 +277,8 @@ export default {
       } else {
         // this.pageNum = 1;
         this.filterFormData = {
-          uploadName: "",
-          uploadIsfavorite: ""
+          uploadName: '',
+          uploadIsfavorite: ''
         };
       }
     },
@@ -295,7 +308,7 @@ export default {
           const imgBox = this.$refs.imgBox;
           if (this.visible) {
             const wImgbox = imgBox[0].getBoundingClientRect().width;
-            this.imgBox.height = 0.6 * wImgbox + "px";
+            this.imgBox.height = 0.6 * wImgbox + 'px';
           }
         });
       })();
@@ -305,11 +318,11 @@ export default {
     // dialog初始化
     init() {
       // 根据业务类型查询结果列表
-      if (this.type === "PhotoGallery") {
+      if (this.type === 'PhotoGallery') {
         // 为每张图片添加select和edit属性
         this.picListOrg.map(pic => {
-          this.$set(pic, "edit", false);
-          this.$set(pic, "select", false);
+          this.$set(pic, 'edit', false);
+          this.$set(pic, 'select', false);
           return pic;
         });
         // 数据筛选
@@ -322,7 +335,7 @@ export default {
             if (this.visible) {
               const wImgbox = imgBox[0].getBoundingClientRect().width;
               // console.log(wImgbox)
-              this.imgBox.height = 0.6 * wImgbox + "px";
+              this.imgBox.height = 0.6 * wImgbox + 'px';
             }
           });
         }
@@ -339,9 +352,9 @@ export default {
       });
       // 渲染左侧filters栏的数据
       this.filters.forEach(filter => {
-        if (filter.key === "all") {
+        if (filter.key === 'all') {
           filter.total = this.picListOrg.length;
-        } else if (filter.key === "favorites") {
+        } else if (filter.key === 'favorites') {
           filter.total = favoriteCount;
         }
       });
@@ -370,13 +383,13 @@ export default {
     // 根据左侧边栏调用数据
     asideSelect(key) {
       switch (key) {
-        case "all":
-          this.filterFormData.uploadIsfavorite = "";
+        case 'all':
+          this.filterFormData.uploadIsfavorite = '';
           this.pageNum = 1;
           this.refreshGallery();
           break;
-        case "favorites":
-          this.filterFormData.uploadIsfavorite = "1";
+        case 'favorites':
+          this.filterFormData.uploadIsfavorite = '1';
           this.pageNum = 1;
           this.refreshGallery();
           break;
@@ -397,35 +410,35 @@ export default {
           this.selectList.push(pic);
         }
       });
-      this.$emit("picClickHander", this.selectList);
+      this.$emit('picClickHander', this.selectList);
     },
     // 批量删除图片
     picsDelHandler() {
-      this.$emit("picsDelHandler", this.selectList);
+      this.$emit('picsDelHandler', this.selectList);
     },
     // 删除单张图片
     picDelHandler(pic) {
-      this.$emit("picDelHandler", pic);
+      this.$emit('picDelHandler', pic);
     },
     // 重命名图片
     picReName(pic) {
-      this.$emit("picReName", pic);
+      this.$emit('picReName', pic);
     },
     // 用户收藏
     insertFavor(pic) {
-      this.$emit("insertFavor", pic);
+      this.$emit('insertFavor', pic);
     },
     // 用户取消收藏
     deleteFavor(pic) {
-      this.$emit("deleteFavor", pic);
+      this.$emit('deleteFavor', pic);
     },
     // 批量上传图片
     picsUpload(files) {
-      const isJPG = files.type === "image/jpeg" || "image/png";
+      const isJPG = files.type === 'image/jpeg' || 'image/png';
       if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG/PNG 格式!");
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');
       } else {
-        this.$emit("picsUpload", files);
+        this.$emit('picsUpload', files);
       }
     },
     // 批量上传 - 最大文件数量限制
@@ -435,26 +448,41 @@ export default {
     // 复制图片链接
     clipboardSuccess() {
       this.$message({
-        message: "图片链接复制成功",
-        type: "success",
+        message: '图片链接复制成功',
+        type: 'success',
         duration: 1500
       });
     },
     // 点击放大图片
-    picGlass(pic) {
-      console.log(pic);
-
+    picGlass(pic, i) {
+      // console.log(pic);
+      this.index = i;
       this.picUrl = pic.uploadLocalUrl;
       this.picBigShow = true;
     },
+    // 放大后的图片按钮 - 前一张
+    picBigLeft() {
+      if (this.index > 0) {
+        this.picUrl = this.picList[this.index - 1].uploadLocalUrl;
+        this.index--;
+      }
+    },
+    // 放大后的图片按钮 - 后一张
+    picBigRight() {
+      if (this.index < this.pageSize - 1) {
+        this.picUrl = this.picList[this.index + 1].uploadLocalUrl;
+        this.index++;
+      }
+    },
     // 查看原图
-    // showOrgPic() {
-    //   const url = this.picUrl
-    //   window.open(url, '_blank');
-    // },
+    showOrgPic() {
+      const url = 'https://' + this.picUrl;
+      console.log(url);
+      window.open(url, '_blank');
+    },
     // 点击放大后的图片
     picBigSelect() {
-      console.log("图片被选中");
+      // console.log('图片被选中');
     },
     // 放大后滚动鼠标滚轴
     picBigZoom() {
