@@ -7,8 +7,9 @@ export default {
     articleManage: '内容管理',
     roleManage: '角色管理',
     /** componentLibrary**/
-    componentLibrary: '组件库',
+    componentLibrary: '组件',
     gallery: '图片库',
+    tinymce: '富文本',
     /** chart**/
     chart: '图表',
     chartLine: '折线图',

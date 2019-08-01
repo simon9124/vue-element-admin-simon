@@ -96,6 +96,7 @@ export default new Router({
 /** 2、动态路由**/
 export const asyncRouterMap = [
 
+  // permission
   {
     path: '/permission',
     component: Layout,
@@ -184,15 +185,28 @@ export const asyncRouterMap = [
       icon: 'component',
       roles: ['admin', 'editor']
     },
-    children: [{
-      path: 'gallery',
-      component: () => import('@/views/componentLibrary/gallery'),
-      name: 'gallery',
-      meta: {
-        title: 'gallery',
-        keepAlive: true
+    children: [
+
+      {
+        path: 'gallery',
+        component: () => import('@/views/componentLibrary/gallery'),
+        name: 'gallery',
+        meta: {
+          title: 'gallery',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'tinymce',
+        component: () => import('@/views/componentLibrary/tinymce'),
+        name: 'RichTxtTinymce',
+        meta: {
+          title: 'tinymce',
+          keepAlive: true
+        }
       }
-    }]
+
+    ]
   },
 
   // charts

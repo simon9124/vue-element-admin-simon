@@ -34,6 +34,7 @@
     "screenfull": "3.3.3",
     "showdown": "1.8.6",
     "sortablejs": "1.7.0",
+    "tinymce": "^4.7.11",
     "tui-editor": "1.2.7",
     "v-charts": "^1.19.0",
     "vue": "2.5.17",
