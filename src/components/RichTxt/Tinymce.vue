@@ -95,7 +95,7 @@ export default {
     tinyOpt: {
       type: Object,
       default: function() {
-        return { height: 400 };
+        return { height: 350 };
       }
     },
     // id
@@ -194,7 +194,8 @@ export default {
         // toolbar2: this.toolbar2,
         // plugins: this.plugins,
         init_instance_callback: this.initEditor,
-        height: 350,
+        // 编辑区尺寸 - 高度
+        height: this.tinyOpt.height,
         language_url:
           document.location.protocol +
           '//' +

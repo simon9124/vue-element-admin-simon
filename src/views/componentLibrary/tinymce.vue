@@ -9,8 +9,8 @@
         <div class="content-spe-element">
 
           富文本内容：{{ richTxtContent }}
-          <!-- :tiny-opt="tinyOpt" -->
           <Tinymce id="tinymce2"
+                   :tiny-opt="tinyOpt"
                    type="PhotoGallery"
                    :gallery-data="galleryData"
                    :value="richTxtContent"
