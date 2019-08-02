@@ -186,6 +186,8 @@ export default {
   },
   methods: {
     init() {
+      console.log(process.env.NODE_ENV);
+
       // 编辑器配置项
       const options = {
         selector: '#' + this.id,
@@ -196,11 +198,18 @@ export default {
         init_instance_callback: this.initEditor,
         // 编辑区尺寸 - 高度
         height: this.tinyOpt.height,
+        // 汉化：部署环境和生产环境的路径不同
         language_url:
-          document.location.protocol +
-          '//' +
-          window.location.host +
-          '/static/langs/zh_CN.js',
+          process.env.NODE_ENV === 'development'
+            ? document.location.protocol +
+              '//' +
+              window.location.host +
+              '/static/langs/zh_CN.js'
+            : document.location.protocol +
+              '//' +
+              window.location.host +
+              process.env.TINYMCE_URL +
+              '/static/langs/zh_CN.js',
         // menubar: false,  // 去掉顶部菜单
         branding: false, // 是否显示POWERED BY TINYMCE
         theme: 'modern',
