@@ -1,31 +1,35 @@
 <template>
-  <div>
-    <div class="tinymce-gallery"
-         style="position:relative">
-      <textarea :id="id"
-                :value="value"></textarea>
-      <vue-dialog :visible="visible"
-                  width="80%"
-                  top="5vh"
-                  title="图片库"
-                  type="PhotoGallery"
-                  :pic-list="galleryData.list"
-                  :page-size="8"
-                  @closeHandler="visible=false"
-                  @confirmHandler="confirmHandler"></vue-dialog>
-      <div style="position:absolute;top:5px;right:5px">
-        <el-button class="tinymce-gallery-button"
-                   type="info"
-                   plain
-                   @click="visible=true">图片库
-        </el-button>
-        <el-button class="tinymce-gallery-button"
-                   type="info"
-                   plain
-                   @click="clearContent">清空
-        </el-button>
-      </div>
+  <div class="tinymce-gallery"
+       :class="{fullscreen:isFullscreen}"
+       style="position:relative">
+    <textarea :id="id"
+              :value="value"></textarea>
+
+    <!-- 右侧按钮 -->
+    <div class="tinymce-gallery-buttons">
+      <!-- style="position:absolute;top:5px;right:5px" -->
+      <el-button class="tinymce-gallery-buttons-button"
+                 type="info"
+                 plain
+                 @click="visible=true">图片库
+      </el-button>
+      <el-button class="tinymce-gallery-buttons-button"
+                 type="info"
+                 plain
+                 @click="clearContent">清空
+      </el-button>
     </div>
+
+    <!-- 图片库 -->
+    <vue-dialog :visible="visible"
+                width="80%"
+                top="5vh"
+                title="图片库"
+                type="PhotoGallery"
+                :pic-list="galleryData.list"
+                :page-size="8"
+                @closeHandler="visible=false"
+                @confirmHandler="confirmHandler"></vue-dialog>
   </div>
 </template>
 
@@ -139,7 +143,9 @@ export default {
       cTinyMce: null,
       checkerTimeout: null,
       // 是否正在输入
-      isTyping: false
+      isTyping: false,
+      // 是否全屏 -> 顶部右侧按钮定位（非全屏：position；全屏：fixed）
+      isFullscreen: false
     };
   },
   mounted() {
@@ -231,7 +237,7 @@ export default {
       // 编辑器初始化
       tinymce.init(this.concatAssciativeArrays(options, this.other_options));
     },
-    // 事件注册
+    // 事件监听
     initEditor(editor) {
       this.editor = editor;
       editor.setContent(this.content);
@@ -244,6 +250,10 @@ export default {
         if (this.editor.getContent() !== this.value) {
           this.submitNewContent('keyup');
         }
+      });
+      // FullscreenStateChanged
+      editor.on('FullscreenStateChanged', e => {
+        this.isFullscreen = e.state;
       });
       // init
       editor.on('init', e => {
@@ -297,17 +307,38 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.tinymce-gallery /deep/ {
+  .tinymce-gallery-buttons {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    &-button {
+      position: relative;
+      height: 25px;
+      margin-left: 0;
+      padding: 5px 15px;
+      span {
+        display: inline-block;
+        margin: auto;
+      }
+    }
+  }
+  .mce-fullscreen {
+    z-index: 2000;
+  }
+}
+
 .el-dialog__wrapper /deep/ .el-dialog__body {
   padding: 10px 0 0 0;
 }
-.tinymce-gallery-button /deep/ {
-  position: relative;
-  height: 25px;
-  margin-left: 0;
-  padding: 5px 15px;
-  span {
-    display: inline-block;
-    margin: auto;
+
+.fullscreen {
+  .tinymce-gallery-buttons {
+    z-index: 2000;
+    position: fixed;
+  }
+  .el-dialog__wrapper {
+    z-index: 10000;
   }
 }
 </style>

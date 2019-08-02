@@ -61,7 +61,4 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "~@/styles/smart-ui/smart-ui.scss";
-.el-dialog__wrapper /deep/ .el-dialog__body {
-  padding: 10px 0 0 0;
-}
 </style>
