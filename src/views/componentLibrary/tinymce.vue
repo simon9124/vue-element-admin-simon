@@ -8,8 +8,16 @@
         <p class="content-spe-title">{{ $t('route.tinymce') }}</p>
         <div class="content-spe-element">
 
-          富文本内容：{{ richTxtContent }}
+          <!-- 富文本内容：{{ richTxtContent }} -->
+
+          <!-- 参数 -->
+          <el-row style="margin-bottom:20px">
+            <el-checkbox v-model="gallery">图片库</el-checkbox>
+          </el-row>
+
+          <!-- 富文本 -->
           <Tinymce id="tinymce2"
+                   :gallery="gallery"
                    :tiny-opt="tinyOpt"
                    type="PhotoGallery"
                    :gallery-data="galleryData"
@@ -33,12 +41,14 @@ export default {
   components: { Tinymce },
   data() {
     return {
-      // 开发替换真实数据
-      richTxtContent: '带图片组件封装',
+      // 是否显示图片库
+      gallery: true,
       // 富文本规格
       tinyOpt: {
         height: 300
       },
+      // 富文本内容 - 带标签
+      richTxtContent: '',
       // 图片库原始数据
       galleryData: {}
     };

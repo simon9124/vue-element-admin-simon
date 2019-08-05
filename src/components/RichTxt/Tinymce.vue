@@ -7,11 +7,22 @@
 
     <!-- 右侧按钮 -->
     <div class="tinymce-gallery-buttons">
-      <!-- style="position:absolute;top:5px;right:5px" -->
+      <el-button class="tinymce-gallery-button markdown-button"
+                 type="primary"
+                 circle
+                 @click="visibleMarkGrammar=true">?
+                 <!-- icon="el-icon-question" -->
+      </el-button>
       <el-button class="tinymce-gallery-buttons-button"
                  type="info"
                  plain
-                 @click="visible=true">图片库
+                 @click="dialogVisible2=true;toHtml()">MarkDown预览
+      </el-button>
+      <el-button v-if="gallery"
+                 class="tinymce-gallery-buttons-button"
+                 type="info"
+                 plain
+                 @click="visibleGallery=true">图片库
       </el-button>
       <el-button class="tinymce-gallery-buttons-button"
                  type="info"
@@ -21,15 +32,39 @@
     </div>
 
     <!-- 图片库 -->
-    <vue-dialog :visible="visible"
+    <vue-dialog :visible="visibleGallery"
                 width="80%"
                 top="5vh"
                 title="图片库"
                 type="PhotoGallery"
                 :pic-list="galleryData.list"
                 :page-size="8"
-                @closeHandler="visible=false"
+                @closeHandler="visibleGallery=false"
                 @confirmHandler="confirmHandler"></vue-dialog>
+
+    <!-- MarkDown -->
+    <el-dialog title="MarkDown 语法"
+               :visible.sync="visibleMarkGrammar"
+               width="80%">
+      <img class="markdown"
+           src="~@/assets/markdown.jpg">
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button type="primary"
+                   @click="visibleMarkGrammar = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="Html Test"
+               :visible.sync="dialogVisible2"
+               width="80%">
+      <span id="html-test"></span>
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button type="primary"
+                   @click="dialogVisible2 = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -88,9 +123,17 @@ import 'tinymce/plugins/visualchars';
 
 import 'tinymce/skins/lightgray/skin.min.css';
 
+// Import showdown
+import showdown from 'showdown';
+
 export default {
   components: { VueDialog },
   props: {
+    // 是否显示图片库
+    gallery: {
+      type: Boolean,
+      default: false
+    },
     // 富文本规格
     tinyOpt: {
       type: Object,
@@ -105,7 +148,7 @@ export default {
       default: 'tinymce'
     },
     // 富文本内容 - 完整标签
-    value: { type: String, default: '123' },
+    value: { type: String, default: '' },
     htmlClass: { default: '', type: String },
     // 插件
     plugins: {
@@ -135,8 +178,6 @@ export default {
   },
   data() {
     return {
-      // 图片库弹窗
-      visible: false,
       // 富文本内容 - 编辑区
       content: '',
       editor: null,
@@ -145,7 +186,13 @@ export default {
       // 是否正在输入
       isTyping: false,
       // 是否全屏 -> 顶部右侧按钮定位（非全屏：position；全屏：fixed）
-      isFullscreen: false
+      isFullscreen: false,
+      // 弹窗 - 图片库
+      visibleGallery: false,
+      // 弹窗 - markDown语法
+      visibleMarkGrammar: false,
+      dialogVisible2: false,
+      markDownValue: ''
     };
   },
   mounted() {
@@ -186,8 +233,6 @@ export default {
   },
   methods: {
     init() {
-      console.log(process.env.NODE_ENV);
-
       // 编辑器配置项
       const options = {
         selector: '#' + this.id,
@@ -303,14 +348,30 @@ export default {
     },
     // 图片库按钮 - 确认
     confirmHandler(params) {
-      this.visible = false;
+      this.visibleGallery = false;
       let picSelectedList = '';
-      console.log(params.galleryList);
       params.galleryList.forEach(pic => {
         picSelectedList += '<img src=' + pic.uploadLocalUrl + '>';
       });
       tinymce.execCommand('mceInsertContent', false, picSelectedList);
       this.submitNewContent('keyup');
+    },
+    // markdown -> html
+    toHtml() {
+      this.$nextTick(() => {
+        var MarkdownContent = tinymce.activeEditor.getContent();
+        // console.log(MarkdownContent);
+        // 去掉标签
+        var transMessageContent = MarkdownContent.replace(/<\/?.+?>/g, '');
+        var afterMessageContent = transMessageContent.replace(/ /g, '');
+        console.log(afterMessageContent);
+        // 转化成html
+        const converter = new showdown.Converter();
+        // console.log(converter.makeHtml(afterMessageContent));
+        document.getElementById('html-test').innerHTML = converter.makeHtml(
+          afterMessageContent
+        );
+      });
     }
   }
 };
@@ -338,8 +399,27 @@ export default {
   }
 }
 
-.el-dialog__wrapper /deep/ .el-dialog__body {
-  padding: 10px 0 0 0;
+.el-dialog__wrapper /deep/ {
+  .el-dialog__body {
+    padding: 10px 0 0 0;
+  }
+  .markdown {
+    width: 100%;
+  }
+  #html-test {
+    padding: 0 20px;
+    display: inline-block;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 400px;
+    max-height: 600px;
+    resize: none;
+    border: 0;
+  }
+}
+
+.markdown-button /deep/ {
+  padding: 5px 8px;
 }
 
 .fullscreen {
