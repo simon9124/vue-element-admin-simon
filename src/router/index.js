@@ -213,6 +213,15 @@ export const asyncRouterMap = [
           title: 'tinymce',
           keepAlive: true
         }
+      },
+      {
+        path: 'codeMirror',
+        component: () => import('@/views/componentLibrary/codeMirror'),
+        name: 'CodeMirror',
+        meta: {
+          title: 'codeMirror',
+          keepAlive: true
+        }
       }
 
     ]

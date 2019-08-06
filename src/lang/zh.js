@@ -11,6 +11,7 @@ export default {
     gallery: '图片库',
     tinymce: '富文本',
     markDown: 'Markdown',
+    codeMirror: '代码编辑',
     /** chart**/
     chart: '图表',
     chartLine: '折线图',

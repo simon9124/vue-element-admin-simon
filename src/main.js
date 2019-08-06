@@ -41,6 +41,16 @@ Vue.use(BaiduMap, {
   ak: 'oBvDtR6nzWtVchkY4cLHtnah1VVZQKRK'
 })
 
+// codemirror
+import VueCodemirror from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+Vue.use(VueCodemirror,
+  /* {
+  options: { theme: 'base16-dark', ... },
+  events: ['scroll', ...]
+} */
+)
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
