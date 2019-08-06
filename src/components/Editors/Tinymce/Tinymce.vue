@@ -7,16 +7,17 @@
 
     <!-- 右侧按钮 -->
     <div class="tinymce-gallery-buttons">
-      <el-button class="tinymce-gallery-button markdown-button"
+      <el-button v-if="markdown"
+                 style="border-radius:50%;width:20px;height:20px;padding:0"
                  type="primary"
                  circle
-                 @click="visibleMarkGrammar=true">?
-                 <!-- icon="el-icon-question" -->
+                 @click="goToMaxiang">?
       </el-button>
-      <el-button class="tinymce-gallery-buttons-button"
+      <el-button v-if="markdown"
+                 class="tinymce-gallery-buttons-button"
                  type="info"
                  plain
-                 @click="dialogVisible2=true;toHtml()">MarkDown预览
+                 @click="visibleMarkDown=true;toHtml()">MarkDown预览
       </el-button>
       <el-button v-if="gallery"
                  class="tinymce-gallery-buttons-button"
@@ -32,8 +33,9 @@
     </div>
 
     <!-- 图片库 -->
-    <vue-dialog :visible="visibleGallery"
-                width="80%"
+    <vue-dialog v-if="gallery"
+                :visible="visibleGallery"
+                :width="widthGallery"
                 top="5vh"
                 title="图片库"
                 type="PhotoGallery"
@@ -43,25 +45,15 @@
                 @confirmHandler="confirmHandler"></vue-dialog>
 
     <!-- MarkDown -->
-    <el-dialog title="MarkDown 语法"
-               :visible.sync="visibleMarkGrammar"
-               width="80%">
-      <img class="markdown"
-           src="~@/assets/markdown.jpg">
+    <el-dialog v-if="markdown"
+               title="MarkDown"
+               :visible.sync="visibleMarkDown"
+               :width="widthMarkDown">
+      <mark-down :mark-down-content="markDownContent"></mark-down>
       <span slot="footer"
             class="dialog-footer">
         <el-button type="primary"
-                   @click="visibleMarkGrammar = false">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog title="Html Test"
-               :visible.sync="dialogVisible2"
-               width="80%">
-      <span id="html-test"></span>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button type="primary"
-                   @click="dialogVisible2 = false">确 定</el-button>
+                   @click="visibleMarkDown = false">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -69,71 +61,19 @@
 </template>
 
 <script>
-// Import TinyMCE
+// tinymce
 import tinymce from 'tinymce/tinymce';
-import VueDialog from '@/components/Dialog/VueDialog';
-
-// A theme is also required
 import 'tinymce/themes/modern/theme';
-
-// Any plugins you want to use has to be imported
-import 'tinymce/plugins/advlist';
-import 'tinymce/plugins/wordcount';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/autosave';
-import 'tinymce/plugins/charmap';
-import 'tinymce/plugins/codesample';
-import 'tinymce/plugins/contextmenu';
-import 'tinymce/plugins/emoticons';
-import 'tinymce/plugins/fullscreen';
-import 'tinymce/plugins/hr';
-import 'tinymce/plugins/imagetools';
-import 'tinymce/plugins/insertdatetime';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/media';
-import 'tinymce/plugins/noneditable';
-import 'tinymce/plugins/paste';
-import 'tinymce/plugins/print';
-import 'tinymce/plugins/searchreplace';
-import 'tinymce/plugins/tabfocus';
-import 'tinymce/plugins/template';
-import 'tinymce/plugins/textpattern';
-import 'tinymce/plugins/visualblocks';
-import 'tinymce/plugins/anchor';
-import 'tinymce/plugins/autoresize';
-import 'tinymce/plugins/bbcode';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/colorpicker';
-import 'tinymce/plugins/directionality';
-import 'tinymce/plugins/fullpage';
-import 'tinymce/plugins/help';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/importcss';
-import 'tinymce/plugins/legacyoutput';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/nonbreaking';
-import 'tinymce/plugins/pagebreak';
-import 'tinymce/plugins/preview';
-import 'tinymce/plugins/save';
-import 'tinymce/plugins/spellchecker';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/textcolor';
-import 'tinymce/plugins/toc';
-import 'tinymce/plugins/visualchars';
-
 import 'tinymce/skins/lightgray/skin.min.css';
+import './plugins.js';
 
-// Import showdown
-import showdown from 'showdown';
+// components
+import VueDialog from '@/components/Dialog/VueDialog';
+import MarkDown from '@/components/Editors/ShowDown/ShowDown';
 
 export default {
-  components: { VueDialog },
+  components: { VueDialog, MarkDown },
   props: {
-    // 是否显示图片库
-    gallery: {
-      type: Boolean,
-      default: false
-    },
     // 富文本规格
     tinyOpt: {
       type: Object,
@@ -149,7 +89,6 @@ export default {
     },
     // 富文本内容 - 完整标签
     value: { type: String, default: '' },
-    htmlClass: { default: '', type: String },
     // 插件
     plugins: {
       default: function() {
@@ -165,34 +104,53 @@ export default {
     },
     // 是否只读
     readonly: { type: Boolean, default: false },
-    // 类型
-    type: {
+
+    /* 图片库 */
+    // 是否显示图片库
+    gallery: {
+      type: Boolean,
+      default: false
+    },
+    // 图片库宽度
+    widthGallery: {
       type: String,
-      default: ''
+      default: '80%'
     },
     // 图片库原始数据
     galleryData: {
       type: Object,
       default: () => {}
+    },
+
+    /* Markdown */
+    // 是否显示Markdown
+    markdown: {
+      type: Boolean,
+      default: false
+    },
+    widthMarkDown: {
+      type: String,
+      default: '60%'
     }
   },
   data() {
     return {
       // 富文本内容 - 编辑区
       content: '',
+      // 富文本编辑区
       editor: null,
-      cTinyMce: null,
-      checkerTimeout: null,
       // 是否正在输入
       isTyping: false,
+      // 正在输入时的按键延时
+      checkerTimeout: null,
       // 是否全屏 -> 顶部右侧按钮定位（非全屏：position；全屏：fixed）
       isFullscreen: false,
       // 弹窗 - 图片库
       visibleGallery: false,
-      // 弹窗 - markDown语法
-      visibleMarkGrammar: false,
-      dialogVisible2: false,
-      markDownValue: ''
+      // 弹窗 - Markdown
+      visibleMarkDown: false,
+      // Markdown内容
+      markDownContent: ''
     };
   },
   mounted() {
@@ -237,9 +195,6 @@ export default {
       const options = {
         selector: '#' + this.id,
         skin: false,
-        // toolbar1: this.toolbar1,
-        // toolbar2: this.toolbar2,
-        // plugins: this.plugins,
         init_instance_callback: this.initEditor,
         // 编辑区尺寸 - 高度
         height: this.tinyOpt.height,
@@ -334,7 +289,9 @@ export default {
     },
     submitNewContent(eventType) {
       this.isTyping = true;
-      if (this.checkerTimeout !== null) clearTimeout(this.checkerTimeout);
+      if (this.checkerTimeout !== null) {
+        clearTimeout(this.checkerTimeout);
+      }
       this.checkerTimeout = setTimeout(() => {
         this.isTyping = false;
         this.$emit(eventType, this.editor.getContent());
@@ -359,19 +316,16 @@ export default {
     // markdown -> html
     toHtml() {
       this.$nextTick(() => {
-        var MarkdownContent = tinymce.activeEditor.getContent();
-        // console.log(MarkdownContent);
-        // 去掉标签
-        var transMessageContent = MarkdownContent.replace(/<\/?.+?>/g, '');
-        var afterMessageContent = transMessageContent.replace(/ /g, '');
-        console.log(afterMessageContent);
-        // 转化成html
-        const converter = new showdown.Converter();
-        // console.log(converter.makeHtml(afterMessageContent));
-        document.getElementById('html-test').innerHTML = converter.makeHtml(
-          afterMessageContent
-        );
+        var html = tinymce.activeEditor.getContent();
+        // 去掉标签（但保留空格）
+        this.markDownContent = html.replace(/<\/?.+?>/g, '');
+        // console.log(this.transMessageContent);
+        // var afterMessageContent = transMessageContent.replace(/ /g, '');
+        // console.log(afterMessageContent);
       });
+    },
+    goToMaxiang() {
+      window.open('https://maxiang.io', '_blank');
     }
   }
 };
@@ -399,15 +353,18 @@ export default {
   }
 }
 
+// dialog
 .el-dialog__wrapper /deep/ {
   .el-dialog__body {
     padding: 10px 0 0 0;
   }
-  .markdown {
-    width: 100%;
+
+  .show-content {
+    padding: 5px 15px;
+    // overflow-y: auto;
   }
   #html-test {
-    padding: 0 20px;
+    // padding: 0 20px;
     display: inline-block;
     min-width: 100%;
     max-width: 100%;
@@ -418,10 +375,7 @@ export default {
   }
 }
 
-.markdown-button /deep/ {
-  padding: 5px 8px;
-}
-
+// 全屏
 .fullscreen {
   .tinymce-gallery-buttons {
     z-index: 2000;

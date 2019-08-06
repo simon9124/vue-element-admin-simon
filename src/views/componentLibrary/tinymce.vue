@@ -13,16 +13,21 @@
           <!-- 参数 -->
           <el-row style="margin-bottom:20px">
             <el-checkbox v-model="gallery">图片库</el-checkbox>
+            <el-checkbox v-model="markdown">Markdown</el-checkbox>
+            <el-checkbox v-model="readonly">只读</el-checkbox>
           </el-row>
 
           <!-- 富文本 -->
-          <Tinymce id="tinymce2"
-                   :gallery="gallery"
+          <Tinymce :gallery="gallery"
+                   :markdown="markdown"
+                   :readonly="readonly"
                    :tiny-opt="tinyOpt"
-                   type="PhotoGallery"
+                   width-gallery="70%"
+                   width-mark-down="50%"
                    :gallery-data="galleryData"
                    :value="richTxtContent"
                    @keyup="tinymceHandler"></Tinymce>
+
         </div>
       </div>
     </div>
@@ -31,8 +36,8 @@
 </template>
 
 <script>
-// 开发替换引用
-import Tinymce from '@/components/RichTxt/Tinymce';
+// component
+import Tinymce from '@/components/Editors/Tinymce/Tinymce';
 // api
 import { getPhotoList } from '@/api/componentLibrary/gallery.js';
 
@@ -43,6 +48,10 @@ export default {
     return {
       // 是否显示图片库
       gallery: true,
+      // 是否显示Markdown
+      markdown: true,
+      // 是否只读
+      readonly: false,
       // 富文本规格
       tinyOpt: {
         height: 300

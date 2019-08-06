@@ -197,6 +197,15 @@ export const asyncRouterMap = [
         }
       },
       {
+        path: 'markDown',
+        component: () => import('@/views/componentLibrary/markDown'),
+        name: 'MarkDown',
+        meta: {
+          title: 'markDown',
+          keepAlive: true
+        }
+      },
+      {
         path: 'tinymce',
         component: () => import('@/views/componentLibrary/tinymce'),
         name: 'RichTxtTinymce',
