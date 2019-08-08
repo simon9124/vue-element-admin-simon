@@ -235,10 +235,9 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "~@/styles/smart-ui/smart-ui.scss";
 .container /deep/ {
-  .vue-codemirror {
+  .vue-codemirror-wrap {
     .CodeMirror {
-      min-height: 400px;
-      max-height: 600px;
+      font-size: 14px;
     }
   }
 }
