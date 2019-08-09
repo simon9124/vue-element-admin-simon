@@ -14,7 +14,7 @@
             language：
             <el-select class="code-mode-select"
                        style="margin-right:10px"
-                       v-model="editorOption.mode"
+                       v-model="mode"
                        @change="changeMode">
               <el-option v-for="mode in modes"
                          :key="mode.value"
@@ -26,7 +26,7 @@
             theme：
             <el-select class="code-mode-select"
                        style="margin-right:10px"
-                       v-model="editorOption.theme"
+                       v-model="theme"
                        @change="changeTheme">
               <el-option v-for="mode in themes"
                          :key="mode.value"
@@ -35,18 +35,13 @@
               </el-option>
             </el-select>
 
-            <el-button type="info"
-                       plain
-                       @click="saveContent">保存</el-button>
-
           </el-row>
 
-          <!-- 手动控制数据流，需监听changed事件 -->
-          <codemirror :value="code"
-                      :options="editorOption"
-                      ref="myEditor"
-                      @change="onCmCodeChange">
-          </codemirror>
+          <!-- codemirror -->
+          <CodeMirror :code="code"
+                      :theme="theme"
+                      :mode="mode"
+                      @change="codeChange"></CodeMirror>
 
         </div>
       </div>
@@ -56,45 +51,17 @@
 </template>
 
 <script>
-import { codemirror } from "vue-codemirror-lite";
-import "./import.js";
+import CodeMirror from "@/components/Editors/CodeMirror/CodeMirror";
 
 export default {
   components: {
-    codemirror
+    CodeMirror
   },
   data() {
     return {
       // 编辑区内容
       code: "",
-      // 配置项
-      editorOption: {
-        mode: "text/javascript",
-        theme: "rubyblue",
-        extraKeys: { "Ctrl-Space": "autocomplete" }, // 快捷键
-        autoCloseBrackets: true,
-        autofocus: true, // 初始时自动获取焦点
-        styleActiveLine: true, // 光标所在行高亮
-        tabSize: 2, // tab的空格宽度
-        smartIndent: true, // 自动缩进
-        lineNumbers: true, // 显示行号
-        line: true,
-        lineWrapping: "wrap",
-        cursorHeight: 0.85, // 光标高度
-        lint: true, // 代码检查
-        // 行号前额外内容
-        gutters: [
-          "CodeMirror-linenumbers", // 行号（不开启会导致行号错乱）
-          "CodeMirror-foldgutter", // 展开收缩（暂无效）
-          "CodeMirror-lint-markers" // 代码检查（需开启lint）
-        ],
-        // autoRefresh: true,
-        matchBrackets: true,
-        showCursorWhenSelecting: true,
-        scrollbarStyle: null // 滚动条（会报错）
-        // readOnly: 'nocursor'
-      },
-      // 模式选择
+      // 模式选择select框
       modes: [
         {
           value: "text/html",
@@ -145,7 +112,7 @@ export default {
           label: "Swift"
         }
       ],
-      // 主题选择
+      // 主题选择select框
       themes: [
         {
           value: "ambiance",
@@ -187,44 +154,26 @@ export default {
           value: "rubyblue",
           label: "rubyblue"
         }
-      ]
+      ],
+      // 选择的模式
+      mode: "text/javascript",
+      // 选择的主题
+      theme: "rubyblue"
     };
   },
-  computed: {
-    editor() {
-      return this.$refs.myEditor.editor;
-    }
-  },
-  mounted() {
-    // console.log(this.editor);
-  },
   methods: {
-    // 编辑区内容发生改变
-    onCmCodeChange(newCode) {
-      this.code = newCode;
+    // 内容发生改变
+    codeChange(code) {
+      this.code = code;
+      // console.log(this.code);
     },
-
-    /* 切换语言、切换主题，此处不要用this.editorOption.mode = value，必须用内置的构造函数方法才有效 */
     // 切换语言
     changeMode(val) {
-      this.editor.setOption("mode", val);
+      this.mode = val;
     },
     // 切换主题
     changeTheme(val) {
-      this.editor.setOption("theme", val);
-    },
-    // 切换主题 - 获取元素并改变其class
-    // setThemeClass(theme) {
-    //   const CodeMirrorWrap = document.getElementsByClassName("CodeMirror-wrap");
-    //   for (var i = 0; i < CodeMirrorWrap.length; i++) {
-    //     CodeMirrorWrap[i].attributes[0].nodeValue =
-    //       "CodeMirror CodeMirror-wrap ";
-    //     CodeMirrorWrap[i].attributes[0].nodeValue += `cm-s-${theme}`;
-    //   }
-    // },
-    // 保存内容
-    saveContent() {
-      console.log(this.code);
+      this.theme = val;
     }
   }
 };
@@ -235,7 +184,22 @@ export default {
 .container /deep/ {
   .vue-codemirror-wrap {
     .CodeMirror {
+      min-height: 400px;
+      max-height: 600px;
       font-size: 14px;
+    }
+    // 显示装订线
+    .CodeMirror-gutters {
+      display: block;
+      width: 40px;
+    }
+    // 编辑区整体左移，去掉因显示装订线产生的留白
+    .CodeMirror-line > span {
+      padding-left: 0;
+    }
+    // 代码检查左移，左移到装订线左侧
+    .CodeMirror-gutter-elt {
+      left: 0 !important;
     }
   }
 }

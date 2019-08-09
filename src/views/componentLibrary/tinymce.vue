@@ -37,12 +37,12 @@
 
 <script>
 // component
-import Tinymce from '@/components/Editors/Tinymce/Tinymce';
+import Tinymce from "@/components/Editors/Tinymce/Tinymce";
 // api
-import { getPhotoList } from '@/api/componentLibrary/gallery.js';
+import { getPhotoList } from "@/api/componentLibrary/gallery.js";
 
 export default {
-  name: 'RichTxtTinymce',
+  name: "RichTxtTinymce",
   components: { Tinymce },
   data() {
     return {
@@ -57,7 +57,7 @@ export default {
         height: 300
       },
       // 富文本内容 - 带标签
-      richTxtContent: '',
+      richTxtContent: "",
       // 图片库原始数据
       galleryData: {}
     };

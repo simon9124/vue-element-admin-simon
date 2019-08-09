@@ -27,6 +27,7 @@ import 'codemirror/theme/solarized.css'
 
 // closebrackets
 import 'codemirror/addon/edit/closebrackets.js'
+import 'codemirror/addon/edit/matchBrackets';
 
 // merge
 import 'codemirror/addon/merge/merge.js'
@@ -44,6 +45,7 @@ import 'codemirror/addon/lint/json-lint'
 // import 'codemirror/addon/lint/yaml-lint'
 
 // fold
+import 'codemirror/addon/fold/foldgutter.css'
 require('codemirror/addon/fold/foldcode.js')
 require('codemirror/addon/fold/foldgutter.js')
 require('codemirror/addon/fold/brace-fold.js')
