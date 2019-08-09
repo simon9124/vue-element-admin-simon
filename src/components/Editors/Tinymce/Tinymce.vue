@@ -17,7 +17,7 @@
                  class="tinymce-gallery-buttons-button"
                  type="info"
                  plain
-                 @click="visibleMarkDown=true;toHtml()">MarkDown预览
+                 @click="visibleMarkDown=true;toHtml()">MarkDown
       </el-button>
       <el-button v-if="gallery"
                  class="tinymce-gallery-buttons-button"
@@ -62,14 +62,14 @@
 
 <script>
 // tinymce
-import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/modern/theme';
-import 'tinymce/skins/lightgray/skin.min.css';
-import './plugins.js';
+import tinymce from "tinymce/tinymce";
+import "tinymce/themes/modern/theme";
+import "tinymce/skins/lightgray/skin.min.css";
+import "./plugins.js";
 
 // components
-import VueDialog from '@/components/Dialog/VueDialog';
-import MarkDown from '@/components/Editors/ShowDown/ShowDown';
+import VueDialog from "@/components/Dialog/VueDialog";
+import MarkDown from "@/components/Editors/ShowDown/ShowDown";
 
 export default {
   components: { VueDialog, MarkDown },
@@ -85,10 +85,10 @@ export default {
     id: {
       type: String,
       required: false,
-      default: 'tinymce'
+      default: "tinymce"
     },
     // 富文本内容 - 完整标签
-    value: { type: String, default: '' },
+    value: { type: String, default: "" },
     // 插件
     plugins: {
       default: function() {
@@ -114,7 +114,7 @@ export default {
     // 图片库宽度
     widthGallery: {
       type: String,
-      default: '80%'
+      default: "80%"
     },
     // 图片库原始数据
     galleryData: {
@@ -130,13 +130,13 @@ export default {
     },
     widthMarkDown: {
       type: String,
-      default: '60%'
+      default: "60%"
     }
   },
   data() {
     return {
       // 富文本内容 - 编辑区
-      content: '',
+      content: "",
       // 富文本编辑区
       editor: null,
       // 是否正在输入
@@ -150,7 +150,7 @@ export default {
       // 弹窗 - Markdown
       visibleMarkDown: false,
       // Markdown内容
-      markDownContent: ''
+      markDownContent: ""
     };
   },
   mounted() {
@@ -183,9 +183,9 @@ export default {
     },
     readonly(value) {
       if (value) {
-        this.editor.setMode('readonly');
+        this.editor.setMode("readonly");
       } else {
-        this.editor.setMode('design');
+        this.editor.setMode("design");
       }
     }
   },
@@ -193,56 +193,55 @@ export default {
     init() {
       // 编辑器配置项
       const options = {
-        selector: '#' + this.id,
+        selector: "#" + this.id,
         skin: false,
         init_instance_callback: this.initEditor,
         // 编辑区尺寸 - 高度
         height: this.tinyOpt.height,
         // 汉化：部署环境和生产环境的路径不同
         language_url:
-          process.env.NODE_ENV === 'development'
+          process.env.NODE_ENV === "development"
             ? document.location.protocol +
-              '//' +
+              "//" +
               window.location.host +
-              '/static/langs/zh_CN.js'
+              "/static/langs/zh_CN.js"
             : document.location.protocol +
-              '//' +
+              "//" +
               window.location.host +
               process.env.TINYMCE_URL +
-              '/static/langs/zh_CN.js',
+              "/static/langs/zh_CN.js",
         // menubar: false,  // 去掉顶部菜单
         branding: false, // 是否显示POWERED BY TINYMCE
-        theme: 'modern',
-        toolbar_items_size: 'small', // 按钮大小
-        // 插件
-        plugins: [
-          'advlist autolink link image lists charmap print hr anchor pagebreak',
-          'searchreplace visualblocks visualchars code fullscreen media nonbreaking',
-          'table directionality emoticons textcolor paste textcolor colorpicker textpattern'
-        ],
+        theme: "modern",
+        toolbar_items_size: "small", // 按钮大小
         // 样式
         style_formats: [
-          { title: 'Bold', icon: 'bold', format: 'bold' },
-          { title: 'Italic', icon: 'italic', format: 'italic' },
-          { title: 'Underline', icon: 'underline', format: 'underline' },
+          { title: "Bold", icon: "bold", format: "bold" },
+          { title: "Italic", icon: "italic", format: "italic" },
+          { title: "Underline", icon: "underline", format: "underline" },
           {
-            title: 'Strikethrough',
-            icon: 'strikethrough',
-            format: 'strikethrough'
+            title: "Strikethrough",
+            icon: "strikethrough",
+            format: "strikethrough"
           },
-          { title: 'Superscript', icon: 'superscript', format: 'superscript' },
-          { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-          { title: 'Code', icon: 'code', format: 'code' }
+          { title: "Superscript", icon: "superscript", format: "superscript" },
+          { title: "Subscript", icon: "subscript", format: "subscript" },
+          { title: "Code", icon: "code", format: "code" }
+        ],
+        // 插件
+        plugins: [
+          "advlist autolink link image lists charmap print hr anchor pagebreak contextmenu searchreplace  visualchars code fullscreen media nonbreaking preview table directionality emoticons textcolor paste textcolor colorpicker textpattern insertdatetime hr code"
+          // visualblocks
         ],
         // 顶栏1
         block_formats:
-          'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;',
+          "Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;",
         // 顶栏2
         toolbar1:
-          'insertfile undo redo | formatselect | bullist numlist | link unlink | uploadimg image media | fullscreen',
+          "insertfile undo redo | formatselect | hr bullist numlist | link unlink | uploadimg image media | emoticons anchor insertdatetime | preview fullscreen",
         // 顶栏3
         toolbar2:
-          'styleselect fontsizeselect | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | removeformat'
+          "styleselect fontsizeselect | forecolor backcolor | bold italic underline strikethrough | charmap code | alignleft aligncenter alignright alignjustify | outdent indent | removeformat"
       };
       // 编辑器初始化
       tinymce.init(this.concatAssciativeArrays(options, this.other_options));
@@ -252,31 +251,31 @@ export default {
       this.editor = editor;
       editor.setContent(this.content);
       // KeyUp
-      editor.on('KeyUp', e => {
-        this.submitNewContent('keyup');
+      editor.on("KeyUp", e => {
+        this.submitNewContent("keyup");
       });
       // Change
-      editor.on('Change', e => {
+      editor.on("Change", e => {
         if (this.editor.getContent() !== this.value) {
-          this.submitNewContent('keyup');
+          this.submitNewContent("keyup");
         }
       });
       // FullscreenStateChanged
-      editor.on('FullscreenStateChanged', e => {
+      editor.on("FullscreenStateChanged", e => {
         this.isFullscreen = e.state;
       });
       // init
-      editor.on('init', e => {
+      editor.on("init", e => {
         editor.setContent(this.content);
-        this.$emit('input', this.content);
+        this.$emit("input", this.content);
       });
       // 如果只读
       if (this.readonly) {
-        this.editor.setMode('readonly');
+        this.editor.setMode("readonly");
       } else {
-        this.editor.setMode('design');
+        this.editor.setMode("design");
       }
-      this.$emit('editorInit', editor);
+      this.$emit("editorInit", editor);
     },
     // 对 options 和 other_options 进行数据处理
     concatAssciativeArrays(array1, array2) {
@@ -300,32 +299,32 @@ export default {
     },
     // 清空内容
     clearContent() {
-      tinymce.activeEditor.setContent('');
-      this.submitNewContent('keyup');
+      tinymce.activeEditor.setContent("");
+      this.submitNewContent("keyup");
     },
     // 图片库按钮 - 确认
     confirmHandler(params) {
       this.visibleGallery = false;
-      let picSelectedList = '';
+      let picSelectedList = "";
       params.galleryList.forEach(pic => {
-        picSelectedList += '<img src=' + pic.uploadLocalUrl + '>';
+        picSelectedList += "<img src=" + pic.uploadLocalUrl + ">";
       });
-      tinymce.execCommand('mceInsertContent', false, picSelectedList);
-      this.submitNewContent('keyup');
+      tinymce.execCommand("mceInsertContent", false, picSelectedList);
+      this.submitNewContent("keyup");
     },
     // markdown -> html
     toHtml() {
       this.$nextTick(() => {
         var html = tinymce.activeEditor.getContent();
         // 去掉标签（但保留空格）
-        this.markDownContent = html.replace(/<\/?.+?>/g, '');
+        this.markDownContent = html.replace(/<\/?.+?>/g, "");
         // console.log(this.transMessageContent);
         // var afterMessageContent = transMessageContent.replace(/ /g, '');
         // console.log(afterMessageContent);
       });
     },
     goToMaxiang() {
-      window.open('https://maxiang.io', '_blank');
+      window.open("https://maxiang.io", "_blank");
     }
   }
 };

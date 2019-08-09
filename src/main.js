@@ -42,8 +42,8 @@ Vue.use(BaiduMap, {
 })
 
 // codemirror
-import VueCodemirror from 'vue-codemirror'
-// import VueCodemirror from 'vue-codemirror-lite'
+// import VueCodemirror from 'vue-codemirror'
+import VueCodemirror from 'vue-codemirror-lite'
 import 'codemirror/lib/codemirror.css'
 Vue.use(VueCodemirror)
 

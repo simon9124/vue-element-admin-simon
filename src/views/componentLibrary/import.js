@@ -32,15 +32,16 @@ import 'codemirror/addon/edit/closebrackets.js'
 import 'codemirror/addon/merge/merge.js'
 import 'codemirror/addon/merge/merge.css'
 
+/* 代码检查：只引入了json检查，其余提示缺少WINDOW.JSLINT等相关依赖，报错 */
 // lint
 require('script-loader!jsonlint')
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/lint/lint.css'
 import 'codemirror/addon/lint/json-lint'
-import 'codemirror/addon/lint/javascript-lint'
-import 'codemirror/addon/lint/coffeescript-lint'
-import 'codemirror/addon/lint/css-lint'
-import 'codemirror/addon/lint/yaml-lint'
+// import 'codemirror/addon/lint/javascript-lint'
+// import 'codemirror/addon/lint/coffeescript-lint'
+// import 'codemirror/addon/lint/css-lint'
+// import 'codemirror/addon/lint/yaml-lint'
 
 // fold
 require('codemirror/addon/fold/foldcode.js')
@@ -64,11 +65,10 @@ import 'codemirror/addon/search/match-highlighter.js';
 require('codemirror/addon/hint/show-hint.js')
 require('codemirror/addon/hint/show-hint.css')
 require('codemirror/addon/hint/javascript-hint.js')
-import 'codemirror/addon/hint/show-hint'
-import 'codemirror/addon/hint/javascript-hint'
+// import 'codemirror/addon/hint/show-hint'
+// import 'codemirror/addon/hint/javascript-hint'
 import 'codemirror/addon/hint/sql-hint'
 import 'codemirror/addon/hint/html-hint'
 import 'codemirror/addon/hint/xml-hint'
 import 'codemirror/addon/hint/anyword-hint'
 import 'codemirror/addon/hint/css-hint'
-import 'codemirror/addon/hint/show-hint'

@@ -13,8 +13,8 @@
 
             language：
             <el-select class="code-mode-select"
+                       style="margin-right:10px"
                        v-model="editorOption.mode"
-                       style="margin-right:20px"
                        @change="changeMode">
               <el-option v-for="mode in modes"
                          :key="mode.value"
@@ -25,6 +25,7 @@
 
             theme：
             <el-select class="code-mode-select"
+                       style="margin-right:10px"
                        v-model="editorOption.theme"
                        @change="changeTheme">
               <el-option v-for="mode in themes"
@@ -33,6 +34,10 @@
                          :value="mode.value">
               </el-option>
             </el-select>
+
+            <el-button type="info"
+                       plain
+                       @click="saveContent">保存</el-button>
 
           </el-row>
 
@@ -54,15 +59,6 @@
 import { codemirror } from "vue-codemirror-lite";
 import "./import.js";
 
-const jsonData = `{
-  "items": [
-    { "market_type": "forexdata", "symbol": "XAUUSD" },
-    { "market_type": "forexdata", "symbol": "UKOIL" },
-    { "market_type": "forexdata", "symbol": "CORN" }
-  ],
-  "name": ""
-}`;
-
 export default {
   components: {
     codemirror
@@ -70,11 +66,10 @@ export default {
   data() {
     return {
       // 编辑区内容
-      code: jsonData,
-      // code: "var a=1\nlet b=2",
+      code: "",
       // 配置项
       editorOption: {
-        mode: "application/json",
+        mode: "text/javascript",
         theme: "rubyblue",
         extraKeys: { "Ctrl-Space": "autocomplete" }, // 快捷键
         autoCloseBrackets: true,
@@ -99,7 +94,12 @@ export default {
         scrollbarStyle: null // 滚动条（会报错）
         // readOnly: 'nocursor'
       },
+      // 模式选择
       modes: [
+        {
+          value: "text/html",
+          label: "XML/HTML"
+        },
         {
           value: "text/css",
           label: "CSS"
@@ -113,46 +113,39 @@ export default {
           label: "json"
         },
         {
-          value: "text/html",
-          label: "XML/HTML"
-        },
-        {
-          value: "text/x-java",
-          label: "Java"
-        },
-        {
-          value: "text/x-objectivec",
-          label: "Objective-C"
-        },
-        {
-          value: "text/x-python",
-          label: "Python"
-        },
-        {
-          value: "text/x-rsrc",
-          label: "R"
-        },
-        {
-          value: "text/x-sh",
-          label: "Shell"
+          value: "text/x-vue",
+          label: "Vue"
         },
         {
           value: "text/x-sql",
           label: "SQL"
         },
         {
-          value: "text/x-swift",
-          label: "Swift"
+          value: "text/x-java",
+          label: "Java"
         },
         {
-          value: "text/x-vue",
-          label: "Vue"
+          value: "text/x-python",
+          label: "Python"
+        },
+        {
+          value: "text/x-sh",
+          label: "Shell"
         },
         {
           value: "text/markdown",
           label: "Markdown"
+        },
+        {
+          value: "text/x-rsrc",
+          label: "R"
+        },
+        {
+          value: "text/x-swift",
+          label: "Swift"
         }
       ],
+      // 主题选择
       themes: [
         {
           value: "ambiance",
@@ -210,23 +203,28 @@ export default {
     onCmCodeChange(newCode) {
       this.code = newCode;
     },
-    // 修改编辑器的语法配置
+
+    /* 切换语言、切换主题，此处不要用this.editorOption.mode = value，必须用内置的构造函数方法才有效 */
+    // 切换语言
     changeMode(val) {
-      this.editorOption.mode = val;
+      this.editor.setOption("mode", val);
     },
     // 切换主题
     changeTheme(val) {
-      this.editorOption.theme = val;
-      this.setThemeClass(val);
+      this.editor.setOption("theme", val);
     },
     // 切换主题 - 获取元素并改变其class
-    setThemeClass(theme) {
-      const CodeMirrorWrap = document.getElementsByClassName("CodeMirror-wrap");
-      for (var i = 0; i < CodeMirrorWrap.length; i++) {
-        CodeMirrorWrap[i].attributes[0].nodeValue =
-          "CodeMirror CodeMirror-wrap ";
-        CodeMirrorWrap[i].attributes[0].nodeValue += `cm-s-${theme}`;
-      }
+    // setThemeClass(theme) {
+    //   const CodeMirrorWrap = document.getElementsByClassName("CodeMirror-wrap");
+    //   for (var i = 0; i < CodeMirrorWrap.length; i++) {
+    //     CodeMirrorWrap[i].attributes[0].nodeValue =
+    //       "CodeMirror CodeMirror-wrap ";
+    //     CodeMirrorWrap[i].attributes[0].nodeValue += `cm-s-${theme}`;
+    //   }
+    // },
+    // 保存内容
+    saveContent() {
+      console.log(this.code);
     }
   }
 };
